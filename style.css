@@ -1,5 +1,5 @@
 /* ############################################ */
-/* MAIN ONES */
+/* GLOBAL STYLES */
 body {
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
     margin: 0;
@@ -7,270 +7,105 @@ body {
     height: 100vh;
 }
 
-@media only screen and (max-width: 600px) {
-  body {
-    height: 80vh; /* Increased height for better readability */
-  }
+.banner-container {
+    width: 100%;
 }
 
+/* ############################################ */
+/* HEADER STYLES */
 header {
     padding: 0;
-    color: #333;
+    color: #333; /* Dark grey text color */
     position: relative;
     overflow: hidden;
     margin-top: 0;
 }
 
-figcaption {
-  color: #F0F0F0;
-}
-
-/* ############################################ */
-/* TITLES */
-.title {
-  padding-left: 20px;
-  width: 30%; /* Increased width for better appearance on larger screens */
-  font-family: 'Arial', sans-serif;
-  font-size: 36px; /* Slightly reduced size for computers */
-  font-style: italic;
-  font-weight: bold;
-  color: #000;
-  transition: color 0.667s ease;
-}
-
-@media only screen and (max-width: 600px) {
-  .title {
-    width: 100%; /* Full width on small screens */
-    padding: 10px 10px 10px 5px;
-    font-size: 24px; /* Better readability on smaller screens */
-  }
-}
-
-h2 {
-  font-family: 'Arial', sans-serif;
-  font-weight: lighter;
-  font-size: 28px; /* Slightly larger font size for computers */
-  color: #242526;
-  margin: 20px 0;
-}
-
-@media only screen and (max-width: 600px) {
-  h2 {
-    font-size: 18px; /* Reduced size for smartphones */
-    padding: 0 10px;
-  }
-}
-
-/* ############################################ */
-/* HOMEPAGE */
-.homepage {
-    width: 100%;
-}
-
-.homepage-banner-container {
-    position: relative;
-    width: 100%;
-    height: 150px; /* Increased banner height for computers */
-    margin-right: 20px;
-}
-
-@media only screen and (max-width: 600px) {
-  .homepage-banner-container {
-    height: 60px; /* Reduced height for smartphones */
-    margin-right: 2px;
-  }
-}
-
-.content {
-    display: flex;
-    margin: 150px 100px 60px; /* Increased margins for more spacing */
-}
-
-@media only screen and (max-width: 600px) {
-  .content {
-    margin: 70px 20px 30px; /* Smaller margins for smartphones */
-  }
-}
-
-/* ############################################ */
-/* LEFT COLUMN */
-.left-column {
-    margin-right: 25%; /* Increased margin for better separation */
-    width: 65%;
-    background-color: rgba(240, 240, 240, 0.92);
-}
-
-.left-column-homepage {
-    margin-right: 25%;
-    width: 55%;
-    background: linear-gradient(to bottom, #FF4500, rgba(240, 240, 240, 0.92) 1%);
-    height: 100%;
-    font-size: 18px; /* Slightly larger font size */
-    overflow-y: auto;
-}
-
-@media only screen and (max-width: 600px) {
-  .left-column-homepage {
-    margin-right: 0;
-    width: 100%;
-    font-size: 14px; /* Increased for readability on small screens */
-  }
-}
-
-/* ############################################ */
-/* RIGHT COLUMN */
-.right-column,
-.right-column-homepage {
-    position: absolute;
-    right: 0;
-    width: 30%; /* Reduced width for more balanced layout */
-    height: 100%;
-    overflow-y: auto;
-}
-
-.right-column-homepage {
-    background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
-    padding: 40px;
-}
-
-@media only screen and (max-width: 600px) {
-  .right-column-homepage {
-    width: 0;
-    padding: 0;
-  }
-}
-
-.right-column-homepage:hover {
-    background: #D0D6DB;
-}
-
-.right-column figure {
-    margin-bottom: 30px; /* Increased spacing between figures */
-}
-
-.right-column img,
-.right-column-homepage img {
-    max-width: 100%;
-}
-
-/* ############################################ */
-/* BANNER */
 .top-banner {
     display: flex;
     justify-content: space-between;
     align-items: center;
     overflow: hidden;
-    padding: 0 4px;
+    padding: 4px;
     width: 100%;
     height: 100%;
-    margin-top: 0;
     cursor: pointer;
     z-index: 2;
     background: linear-gradient(90deg, #F0F0F0, #242526 40%);
 }
 
-@media only screen and (max-width: 600px) {
-  .top-banner {
-    padding: 0 2px;
-    background: linear-gradient(90deg, #F0F0F0, #242526 30%);
-  }
-}
-
-.top-banner a:hover {
-    color: #FF4500;
-}
-
-.banner-element {
+/* ############################################ */
+/* STYLES FOR TITLES AND TEXT */
+.title {
+    padding-left: 20px;
     font-family: 'Arial', sans-serif;
+    font-size: 40px;
     font-style: italic;
-    font-stretch: condensed;
-    font-size: 24px; /* Increased size for better readability */
-    color: #F0F0F0;
-    padding: 0 12px;
+    font-weight: bold;
+    color: #000; /* Black text color */
+    transition: color 0.667s ease; /* Smooth transition for color changes */
 }
 
-@media only screen and (max-width: 600px) {
-  .banner-element {
-    font-size: 14px; /* Increased for mobile readability */
-    line-height: 1.5em;
-    padding: 0;
-  }
+h2 {
+    font-family: 'Arial', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    color: #242526; /* Lighter shade of gray */
+    margin: 20px 0 10px;
 }
 
 /* ############################################ */
-/* NAV */
-nav ul {
-    list-style: none;
+/* CONTENT STYLES */
+.content {
     display: flex;
+    margin: 50px;
 }
 
-nav li {
-    margin-right: 30px; /* Increased spacing between nav items */
+.column {
+    flex: 1; /* Allows for flexible width distribution */
+    background-color: #f0f0f0ea;
+    padding: 20px;
+    margin-right: 20px;
 }
 
-nav a {
-    text-decoration: none;
-    color: #333;
-    font-style: italic;
-    font-weight: bold;
-    transition: color 0.3s ease;
+.left-column {
+    margin-right: 20%; /* More space for left column on larger screens */
 }
 
+.right-column {
+    background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
+}
+
+/* ############################################ */
+/* MEDIA QUERIES FOR RESPONSIVENESS */
 @media only screen and (max-width: 600px) {
-  nav li {
-    margin-right: 10px; /* Reduced spacing for smaller screens */
-  }
-  nav a {
-    font-size: 14px; /* Reduced font size for better fit */
-  }
-}
+    body {
+        height: 60vh; /* Adjust height for smaller screens */
+    }
 
-/* ############################################ */
-/* SWARMS */
-#imageSwarm {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    cursor: pointer;
-}
+    .top-banner {
+        padding: 2px;
+        background: linear-gradient(90deg, #F0F0F0, #242526 30%);
+    }
 
-.title-swarm {
-    font-family: 'Arial', sans-serif;
-    font-style: italic;
-    font-weight: bold;
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateY(-50%);
-    z-index: 1;
-    color: #FF4500;
-}
+    .content {
+        flex-direction: column; /* Stack columns vertically on small screens */
+        margin: 15px; /* Less margin for smaller screens */
+    }
 
-.title-swarm h1 {
-    margin: 0 0 0 20px;
-    font-size: 32px; /* Slightly larger font for titles */
-    color: #FF4500;
-}
+    .column {
+        width: 100%; /* Full width for very small screens */
+        margin-right: 0; /* Remove right margin on smaller screens */
+        font-size: 10px; /* Smaller font size for better readability */
+    }
 
-.title-swarm .line {
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    background-color: #FF4500;
-    top: 50%;
-    left: 20px;
-    transform-origin: left;
-    z-index: 0;
-}
+    .title {
+        width: 100%; /* Full width title on small screens */
+        font-size: 20px; /* Smaller title size */
+        padding-left: 5px; /* Adjust padding */
+    }
 
-/* ############################################ */
-/* MISC */
-#hrid {
-    display: inline-block;
-    width: 100%;
-    background: #FF4500;
-    height: 2px;
-    border: 0;
-    margin: 0 0 20px;
+    h2 {
+        font-size: 12px; /* Smaller h2 size */
+    }
 }
