@@ -98,7 +98,7 @@ h2 {
   }
 
 .left-column {
-    margin-left: 15px;
+    left: 15px;
     width: 66%;
     background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
     height: 100%;
@@ -107,7 +107,7 @@ h2 {
 
 .right-column {
     position: absolute; /* Set absolute positioning for the right column */
-    margin-right: 15px; /* Position it at the right */
+    right: 15px; /* Position it at the right */
     width: 34%; /* Adjust the width to your desired size */
     height: 100%; /* Take the full height of the content container */
     overflow-y: auto;
