@@ -93,10 +93,9 @@ h2 {
 .content {
     display: flex;
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
-    margin: 0;
-    padding: 0;
     height: 100vh;
     width: 100%;
+    margin: auto;
   }
 
 .left-column {
@@ -104,7 +103,6 @@ h2 {
     width: 57%;
     background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
     height: 100%;
-    font-size: 16px;
     overflow-y: auto;
   }
 
