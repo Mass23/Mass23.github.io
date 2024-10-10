@@ -128,6 +128,7 @@ figcaption {
     overflow: hidden; /* Hide overflow to contain glitch effects */
     padding: 4px; /* Adjust the padding as needed */
     width: 100%; /* Adjust the width to make it narrower */
+    height: 100%;
     margin-top: 0px; /* Add the missing semicolon here */
     cursor: pointer;
     z-index: 2;
