@@ -97,8 +97,8 @@ h2 {
 .content {
     display: flex;
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
-    margin: 0;
-    padding: 5%;
+    margin: 0 0 0 0;
+    padding: 2.5% 2.5% 2.5% 2.5%;
     top: 100px;
   }
 
