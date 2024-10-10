@@ -144,6 +144,18 @@ figcaption {
     background: linear-gradient(90deg, #F0F0F0, #242526 40%);
 }
 
+@media only screen and (max-width: 600px) {
+  .top-banner {
+    padding: 4px;  /* Increase width to 80% for small screens */
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .top-banner {
+    padding: 2px;  /* Full width for very small screens */
+  }
+}
+
 .top-banner a:hover {
     color: #ff4500; /* Bright red-orange on hover */
 }
@@ -156,6 +168,20 @@ figcaption {
     padding-left: 20px;
 }
 
+@media only screen and (max-width: 600px) {
+  .banner-element-secondary {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .banner-element-secondary {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+}
+
 /* ############################################ */
 /* TEXT */
 h2 {
@@ -166,6 +192,20 @@ h2 {
     margin-bottom: 10px;
 }
 
+@media only screen and (max-width: 600px) {
+  .h2 {
+    padding-right: 10px;
+    padding-left: 5px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .h2 {
+    padding-right: 5px;
+    padding-left: 2px;
+  }
+}
+
 .title {
     padding-left: 20px;
     font-family: 'Arial', sans-serif;
@@ -173,6 +213,18 @@ h2 {
     font-weight: bold;
     color: #000; /* Black text color */
     transition: color 0.667s ease; /* Smooth transition for color changes */
+}
+
+@media only screen and (max-width: 600px) {
+  .title {
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .title {
+    padding-left: 5px;
+  }
 }
 
 nav ul {
@@ -199,6 +251,21 @@ nav a {
     margin-left: 50px;
 }
 
+@media only screen and (max-width: 600px) {
+  .content {
+    margin-top: 20px; 
+    margin-bottom: 20px;
+    margin-left: 20px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .content {
+    margin-top: 10px; 
+    margin-bottom: 10px;
+    margin-left: 10px;
+  }
+}
 
 /* ############################################ */
 /* SWARMS */
