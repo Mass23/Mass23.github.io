@@ -96,7 +96,7 @@ h2 {
     height: 100vh;
   }
 
-.left-column-homepage {
+.left-column {
     margin-right: 20%; /* Add right margin to the left column */
     width: 57%;
     background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
@@ -105,7 +105,7 @@ h2 {
     overflow-y: auto;
   }
 
-.right-column-homepage {
+.right-column {
     position: absolute; /* Set absolute positioning for the right column */
     /*top: 112px; /* Position it at the top */
     right: 0; /* Position it at the right */
@@ -116,7 +116,7 @@ h2 {
     padding: 40px;
 }
 
-.right-column-homepage:hover {
+.right-column:hover {
     background: #D0D6DB; /* Shaded background color when not hovered */
   }
   
@@ -127,7 +127,7 @@ h2 {
   .right-column img {
     max-width: 100%; /* Ensure images don't exceed their container width */
   }
-  .right-column-homepage img {
+  .right-column img {
     max-width: 100%; /* Ensure images don't exceed their container width */
   }
   
@@ -146,13 +146,13 @@ h2 {
     margin-right: 15px;
   }
 
-  .left-column-homepage {
+  .left-column {
     margin-right: 0%; 
     font-size: 10px;
     width: 100%;  /* Full width for very small screens */
   }
 
-  .right-column-homepage {
+  .right-column {
     width: 0%;
     padding: 0px;
   }
