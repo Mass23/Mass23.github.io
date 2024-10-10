@@ -30,7 +30,8 @@ header {
     color: #333; /* Dark grey text color */
     position: relative;
     overflow: hidden;
-    margin-top: 0;
+    margin: 0 0 0 0;
+    width: 100%;
 }
 
 .top-banner {
