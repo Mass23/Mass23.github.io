@@ -5,6 +5,10 @@ body {
     height: 100vh;
 }
 
+@media screen and (min-width: 1366px) {
+    #image img {width:375px;}
+}
+
 header {
     padding: 0px;
     color: #333; /* Dark grey text color */
