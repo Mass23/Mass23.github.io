@@ -1,305 +1,237 @@
 /* ############################################ */
 /* MAIN ONES */
-body {
-  background: linear-gradient(to bottom, #2946FF, #242526 20%);
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-}
-
-@media only screen and (max-width: 600px) {
-.body {
-  height: 60vh;
-}
-}
-
-header {
-  padding: 0px;
-  color: #333; /* Dark grey text color */
-  position: relative;
-  overflow: hidden;
-  margin-top: 0px; /* Adjust the margin-top to position the banner higher */
-}
-
-figcaption {
-color: #F0F0F0;
-}
-
-/* ############################################ */
-/* TITLES */
 .title {
-padding-left: 20px;
-width: 25%;
-font-family: 'Arial', sans-serif;
-font-size: 40px;
-font-style: italic;
-font-weight: bold;
-color: #000; /* Black text color */
-transition: color 0.667s ease; /* Smooth transition for color changes */
-}
-
-@media only screen and (max-width: 600px) {
-.title {
-width: 16%;
-padding-left: 5px;
-padding-top: 5px;
-padding-bottom: 5px;
-font-size: 20px;
-}
-}
-
+    padding-left: 20px;
+    width: 25%;
+    font-family: 'Arial', sans-serif;
+    font-size: 40px;
+    font-style: italic;
+    font-weight: bold;
+    color: #000; /* Black text color */
+    transition: color 0.667s ease; /* Smooth transition for color changes */
+    }
+        
 h2 {
-font-family: 'Arial', sans-serif;
-font-weight: lighter; /* Adjust font weight if needed */
-font-size: 24px;
-color: #242526; /* Adjust color to a lighter shade of gray */
-margin-top: 20px;
-margin-bottom: 10px;
-}
-
+    font-family: 'Arial', sans-serif;
+    font-weight: lighter; /* Adjust font weight if needed */
+    font-size: 24px;
+    color: #242526; /* Adjust color to a lighter shade of gray */
+    margin-top: 20px;
+    margin-bottom: 10px;
+    }
+    
 @media only screen and (max-width: 600px) {
-.h2 {
-padding-right: 5px;
-padding-left: 2px;
-font-size: 12px;
-}
-}
+    .title {
+        width: 16%;
+        padding-left: 5px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        font-size: 20px;
+        }
+    .h2 {
+        padding-right: 5px;
+        padding-left: 2px;
+        font-size: 12px;
+        }
+    }
 
 /* ############################################ */
-/* HOMEPAGE */
-.homepage {
-  width: 100%;
-}
+/* HEADER */
 
-.homepage-banner-container {
-  position: relative;
-  width: 100%;
-  height: 122px; 
-  margin-right: 20px;
-}
-
+.top-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden; /* Hide overflow to contain glitch effects */
+    padding-right: 4px; 
+    padding-left: 4px; 
+    width: 100%; /* Adjust the width to make it narrower */
+    height: 100%;
+    margin-top: 0px; 
+    cursor: pointer;
+    z-index: 2;
+    background: linear-gradient(90deg, #F0F0F0, #242526 40%);
+  }
+  
+  .top-banner a:hover {
+    color: #ff4500; /* Bright red-orange on hover */
+  }
+  
+  .banner-element {
+    font-family: "Arial", Arial, sans-serif;
+    font-style: italic;
+    font-stretch: condensed;
+    font-size: 20px;
+    color: #F0F0F0;
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+  
 @media only screen and (max-width: 600px) {
-.homepage-banner-container {
-  height: 22px;
-  margin-right: 2px;
-}
-}
+  .top-banner {
+        padding-right: 2px; 
+        padding-left: 2px; 
+        background: linear-gradient(90deg, #F0F0F0, #242526 30%);
+    }
+  .banner-element {
+    font-weight: lighter;
+    letter-spacing: -1px;
+    font-size: 12px;
+    line-height: 0.1em;
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+
+/* ############################################ */
+/* CONTENT */
 
 .content {
-  display: flex;
-  margin-top: 122px; 
-  margin-bottom: 50px;
-  margin-left: 50px;
-  margin-right: 50px;
-}
-
-@media only screen and (max-width: 600px) {
-.content {
-  margin-top: 62px;
-  margin-bottom: 15px;
-  margin-left: 15px;
-  margin-right: 15px;
-}
-}
-
-/* ############################################ */
-/* LEFT COLUMN */
-
-.left-column {
-  margin-right: 20%; /* Add right margin to the left column */
-  width: 66.6%;
-  background-color:#f0f0f0ea;
-}
+    display: flex;
+    margin-top: 122px; 
+    margin-bottom: 50px;
+    margin-left: 50px;
+    margin-right: 50px;
+  }
 
 .left-column-homepage {
-  margin-right: 20%; /* Add right margin to the left column */
-  width: 57%;
-  background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
-  height: 100%;
-  font-size: 16px;
-  overflow-y: auto;
-}
-
-@media only screen and (max-width: 600px) {
-.left-column-homepage {
-  margin-right: 0%; 
-  font-size: 10px;
-  width: 100%;  /* Full width for very small screens */
-}
-}
-
-/* ############################################ */
-/* RIGHT COLUMN */
-.right-column {
-  position: absolute; /* Set absolute positioning for the right column */
-  top: 0; /* Position it at the top */
-  right: 0; /* Position it at the right */
-  display: flex;
-  flex-direction: column;
-  width: 33.3%; /* Adjust the width to your desired size */
-  height: 100%; /* Take the full height of the content container */
-  overflow-y: auto;
-}
+    margin-right: 20%; /* Add right margin to the left column */
+    width: 57%;
+    background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
+    height: 100%;
+    font-size: 16px;
+    overflow-y: auto;
+  }
 
 .right-column-homepage {
-  position: absolute; /* Set absolute positioning for the right column */
-  /*top: 112px; /* Position it at the top */
-  right: 0; /* Position it at the right */
-  width: 33.3%; /* Adjust the width to your desired size */
-  height: 100%; /* Take the full height of the content container */
-  overflow-y: auto;
-  background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
-  padding: 40px;
-}
-
-@media only screen and (max-width: 600px) {
-.right-column-homepage {
-  width: 0%;
-  padding: 0px;
-}
+    position: absolute; /* Set absolute positioning for the right column */
+    /*top: 112px; /* Position it at the top */
+    right: 0; /* Position it at the right */
+    width: 33.3%; /* Adjust the width to your desired size */
+    height: 100%; /* Take the full height of the content container */
+    overflow-y: auto;
+    background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
+    padding: 40px;
 }
 
 .right-column-homepage:hover {
-  background: #D0D6DB; /* Shaded background color when not hovered */
-}
-
-.right-column figure {
-  margin-bottom: 20px; /* Add bottom margin to each figure */
-}
-
-.right-column img {
-  max-width: 100%; /* Ensure images don't exceed their container width */
-}
-.right-column-homepage img {
-  max-width: 100%; /* Ensure images don't exceed their container width */
-}
-
-/* ############################################ */
-/* BANNER */
-.top-banner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  overflow: hidden; /* Hide overflow to contain glitch effects */
-  padding-right: 4px; 
-  padding-left: 4px; 
-  width: 100%; /* Adjust the width to make it narrower */
-  height: 100%;
-  margin-top: 0px; 
-  cursor: pointer;
-  z-index: 2;
-  background: linear-gradient(90deg, #F0F0F0, #242526 40%);
-}
-
+    background: #D0D6DB; /* Shaded background color when not hovered */
+  }
+  
+  .right-column figure {
+    margin-bottom: 20px; /* Add bottom margin to each figure */
+  }
+  
+  .right-column img {
+    max-width: 100%; /* Ensure images don't exceed their container width */
+  }
+  .right-column-homepage img {
+    max-width: 100%; /* Ensure images don't exceed their container width */
+  }
+  
 @media only screen and (max-width: 600px) {
-.top-banner {
-  padding-right: 2px; 
-  padding-left: 2px; 
-  background: linear-gradient(90deg, #F0F0F0, #242526 30%);
-}
-}
+  .content {
+        margin-top: 62px;
+        margin-bottom: 15px;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
 
-.top-banner a:hover {
-  color: #ff4500; /* Bright red-orange on hover */
-}
+  .content {
+    margin-top: 62px;
+    margin-bottom: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
 
-.banner-element {
-  font-family: "Arial", Arial, sans-serif;
-  font-style: italic;
-  font-stretch: condensed;
-  font-size: 20px;
-  color: #F0F0F0;
-  padding-right: 12px;
-  padding-left: 12px;
-}
+  .left-column-homepage {
+    margin-right: 0%; 
+    font-size: 10px;
+    width: 100%;  /* Full width for very small screens */
+  }
 
-@media only screen and (max-width: 600px) {
-.banner-element {
-  font-weight: lighter;
-  letter-spacing: -1px;
-  font-size: 12px;
-  line-height: 0.1em;
-  padding-right: 0px;
-  padding-left: 0px;
-}
-}
+  .right-column-homepage {
+    width: 0%;
+    padding: 0px;
+  }
+  }
 
 /* ############################################ */
 /* NAV */
 nav ul {
-  list-style: none;
-  display: flex;
-}
-
-nav li {
-  margin-right: 20px;
-}
-
-nav a {
-  text-decoration: none;
-  color: #333; /* Dark grey text color */
-  font-style: italic;
-  font-weight: bold;
-  transition: color 0.3s ease; /* Smooth transition for color changes */
-}
+    list-style: none;
+    display: flex;
+  }
+  
+  nav li {
+    margin-right: 20px;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: #333; /* Dark grey text color */
+    font-style: italic;
+    font-weight: bold;
+    transition: color 0.3s ease; /* Smooth transition for color changes */
+  }
 
 /* ############################################ */
 /* SWARMS */
 #imageSwarm {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  cursor: pointer;
-}
-
-.title-swarm {
-  font-family: 'Arial', sans-serif;
-  font-style: italic;
-  font-weight: bold;
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateY(-50%);
-  z-index: 1;
-  margin-left: 20px;
-  margin: 0;
-  color: #ff4500; /* Adjust title color */
-}
-
-.title-swarm h1 {
-  margin: 0;
-  margin-left: 20px;
-  font-size: 24px;
-  color: #ff4500; /* Adjust title color */
-  font-weight: bold;
-  position: relative;
-  z-index: 1;
-  margin-left: 20px;
-}
-
-.title-swarm .line {
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  background-color: #ff4500; /* Adjust line color */
-  top: 50%;
-  left: 20px;
-  transform-origin: left;
-  z-index: 0;
-  margin-left: 20px;
-}
-
-
-/* ############################################ */
-/* MISC */
-
-#hrid {
-  display: inline-block;
-  width: 100%;
-  background:  #ff4500 50%;
-  height: 2px;
-  border: 0;
-  margin-top: 0px;
-  margin-bottom: 20px;
-}
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    cursor: pointer;
+  }
+  
+  .title-swarm {
+    font-family: 'Arial', sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    margin-left: 20px;
+    margin: 0;
+    color: #ff4500; /* Adjust title color */
+  }
+  
+  .title-swarm h1 {
+    margin: 0;
+    margin-left: 20px;
+    font-size: 24px;
+    color: #ff4500; /* Adjust title color */
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+    margin-left: 20px;
+  }
+  
+  .title-swarm .line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #ff4500; /* Adjust line color */
+    top: 50%;
+    left: 20px;
+    transform-origin: left;
+    z-index: 0;
+    margin-left: 20px;
+  }
+  
+  
+  /* ############################################ */
+  /* MISC */
+  
+  #hrid {
+    display: inline-block;
+    width: 100%;
+    background:  #ff4500 50%;
+    height: 2px;
+    border: 0;
+    margin-top: 0px;
+    margin-bottom: 20px;
+  }
+  
