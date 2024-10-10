@@ -44,6 +44,31 @@ header {
     background: linear-gradient(90deg, #F0F0F0, #242526 40%);
 }
 
+.top-banner a:hover {
+  color: #ff4500; /* Bright red-orange on hover */
+}
+
+.banner-element {
+  font-family: "Arial", Arial, sans-serif;
+  font-style: italic;
+  font-stretch: condensed;
+  font-size: 20px;
+  color: #F0F0F0;
+  padding-right: 12px;
+  padding-left: 12px;
+}
+
+@media only screen and (max-width: 600px) {
+.banner-element {
+  font-weight: lighter;
+  letter-spacing: -1px;
+  font-size: 12px;
+  line-height: 0.1em;
+  padding-right: 0px;
+  padding-left: 0px;
+}
+}
+
 /* ############################################ */
 /* STYLES FOR TITLES AND TEXT */
 .title {
