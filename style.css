@@ -1,3 +1,5 @@
+/* ############################################ */
+/* MAIN ONES */
 body {
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
     margin: 0;
@@ -17,6 +19,100 @@ figcaption {
   color: #F0F0F0;
 }
 
+/* ############################################ */
+/* HOMEPAGE */
+.homepage {
+    width: 100%;
+}
+
+.homepage-banner-container {
+    position: relative;
+    width: 100%; /* Adjust width as needed */
+    height: 100px; /* Adjust height as needed */
+}
+
+/* ############################################ */
+/* LEFT COLUMN */
+
+.left-column {
+    margin-right: 20%; /* Add right margin to the left column */
+    width: 66.6%;
+    background-color:#f0f0f0ea;
+}
+
+.left-column-homepage {
+    margin-right: 20%; /* Add right margin to the left column */
+    width: 57%;
+    background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
+    height: 100%;
+    overflow-y: auto;
+}
+
+@media only screen and (max-width: 600px) {
+  .left-column-homepage {
+    width: 67%;   /* Increase width to 80% for small screens */
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .left-column-homepage {
+    width: 77%;  /* Full width for very small screens */
+  }
+}
+
+/* ############################################ */
+/* RIGHT COLUMN */
+.right-column {
+    position: absolute; /* Set absolute positioning for the right column */
+    top: 0; /* Position it at the top */
+    right: 0; /* Position it at the right */
+    display: flex;
+    flex-direction: column;
+    width: 33.3%; /* Adjust the width to your desired size */
+    height: 100%; /* Take the full height of the content container */
+    overflow-y: auto;
+}
+
+.right-column-homepage {
+    position: absolute; /* Set absolute positioning for the right column */
+    top: 102px; /* Position it at the top */
+    right: 0; /* Position it at the right */
+    width: 33.3%; /* Adjust the width to your desired size */
+    height: 100%; /* Take the full height of the content container */
+    overflow-y: auto;
+    background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
+    padding: 40px;
+}
+
+@media only screen and (max-width: 600px) {
+  .left-column-homepage {
+    width: 24.3%;   /* Increase width to 80% for small screens */
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .left-column-homepage {
+    width: 15.3%;  /* Full width for very small screens */
+  }
+}
+
+.right-column-homepage:hover {
+    background: #D0D6DB; /* Shaded background color when not hovered */
+}
+
+.right-column figure {
+    margin-bottom: 20px; /* Add bottom margin to each figure */
+}
+
+.right-column img {
+    max-width: 100%; /* Ensure images don't exceed their container width */
+}
+.right-column-homepage img {
+    max-width: 100%; /* Ensure images don't exceed their container width */
+}
+
+/* ############################################ */
+/* BANNER */
 .banner-element-link {
     margin-left: 20px;/* Other styles for the element-class */
 }
@@ -24,12 +120,6 @@ figcaption {
 .element-link {
     margin-left: 20px;/* Other styles for the element-class */
     margin-bottom: 0px;
-}
-
-.homepage-banner-container {
-    position: relative;
-    width: 100%; /* Adjust width as needed */
-    height: 100px; /* Adjust height as needed */
 }
 
 .white-layer {
@@ -54,10 +144,20 @@ figcaption {
     background: linear-gradient(90deg, #F0F0F0, #242526 40%);
 }
 
-.homepage {
-    width: 100%;
+.top-banner a:hover {
+    color: #ff4500; /* Bright red-orange on hover */
 }
 
+.banner-element-secondary {
+    font-family: 'Arial', sans-serif;
+    font-style: italic;
+    color: #F0F0F0;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+/* ############################################ */
+/* TEXT */
 h2 {
     font-family: 'Arial', sans-serif;
     font-weight: lighter; /* Adjust font weight if needed */
@@ -66,7 +166,6 @@ h2 {
     margin-bottom: 10px;
 }
 
-
 .title {
     padding-left: 20px;
     font-family: 'Arial', sans-serif;
@@ -74,6 +173,41 @@ h2 {
     font-weight: bold;
     color: #000; /* Black text color */
     transition: color 0.667s ease; /* Smooth transition for color changes */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav li {
+    margin-right: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333; /* Dark grey text color */
+    font-style: italic;
+    font-weight: bold;
+    transition: color 0.3s ease; /* Smooth transition for color changes */
+}
+
+.content {
+    display: flex;
+    margin-top: 50px; /* Add margin to the entire content area */
+    margin-bottom: 50px;
+    margin-left: 50px;
+}
+
+
+/* ############################################ */
+/* SWARMS */
+#imageSwarm {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    cursor: pointer;
 }
 
 .title-swarm {
@@ -113,119 +247,9 @@ h2 {
     margin-left: 20px;
 }
 
-.banner-element-secondary {
-    font-family: 'Arial', sans-serif;
-    font-style: italic;
-    color: #F0F0F0;
-    padding-right: 20px;
-    padding-left: 20px;
-}
 
-nav ul {
-    list-style: none;
-    display: flex;
-}
-
-nav li {
-    margin-right: 20px;
-}
-
-nav a {
-    text-decoration: none;
-    color: #333; /* Dark grey text color */
-    font-style: italic;
-    font-weight: bold;
-    transition: color 0.3s ease; /* Smooth transition for color changes */
-}
-
-.top-banner a:hover {
-    color: #ff4500; /* Bright red-orange on hover */
-}
-
-#imageSwarm {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    cursor: pointer;
-}
-
-.content {
-    display: flex;
-    margin-top: 50px; /* Add margin to the entire content area */
-    margin-bottom: 50px;
-    margin-left: 50px;
-}
-
-.left-column {
-    margin-right: 20%; /* Add right margin to the left column */
-    width: 66.6%;
-    background-color:#f0f0f0ea;
-}
-
-.left-column-homepage {
-    margin-right: 20%; /* Add right margin to the left column */
-    width: 57%;
-    background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
-    height: 100%;
-    overflow-y: auto;
-}
-
-.right-column {
-    position: absolute; /* Set absolute positioning for the right column */
-    top: 0; /* Position it at the top */
-    right: 0; /* Position it at the right */
-    display: flex;
-    flex-direction: column;
-    width: 33.3%; /* Adjust the width to your desired size */
-    height: 100%; /* Take the full height of the content container */
-    overflow-y: auto;
-}
-
-.right-column-coa {
-    position: absolute; /* Set absolute positioning for the right column */
-    top: 0; /* Position it at the top */
-    right: 0; /* Position it at the right */
-    display: flex;
-    flex-direction: column;
-    width: 50%; /* Adjust the width to your desired size */
-    height: 100%; /* Take the full height of the content container */
-    overflow-y: auto;
-}
-
-.right-column-coa img {
-    max-width: 100%; /* Ensure image doesn't exceed its container's width */
-    height: auto; /* Maintain aspect ratio */
-    /* Add any other styles you need */
-}
-
-.right-column-homepage {
-    position: absolute; /* Set absolute positioning for the right column */
-    top: 102px; /* Position it at the top */
-    right: 0; /* Position it at the right */
-    width: 33.3%; /* Adjust the width to your desired size */
-    height: 100%; /* Take the full height of the content container */
-    overflow-y: auto;
-    background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
-    padding: 40px;
-}
-
-.right-column-homepage:hover {
-    background: #D0D6DB; /* Shaded background color when not hovered */
-}
-
-
-.right-column figure {
-    margin-bottom: 20px; /* Add bottom margin to each figure */
-}
-
-.right-column img {
-    max-width: 100%; /* Ensure images don't exceed their container width */
-}
-.right-column-homepage img {
-    max-width: 100%; /* Ensure images don't exceed their container width */
-}
-
+/* ############################################ */
+/* QUOTES */
 .quote-left {
     font-family: 'Andale Mono', monospace;
     font-style: italic;
