@@ -28,13 +28,13 @@ figcaption {
 .homepage-banner-container {
     position: relative;
     width: 100%;
-    height: 102px; 
+    height: 100px; 
     margin-right: 20px;
 }
 
 @media only screen and (max-width: 600px) {
   .homepage-banner-container {
-    height: 32px;
+    height: 26px;
     margin-right: 2px;
   }
 }
