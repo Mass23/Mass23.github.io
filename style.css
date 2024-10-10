@@ -82,7 +82,7 @@ figcaption {
 @media only screen and (max-width: 600px) {
   .left-column-homepage {
     margin-right: 0%; 
-    font-size: 10px;
+    font-size: 12px;
     width: 100%;  /* Full width for very small screens */
   }
 }
@@ -186,7 +186,7 @@ figcaption {
   .banner-element {
     font-weight: lighter;
     letter-spacing: -1px;
-    font-size: 9px;
+    font-size: 10px;
     line-height: 1em;
     padding-right: 0px;
     padding-left: 0px;
