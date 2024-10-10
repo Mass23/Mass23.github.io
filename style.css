@@ -86,11 +86,10 @@ h2 {
 /* CONTENT */
 
 .content {
-    display: flex;
-    margin-top: 122px; 
-    margin-bottom: 50px;
-    margin-left: 50px;
-    margin-right: 50px;
+  background: linear-gradient(to bottom, #2946FF, #242526 20%);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
   }
 
 .left-column-homepage {
@@ -104,7 +103,7 @@ h2 {
 
 .right-column-homepage {
     position: absolute; /* Set absolute positioning for the right column */
-    /*top: 112px; /* Position it at the top */
+    top: 112px; /* Position it at the top */
     right: 0; /* Position it at the right */
     width: 33.3%; /* Adjust the width to your desired size */
     height: 100%; /* Take the full height of the content container */
