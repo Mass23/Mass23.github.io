@@ -34,7 +34,7 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .homepage-banner-container {
-    height: 26px;
+    height: 16px;
     margin-right: 2px;
   }
 }
@@ -157,7 +157,8 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .banner-element-secondary {
-    font-size: 6px;
+    font-size: 8px;
+    line-height: 1px;
     padding-right: 2px;
     padding-left: 2px;
   }
