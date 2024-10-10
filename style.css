@@ -69,7 +69,7 @@ figcaption {
 
 @media only screen and (max-width: 480px) {
   .left-column-homepage {
-    margin-right: 10%; 
+    margin-right: 0%; 
     width: 100%;  /* Full width for very small screens */
   }
 }
