@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function createImageSwarm(event) {
       const image = new Image();
-      image.src = "images/background.jpeg";
+      image.src = "images/me.webp";
       image.classList.add("swarm-image");
       image.style.position = "absolute";
 
