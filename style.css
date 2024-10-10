@@ -50,7 +50,7 @@ h2 {
     justify-content: space-between;
     align-items: center;
     width: 100%; /* Adjust the width to make it narrower */
-    height: 90px;
+    height: 10%;
     margin: 0 0 0 0; 
     padding: 0 0 0 0;
     cursor: pointer;
@@ -99,7 +99,7 @@ h2 {
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
     margin: 0;
     padding: 0;
-    height: 100%;
+    height: 90%;
   }
 
 .left-column {
