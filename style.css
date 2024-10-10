@@ -1,5 +1,5 @@
 /* ############################################ */
-/* MAIN ONES */
+/* Titles */
 .title {
     padding-left: 20px;
     width: 25%;
@@ -55,11 +55,11 @@ h2 {
     position: relative;
   }
   
-  .top-banner a:hover {
+.top-banner a:hover {
     color: #ff4500; /* Bright red-orange on hover */
   }
   
-  .banner-element {
+.banner-element {
     font-family: "Arial", Arial, sans-serif;
     font-style: italic;
     font-stretch: condensed;
@@ -70,11 +70,13 @@ h2 {
   }
   
 @media only screen and (max-width: 600px) {
+    
   .top-banner {
         padding-right: 2px; 
         padding-left: 2px; 
         background: linear-gradient(90deg, #F0F0F0, #242526 30%);
     }
+    
   .banner-element {
     font-weight: lighter;
     letter-spacing: -1px;
@@ -83,6 +85,7 @@ h2 {
     padding-right: 0px;
     padding-left: 0px;
   }
+    
 }
 /* ############################################ */
 /* CONTENT */
