@@ -98,7 +98,6 @@ h2 {
     display: flex;
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
     padding: 10px;
-    height: 100vh;
   }
 
 .left-column {
@@ -106,8 +105,6 @@ h2 {
     width: 66%;
     background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
     padding: 20px 20px 20px 20px;
-    overflow-y: auto;
-    height: 50vh;
   }
 
 .right-column {
@@ -115,7 +112,6 @@ h2 {
     right: 0; /* Position it at the right */
     width: 34%; /* Adjust the width to your desired size */
     padding: 20px 20px 20px 20px;
-    overflow-y: auto;
     background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
 }
 
