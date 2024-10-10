@@ -62,15 +62,15 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .left-column-homepage {
-    margin-right: 15%; 
-    width: 67%;   /* Increase width to 80% for small screens */
+    margin-right: 10%; 
+    width: 70%;   /* Increase width to 80% for small screens */
   }
 }
 
 @media only screen and (max-width: 480px) {
   .left-column-homepage {
     margin-right: 10%; 
-    width: 77%;  /* Full width for very small screens */
+    width: 100%;  /* Full width for very small screens */
   }
 }
 
@@ -100,14 +100,14 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .right-column-homepage {
-    width: 24.3%;
+    width: 30%;
     padding: 20px;
   }
 }
 
 @media only screen and (max-width: 480px) {
   .right-column-homepage {
-    width: 15.3%;
+    width: 0%;
     padding: 10px;
   }
 }
