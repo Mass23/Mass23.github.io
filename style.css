@@ -50,7 +50,6 @@ h2 {
     justify-content: space-between;
     align-items: center;
     width: 100%; /* Adjust the width to make it narrower */
-    height: 120px;
     margin: 0; 
     padding: 0;
     cursor: pointer;
@@ -97,9 +96,8 @@ h2 {
 .content {
     display: flex;
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
-    margin-top: 0;
     padding: 10px;
-    top: 90px;
+    margin: 0;
   }
 
 .left-column {
@@ -229,7 +227,6 @@ nav ul {
     background:  #ff4500 50%;
     border: 0;
     margin: 0;
-    top: 98px;
     height: 2px;
   }
   
