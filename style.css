@@ -28,7 +28,7 @@ figcaption {
 .homepage-banner-container {
     position: relative;
     width: 100%;
-    height: 50px; 
+    height: 102px; 
     margin-right: 20px;
 }
 
@@ -126,7 +126,7 @@ figcaption {
     justify-content: space-between;
     align-items: center;
     overflow: hidden; /* Hide overflow to contain glitch effects */
-    padding: 10px; /* Adjust the padding as needed */
+    padding: 4px; /* Adjust the padding as needed */
     width: 100%; /* Adjust the width to make it narrower */
     margin-top: 0px; /* Add the missing semicolon here */
     cursor: pointer;
@@ -148,7 +148,7 @@ figcaption {
     font-family: "Arial", Arial, sans-serif;
     font-style: italic;
     font-stretch: condensed;
-    font-size: 30px;
+    font-size: 24px;
     color: #F0F0F0;
     padding-right: 12px;
     padding-left: 12px;
@@ -156,7 +156,7 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .banner-element-secondary {
-    font-size: 6px;
+    font-size: 8px;
     padding-right: 2px;
     padding-left: 2px;
   }
