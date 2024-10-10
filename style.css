@@ -105,7 +105,7 @@ h2 {
 .left-column {
     left: 0;
     width: 56%;
-    padding: 5%;
+    padding: 5% 5% 5% 5%;
     background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
     height: 100%;
     overflow-y: auto;
@@ -114,12 +114,11 @@ h2 {
 .right-column {
     position: absolute; /* Set absolute positioning for the right column */
     right: 0; /* Position it at the right */
-    padding: 5%,
+    padding: 5% 5% 5% 5%,
     width: 34%; /* Adjust the width to your desired size */
     height: 100%; /* Take the full height of the content container */
     overflow-y: auto;
     background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
-    padding: 40px;
 }
 
 .right-column:hover {
