@@ -183,6 +183,7 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .banner-element {
+    font-weight: lighter;
     letter-spacing: -1px;
     font-size: 10px;
     line-height: 1em;
