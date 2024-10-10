@@ -167,9 +167,9 @@ figcaption {
 .top-banner a:hover {
     color: #ff4500; /* Bright red-orange on hover */
 }
-/*
+
 .banner-element-secondary {
-    font-family: 'Arial', sans-serif;
+    font-family: "Arial Narrow", Arial, sans-serif;
     font-style: italic;
     font-size: 16px;
     color: #F0F0F0;
@@ -191,9 +191,6 @@ figcaption {
     padding-right: 2px;
     padding-left: 2px;
   }
-}*/
-
-.banner-image {
 }
 
 /* ############################################ */
