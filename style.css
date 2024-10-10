@@ -97,6 +97,7 @@ h2 {
     display: flex;
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
     padding: 10px;
+    height: 600px;
   }
 
 .left-column {
