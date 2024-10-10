@@ -78,7 +78,7 @@ figcaption {
 
 .right-column-homepage {
     position: absolute; /* Set absolute positioning for the right column */
-    top: 112px; /* Position it at the top */
+    /*top: 112px; /* Position it at the top */
     right: 0; /* Position it at the right */
     width: 33.3%; /* Adjust the width to your desired size */
     height: 100%; /* Take the full height of the content container */
