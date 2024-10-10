@@ -164,6 +164,7 @@ figcaption {
   .top-banner {
     padding-right: 2px; 
     padding-left: 2px; 
+    background: linear-gradient(90deg, #F0F0F0, #242526 30%);
   }
 }
 
@@ -185,7 +186,7 @@ figcaption {
   .banner-element {
     font-weight: lighter;
     letter-spacing: -1px;
-    font-size: 10px;
+    font-size: 9px;
     line-height: 1em;
     padding-right: 0px;
     padding-left: 0px;
