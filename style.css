@@ -33,12 +33,6 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .left-column-homepage {
-    height: 30px;
-  }
-}
-
-@media only screen and (max-width: 480px) {
-  .left-column-homepage {
     height: 15px;
   }
 }
@@ -61,13 +55,6 @@ figcaption {
 }
 
 @media only screen and (max-width: 600px) {
-  .left-column-homepage {
-    margin-right: 10%; 
-    width: 70%;   /* Increase width to 80% for small screens */
-  }
-}
-
-@media only screen and (max-width: 480px) {
   .left-column-homepage {
     margin-right: 0%; 
     width: 100%;  /* Full width for very small screens */
@@ -99,13 +86,6 @@ figcaption {
 }
 
 @media only screen and (max-width: 600px) {
-  .right-column-homepage {
-    width: 30%;
-    padding: 20px;
-  }
-}
-
-@media only screen and (max-width: 480px) {
   .right-column-homepage {
     width: 0%;
     padding: 0px;
@@ -154,13 +134,7 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .top-banner {
-    padding: 4px;  /* Increase width to 80% for small screens */
-  }
-}
-
-@media only screen and (max-width: 480px) {
-  .top-banner {
-    padding: 2px;  /* Full width for very small screens */
+    padding: 2px; 
   }
 }
 
@@ -171,21 +145,13 @@ figcaption {
 .banner-element-secondary {
     font-family: "Arial Narrow", Arial, sans-serif;
     font-style: italic;
-    font-size: 16px;
+    font-size: 24px;
     color: #F0F0F0;
     padding-right: 12px;
     padding-left: 12px;
 }
 
 @media only screen and (max-width: 600px) {
-  .banner-element-secondary {
-    font-size: 9px;
-    padding-right: 6px;
-    padding-left: 6px;
-  }
-}
-
-@media only screen and (max-width: 480px) {
   .banner-element-secondary {
     font-size: 6px;
     padding-right: 2px;
@@ -205,13 +171,6 @@ h2 {
 
 @media only screen and (max-width: 600px) {
   .h2 {
-    padding-right: 10px;
-    padding-left: 5px;
-  }
-}
-
-@media only screen and (max-width: 480px) {
-  .h2 {
     padding-right: 5px;
     padding-left: 2px;
   }
@@ -221,7 +180,7 @@ h2 {
     padding-left: 20px;
     width: 25%;
     font-family: 'Arial', sans-serif;
-    font-size: 24px;
+    font-size: 30px;
     font-style: italic;
     font-weight: bold;
     color: #000; /* Black text color */
@@ -229,13 +188,6 @@ h2 {
 }
 
 @media only screen and (max-width: 600px) {
-  .title {
-    padding-left: 10px;
-    font-size: 18px;
-  }
-}
-
-@media only screen and (max-width: 480px) {
   .title {
     padding-left: 5px;
     font-size: 12px;
