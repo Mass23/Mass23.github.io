@@ -129,14 +129,6 @@ figcaption {
 
 /* ############################################ */
 /* BANNER */
-.banner-element-link {
-    margin-left: 20px;/* Other styles for the element-class */
-}
-
-.element-link {
-    margin-left: 20px;/* Other styles for the element-class */
-    margin-bottom: 0px;
-}
 
 .white-layer {
     position: absolute;
@@ -181,23 +173,23 @@ figcaption {
     font-style: italic;
     font-size: 16px;
     color: #F0F0F0;
-    padding-right: 20px;
-    padding-left: 20px;
+    padding-right: 12px;
+    padding-left: 12px;
 }
 
 @media only screen and (max-width: 600px) {
   .banner-element-secondary {
     font-size: 9px;
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-right: 6px;
+    padding-left: 6px;
   }
 }
 
 @media only screen and (max-width: 480px) {
   .banner-element-secondary {
     font-size: 6px;
-    padding-right: 5px;
-    padding-left: 5px;
+    padding-right: 2px;
+    padding-left: 2px;
   }
 }
 
@@ -238,14 +230,14 @@ h2 {
 @media only screen and (max-width: 600px) {
   .title {
     padding-left: 10px;
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 
 @media only screen and (max-width: 480px) {
   .title {
     padding-left: 5px;
-    font-size: 10px;
+    font-size: 12px;
   }
 }
 
@@ -338,40 +330,7 @@ nav a {
 
 
 /* ############################################ */
-/* QUOTES */
-.quote-left {
-    font-family: 'Andale Mono', monospace;
-    font-style: italic;
-    font-size: 1.4em; /* Adjust the font size as needed */
-    color: #666; /* Adjust the color to a lighter shade of grey */
-    text-align: left;
-    width: auto;
-}
-
-.quote-right {
-    font-family: 'Andale Mono', monospace;
-    font-style: italic;
-    font-size: 1.4em; /* Adjust the font size as needed */
-    color: #666; /* Adjust the color to a lighter shade of grey */
-    text-align: right;
-    width: auto;
-}
-
-.quote-left-small {
-    font-family: 'Andale Mono', monospace;
-    font-size: 1em; /* Adjust the font size as needed */
-    color: #666; /* Adjust the color to a lighter shade of grey */
-    text-align: left;
-    width: auto;
-}
-
-.quote-right-small {
-    font-family: 'Andale Mono', monospace;
-    font-size: 1em; /* Adjust the font size as needed */
-    color: #666; /* Adjust the color to a lighter shade of grey */
-    text-align: right;
-    width: auto;
-}
+/* MISC */
 
 #hrid {
     display: inline-block;
