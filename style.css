@@ -8,17 +8,17 @@ body {
 }
 
 @media only screen and (max-width: 600px) {
-  .body {
+  body {
     height: 60vh;
   }
 }
 
 header {
-    padding: 0px;
-    color: #333; /* Dark grey text color */
+    padding: 0;
+    color: #333;
     position: relative;
     overflow: hidden;
-    margin-top: 0px; /* Adjust the margin-top to position the banner higher */
+    margin-top: 0;
 }
 
 figcaption {
@@ -34,35 +34,31 @@ figcaption {
   font-size: 40px;
   font-style: italic;
   font-weight: bold;
-  color: #000; /* Black text color */
-  transition: color 0.667s ease; /* Smooth transition for color changes */
+  color: #000;
+  transition: color 0.667s ease;
 }
 
 @media only screen and (max-width: 600px) {
-.title {
-  width: 16%;
-  padding-left: 5px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  font-size: 20px;
-}
+  .title {
+    width: 16%;
+    padding: 5px 0 5px 5px;
+    font-size: 20px;
+  }
 }
 
 h2 {
   font-family: 'Arial', sans-serif;
-  font-weight: lighter; /* Adjust font weight if needed */
+  font-weight: lighter;
   font-size: 24px;
-  color: #242526; /* Adjust color to a lighter shade of gray */
-  margin-top: 20px;
-  margin-bottom: 10px;
+  color: #242526;
+  margin: 20px 0 10px;
 }
 
 @media only screen and (max-width: 600px) {
-.h2 {
-  padding-right: 5px;
-  padding-left: 2px;
-  font-size: 12px;
-}
+  h2 {
+    padding: 0 5px 0 2px;
+    font-size: 12px;
+  }
 }
 
 /* ############################################ */
@@ -74,7 +70,7 @@ h2 {
 .homepage-banner-container {
     position: relative;
     width: 100%;
-    height: 122px; 
+    height: 122px;
     margin-right: 20px;
 }
 
@@ -87,34 +83,27 @@ h2 {
 
 .content {
     display: flex;
-    margin-top: 122px; 
-    margin-bottom: 50px;
-    margin-left: 50px;
-    margin-right: 50px;
+    margin: 122px 50px 50px;
 }
 
 @media only screen and (max-width: 600px) {
   .content {
-    margin-top: 62px;
-    margin-bottom: 15px;
-    margin-left: 15px;
-    margin-right: 15px;
+    margin: 62px 15px 15px;
   }
 }
 
 /* ############################################ */
 /* LEFT COLUMN */
-
 .left-column {
-    margin-right: 20%; /* Add right margin to the left column */
+    margin-right: 20%;
     width: 66.6%;
-    background-color:#f0f0f0ea;
+    background-color: rgba(240, 240, 240, 0.92);
 }
 
 .left-column-homepage {
-    margin-right: 20%; /* Add right margin to the left column */
+    margin-right: 20%;
     width: 57%;
-    background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
+    background: linear-gradient(to bottom, #FF4500, rgba(240, 240, 240, 0.92) 1%);
     height: 100%;
     font-size: 16px;
     overflow-y: auto;
@@ -122,56 +111,52 @@ h2 {
 
 @media only screen and (max-width: 600px) {
   .left-column-homepage {
-    margin-right: 0%; 
+    margin-right: 0;
+    width: 100%;
     font-size: 10px;
-    width: 100%;  /* Full width for very small screens */
   }
 }
 
 /* ############################################ */
 /* RIGHT COLUMN */
-.right-column {
-    position: absolute; /* Set absolute positioning for the right column */
-    top: 0; /* Position it at the top */
-    right: 0; /* Position it at the right */
-    display: flex;
-    flex-direction: column;
-    width: 33.3%; /* Adjust the width to your desired size */
-    height: 100%; /* Take the full height of the content container */
+.right-column,
+.right-column-homepage {
+    position: absolute;
+    right: 0;
+    width: 33.3%;
+    height: 100%;
     overflow-y: auto;
 }
 
+.right-column {
+    top: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .right-column-homepage {
-    position: absolute; /* Set absolute positioning for the right column */
-    /*top: 112px; /* Position it at the top */
-    right: 0; /* Position it at the right */
-    width: 33.3%; /* Adjust the width to your desired size */
-    height: 100%; /* Take the full height of the content container */
-    overflow-y: auto;
     background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
     padding: 40px;
 }
 
 @media only screen and (max-width: 600px) {
   .right-column-homepage {
-    width: 0%;
-    padding: 0px;
+    width: 0;
+    padding: 0;
   }
 }
 
 .right-column-homepage:hover {
-    background: #D0D6DB; /* Shaded background color when not hovered */
+    background: #D0D6DB;
 }
 
 .right-column figure {
-    margin-bottom: 20px; /* Add bottom margin to each figure */
+    margin-bottom: 20px;
 }
 
-.right-column img {
-    max-width: 100%; /* Ensure images don't exceed their container width */
-}
+.right-column img,
 .right-column-homepage img {
-    max-width: 100%; /* Ensure images don't exceed their container width */
+    max-width: 100%;
 }
 
 /* ############################################ */
@@ -180,12 +165,11 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    overflow: hidden; /* Hide overflow to contain glitch effects */
-    padding-right: 4px; 
-    padding-left: 4px; 
-    width: 100%; /* Adjust the width to make it narrower */
+    overflow: hidden;
+    padding: 0 4px;
+    width: 100%;
     height: 100%;
-    margin-top: 0px; 
+    margin-top: 0;
     cursor: pointer;
     z-index: 2;
     background: linear-gradient(90deg, #F0F0F0, #242526 40%);
@@ -193,24 +177,22 @@ h2 {
 
 @media only screen and (max-width: 600px) {
   .top-banner {
-    padding-right: 2px; 
-    padding-left: 2px; 
+    padding: 0 2px;
     background: linear-gradient(90deg, #F0F0F0, #242526 30%);
   }
 }
 
 .top-banner a:hover {
-    color: #ff4500; /* Bright red-orange on hover */
+    color: #FF4500;
 }
 
 .banner-element {
-    font-family: "Arial", Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     font-style: italic;
     font-stretch: condensed;
     font-size: 20px;
     color: #F0F0F0;
-    padding-right: 12px;
-    padding-left: 12px;
+    padding: 0 12px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -219,8 +201,7 @@ h2 {
     letter-spacing: -1px;
     font-size: 12px;
     line-height: 0.1em;
-    padding-right: 0px;
-    padding-left: 0px;
+    padding: 0;
   }
 }
 
@@ -237,10 +218,10 @@ nav li {
 
 nav a {
     text-decoration: none;
-    color: #333; /* Dark grey text color */
+    color: #333;
     font-style: italic;
     font-weight: bold;
-    transition: color 0.3s ease; /* Smooth transition for color changes */
+    transition: color 0.3s ease;
 }
 
 /* ############################################ */
@@ -262,44 +243,36 @@ nav a {
     left: 50%;
     transform: translateY(-50%);
     z-index: 1;
-    margin-left: 20px;
-    margin: 0;
-    color: #ff4500; /* Adjust title color */
+    color: #FF4500;
 }
 
 .title-swarm h1 {
-    margin: 0;
-    margin-left: 20px;
+    margin: 0 0 0 20px;
     font-size: 24px;
-    color: #ff4500; /* Adjust title color */
+    color: #FF4500;
     font-weight: bold;
     position: relative;
     z-index: 1;
-    margin-left: 20px;
 }
 
 .title-swarm .line {
     position: absolute;
     width: 100%;
     height: 2px;
-    background-color: #ff4500; /* Adjust line color */
+    background-color: #FF4500;
     top: 50%;
     left: 20px;
     transform-origin: left;
     z-index: 0;
-    margin-left: 20px;
 }
-
 
 /* ############################################ */
 /* MISC */
-
 #hrid {
     display: inline-block;
     width: 100%;
-    background:  #ff4500 50%;
+    background: #FF4500 50%;
     height: 2px;
     border: 0;
-    margin-top: 0px;
-    margin-bottom: 20px;
-  }
+    margin: 0 0 20px;
+}
