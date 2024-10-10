@@ -7,6 +7,16 @@ body {
     height: 100vh;
 }
 
+#hrid {
+  display: inline-block;
+  width: 100%;
+  background:  #ff4500 50%;
+  height: 2px;
+  border: 0;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
 .banner-container {
     width: 100%;
 }
@@ -74,6 +84,13 @@ h2 {
 
 .right-column {
     background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
+}
+
+@media only screen and (max-width: 600px) {
+.right-column {
+  width: 0%;
+  padding: 0px;
+}
 }
 
 /* ############################################ */
