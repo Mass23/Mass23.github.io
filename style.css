@@ -97,7 +97,7 @@ h2 {
 /* CONTENT */
 .content {
     display: flex;
-    background: linear-gradient(to bottom, #2946FF, #242526 10%);
+    background: linear-gradient(to bottom, #233BD9, #242526 10%);
     padding: 30px;
     height: 900px;
     top: 100px;
@@ -115,7 +115,7 @@ h2 {
     position: absolute; /* Set absolute positioning for the right column */
     right: 0; /* Position it at the right */
     width: 34%; /* Adjust the width to your desired size */
-    height: 880px;
+    height: 890px;
     padding: 20px 20px 20px 20px;
     background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
 }
