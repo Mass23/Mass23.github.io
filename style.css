@@ -99,6 +99,7 @@ h2 {
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
     margin: 0 0 0 0;
     padding: 0 0 0 0;
+    height: 100vh;
   }
 
 .left-column {
