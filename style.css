@@ -97,8 +97,9 @@ h2 {
 .content {
     display: flex;
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
-    padding: 20px;
+    padding: 30px;
     height: 900px;
+    top: 100px;
   }
 
 .left-column {
@@ -223,8 +224,7 @@ nav ul {
     display: inline-block;
     width: 100%;
     background:  #ff4500 50%;
-    border: 0;
-    margin: 0;
+    top: 100px;
     height: 2px;
   }
   
