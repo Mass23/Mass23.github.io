@@ -31,6 +31,18 @@ figcaption {
     height: 100px; /* Adjust height as needed */
 }
 
+@media only screen and (max-width: 600px) {
+  .left-column-homepage {
+    height: 70px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .left-column-homepage {
+    height: 50px;
+  }
+}
+
 /* ############################################ */
 /* LEFT COLUMN */
 
@@ -167,6 +179,7 @@ figcaption {
 .banner-element-secondary {
     font-family: 'Arial', sans-serif;
     font-style: italic;
+    font-size: 30px;
     color: #F0F0F0;
     padding-right: 20px;
     padding-left: 20px;
@@ -174,6 +187,7 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .banner-element-secondary {
+    font-size: 20px;
     padding-right: 10px;
     padding-left: 10px;
   }
@@ -181,6 +195,7 @@ figcaption {
 
 @media only screen and (max-width: 480px) {
   .banner-element-secondary {
+    font-size: 10px;
     padding-right: 5px;
     padding-left: 5px;
   }
