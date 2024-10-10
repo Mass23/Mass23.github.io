@@ -158,7 +158,7 @@ figcaption {
 @media only screen and (max-width: 600px) {
   .banner-element-secondary {
     font-size: 8px;
-    line-height: 1px;
+    line-height: 1em;
     padding-right: 2px;
     padding-left: 2px;
   }
