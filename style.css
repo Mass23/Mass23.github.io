@@ -44,7 +44,6 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    overflow: hidden; /* Hide overflow to contain glitch effects */
     width: 100%; /* Adjust the width to make it narrower */
     height: 100px;
     margin: 0 0 0 0; 
