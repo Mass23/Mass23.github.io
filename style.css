@@ -7,6 +7,12 @@ body {
     height: 100vh;
 }
 
+@media only screen and (max-width: 600px) {
+  .body {
+    height: 60vh;
+  }
+}
+
 header {
     padding: 0px;
     color: #333; /* Dark grey text color */
@@ -53,12 +59,14 @@ figcaption {
     width: 57%;
     background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
     height: 100%;
+    font-size: 12px;
     overflow-y: auto;
 }
 
 @media only screen and (max-width: 600px) {
   .left-column-homepage {
     margin-right: 0%; 
+    font-size: 6px;
     width: 100%;  /* Full width for very small screens */
   }
 }
@@ -169,6 +177,7 @@ figcaption {
 h2 {
     font-family: 'Arial', sans-serif;
     font-weight: lighter; /* Adjust font weight if needed */
+    font-size: 15px;
     color: #242526; /* Adjust color to a lighter shade of gray */
     margin-top: 20px;
     margin-bottom: 10px;
@@ -178,6 +187,7 @@ h2 {
   .h2 {
     padding-right: 5px;
     padding-left: 2px;
+    font-size: 10px;
   }
 }
 
