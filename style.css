@@ -145,7 +145,8 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .top-banner {
-    padding: 2px; 
+    padding-right: 2px; 
+    padding-left: 2px; 
   }
 }
 
@@ -157,7 +158,7 @@ figcaption {
     font-family: "Arial", Arial, sans-serif;
     font-style: italic;
     font-stretch: condensed;
-    font-size: 16px;
+    font-size: 24px;
     color: #F0F0F0;
     padding-right: 12px;
     padding-left: 12px;
@@ -165,10 +166,10 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .banner-element-secondary {
-    font-size: 8px;
+    font-size: 12px;
     line-height: 1em;
-    padding-right: 2px;
-    padding-left: 2px;
+    padding-right: 0px;
+    padding-left: 0px;
   }
 }
 
