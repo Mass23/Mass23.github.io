@@ -56,7 +56,7 @@ h2 {
     height: 98px;
     cursor: pointer;
     z-index: 2;
-    background: linear-gradient(90deg, #F0F0F0, #242526 40%);
+    background: linear-gradient(90deg, #F0F0F0, #242526 30%);
     position: relative;
     height: 98px;
   }
