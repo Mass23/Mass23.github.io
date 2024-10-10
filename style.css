@@ -46,8 +46,8 @@ h2 {
     padding-right: 4px; 
     padding-left: 4px; 
     width: 100%; /* Adjust the width to make it narrower */
-    height: 100%;
-    margin-top: 0px; 
+    height: 100px;
+    margin-top: 0 0 0 0; 
     cursor: pointer;
     z-index: 2;
     background: linear-gradient(90deg, #F0F0F0, #242526 40%);
