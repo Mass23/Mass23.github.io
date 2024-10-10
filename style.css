@@ -97,16 +97,16 @@ h2 {
 .content {
     display: flex;
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
-    padding: 10px;
-    height: 600px;
+    padding: 20px;
+    height: 900px;
   }
 
 .left-column {
     left: 0;
-    width: 60%;
+    width: 58%;
     background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
     padding: 20px 20px 20px 20px;
-    height: 200px;
+    height: 300px;
   }
 
 .right-column {
