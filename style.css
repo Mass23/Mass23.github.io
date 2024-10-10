@@ -87,7 +87,7 @@ h2 {
 
 .content {
     display: flex;
-    margin-top: 82px; 
+    margin-top: 122px; 
     margin-bottom: 50px;
     margin-left: 50px;
     margin-right: 50px;
@@ -95,7 +95,7 @@ h2 {
 
 @media only screen and (max-width: 600px) {
   .content {
-    margin-top: 42px;
+    margin-top: 62px;
     margin-bottom: 15px;
     margin-left: 15px;
     margin-right: 15px;
@@ -217,7 +217,7 @@ h2 {
   .banner-element {
     font-weight: lighter;
     letter-spacing: -1px;
-    font-size: 10px;
+    font-size: 12px;
     line-height: 0.1em;
     padding-right: 0px;
     padding-left: 0px;
