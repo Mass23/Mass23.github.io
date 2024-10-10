@@ -1,5 +1,5 @@
 /* ############################################ */
-/* Titles */
+/* MAINS */
 .title {
     padding-left: 20px;
     width: 25%;
@@ -19,6 +19,13 @@ h2 {
     margin-top: 20px;
     margin-bottom: 10px;
     }
+
+.body {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    height: 100vh;
+    width: 100%;
+}
     
 @media only screen and (max-width: 600px) {
     .title {
@@ -35,13 +42,6 @@ h2 {
         }
     }
 
-.body {
-    margin: 0 0 0 0;
-    padding: 0 0 0 0;
-    height: 100vh;
-    width: 100%;
-}
-
 /* ############################################ */
 /* HEADER */
 .top-banner {
@@ -53,7 +53,7 @@ h2 {
     padding-left: 4px; 
     width: 100%; /* Adjust the width to make it narrower */
     height: 100px;
-    margin-top: 0 0 0 0; 
+    margin: 0 0 0 0; 
     cursor: pointer;
     z-index: 2;
     background: linear-gradient(90deg, #F0F0F0, #242526 40%);
