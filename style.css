@@ -26,6 +26,46 @@ figcaption {
 }
 
 /* ############################################ */
+/* TITLES */
+.title {
+  padding-left: 20px;
+  width: 25%;
+  font-family: 'Arial', sans-serif;
+  font-size: 40px;
+  font-style: italic;
+  font-weight: bold;
+  color: #000; /* Black text color */
+  transition: color 0.667s ease; /* Smooth transition for color changes */
+}
+
+@media only screen and (max-width: 600px) {
+.title {
+  width: 16%;
+  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 20px;
+}
+}
+
+h2 {
+  font-family: 'Arial', sans-serif;
+  font-weight: lighter; /* Adjust font weight if needed */
+  font-size: 24px;
+  color: #242526; /* Adjust color to a lighter shade of gray */
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+.h2 {
+  padding-right: 5px;
+  padding-left: 2px;
+  font-size: 12px;
+}
+}
+
+/* ############################################ */
 /* HOMEPAGE */
 .homepage {
     width: 100%;
@@ -34,7 +74,7 @@ figcaption {
 .homepage-banner-container {
     position: relative;
     width: 100%;
-    height: 82px; 
+    height: 122px; 
     margin-right: 20px;
 }
 
@@ -55,7 +95,7 @@ figcaption {
 
 @media only screen and (max-width: 600px) {
   .content {
-    margin-top: 22px;
+    margin-top: 42px;
     margin-bottom: 15px;
     margin-left: 15px;
     margin-right: 15px;
@@ -83,7 +123,7 @@ figcaption {
 @media only screen and (max-width: 600px) {
   .left-column-homepage {
     margin-right: 0%; 
-    font-size: 12px;
+    font-size: 10px;
     width: 100%;  /* Full width for very small screens */
   }
 }
@@ -145,7 +185,7 @@ figcaption {
     padding-left: 4px; 
     width: 100%; /* Adjust the width to make it narrower */
     height: 100%;
-    margin-top: 0px; /* Add the missing semicolon here */
+    margin-top: 0px; 
     cursor: pointer;
     z-index: 2;
     background: linear-gradient(90deg, #F0F0F0, #242526 40%);
@@ -181,46 +221,6 @@ figcaption {
     line-height: 0.1em;
     padding-right: 0px;
     padding-left: 0px;
-  }
-}
-
-/* ############################################ */
-/* TITLES */
-.title {
-    padding-left: 20px;
-    width: 25%;
-    font-family: 'Arial', sans-serif;
-    font-size: 40px;
-    font-style: italic;
-    font-weight: bold;
-    color: #000; /* Black text color */
-    transition: color 0.667s ease; /* Smooth transition for color changes */
-}
-
-@media only screen and (max-width: 600px) {
-  .title {
-    width: 16%;
-    padding-left: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    font-size: 18px;
-  }
-}
-
-h2 {
-    font-family: 'Arial', sans-serif;
-    font-weight: lighter; /* Adjust font weight if needed */
-    font-size: 24px;
-    color: #242526; /* Adjust color to a lighter shade of gray */
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
-
-@media only screen and (max-width: 600px) {
-  .h2 {
-    padding-right: 5px;
-    padding-left: 2px;
-    font-size: 12px;
   }
 }
 
