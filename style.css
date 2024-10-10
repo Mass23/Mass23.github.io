@@ -29,11 +29,13 @@ figcaption {
     position: relative;
     width: 100%;
     height: 50px; 
+    margin-right: 20px;
 }
 
 @media only screen and (max-width: 600px) {
   .left-column-homepage {
     height: 15px;
+    margin-right: 2px;
   }
 }
 
