@@ -53,7 +53,6 @@ h2 {
     background: linear-gradient(90deg, #F0F0F0, #242526 40%);
     padding: 0px;
     position: relative;
-    overflow: hidden;
   }
   
   .top-banner a:hover {
