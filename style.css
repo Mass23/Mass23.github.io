@@ -51,8 +51,8 @@ h2 {
     align-items: center;
     width: 100%; /* Adjust the width to make it narrower */
     height: 98px;
-    margin: 0px 0px 0px 0px; 
-    padding: 2.5% 2.5% 2.5% 2.5%;
+    margin: 0; 
+    padding: 0;
     cursor: pointer;
     z-index: 2;
     background: linear-gradient(90deg, #F0F0F0, #242526 40%);
@@ -97,8 +97,8 @@ h2 {
 .content {
     display: flex;
     background: linear-gradient(to bottom, #2946FF, #242526 20%);
-    margin: 0 0 0 0;
-    padding: 2.5% 2.5% 2.5% 2.5%;
+    margin: 0;
+    padding: 0;
     top: 100px;
   }
 
