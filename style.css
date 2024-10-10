@@ -5,6 +5,11 @@
     padding: 0;
 }
 
+body {
+    margin: 0;
+    padding: 0;
+}
+
 .title {
     padding-left: 20px;
     width: 25%;
@@ -22,11 +27,6 @@ h2 {
     font-size: 24px;
     color: #242526; /* Adjust color to a lighter shade of gray */
     }
-
-.body {
-    margin: 0;
-    padding: 0;
-}
     
 @media only screen and (max-width: 600px) {
     .title {
