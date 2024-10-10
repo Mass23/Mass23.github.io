@@ -86,6 +86,7 @@ h2 {
 /* CONTENT */
 
 .content {
+  display: flex;
   background: linear-gradient(to bottom, #2946FF, #242526 20%);
   margin: 0;
   padding: 0;
