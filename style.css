@@ -221,10 +221,10 @@ nav ul {
   /* MISC */
   
   #hrid {
-    display: inline-block;
     width: 100%;
     background:  #ff4500 50%;
-    top: 100px;
+    border: 0px;
+    top: 98px;
     height: 2px;
   }
   
