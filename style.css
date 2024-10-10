@@ -210,14 +210,14 @@ figcaption {
     padding-left: 5px;
     padding-top: 5px;
     padding-bottom: 5px;
-    font-size: 16px;
+    font-size: 18px;
   }
 }
 
 h2 {
     font-family: 'Arial', sans-serif;
     font-weight: lighter; /* Adjust font weight if needed */
-    font-size: 24px;
+    font-size: 22px;
     color: #242526; /* Adjust color to a lighter shade of gray */
     margin-top: 20px;
     margin-bottom: 10px;
