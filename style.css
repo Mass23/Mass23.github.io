@@ -20,6 +20,7 @@ body {
     font-weight: bold;
     color: #000; /* Black text color */
     transition: color 0.667s ease; /* Smooth transition for color changes */
+    align-items: center;
     }
         
 h2 {
