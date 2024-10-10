@@ -83,7 +83,7 @@ h2 {
     padding-right: 0px;
     padding-left: 0px;
   }
-
+}
 /* ############################################ */
 /* CONTENT */
 
@@ -93,6 +93,7 @@ h2 {
     margin: 0;
     padding: 0;
     height: 100vh;
+    width: 100%;
   }
 
 .left-column {
@@ -119,14 +120,14 @@ h2 {
     background: #D0D6DB; /* Shaded background color when not hovered */
   }
   
-  .right-column figure {
+.right-column figure {
     margin-bottom: 20px; /* Add bottom margin to each figure */
   }
   
-  .right-column img {
+.right-column img {
     max-width: 100%; /* Ensure images don't exceed their container width */
   }
-  .right-column img {
+.right-column img {
     max-width: 100%; /* Ensure images don't exceed their container width */
   }
   
@@ -186,7 +187,7 @@ nav ul {
     cursor: pointer;
   }
   
-  .title-swarm {
+.title-swarm {
     font-family: 'Arial', sans-serif;
     font-style: italic;
     font-weight: bold;
@@ -200,7 +201,7 @@ nav ul {
     color: #ff4500; /* Adjust title color */
   }
   
-  .title-swarm h1 {
+.title-swarm h1 {
     margin: 0;
     margin-left: 20px;
     font-size: 24px;
@@ -211,7 +212,7 @@ nav ul {
     margin-left: 20px;
   }
   
-  .title-swarm .line {
+ .title-swarm .line {
     position: absolute;
     width: 100%;
     height: 2px;
