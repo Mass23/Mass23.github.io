@@ -45,11 +45,10 @@ h2 {
     justify-content: space-between;
     align-items: center;
     overflow: hidden; /* Hide overflow to contain glitch effects */
-    padding-right: 4px; 
-    padding-left: 4px; 
     width: 100%; /* Adjust the width to make it narrower */
     height: 100px;
     margin: 0 0 0 0; 
+    padding: 0 0 0 0;
     cursor: pointer;
     z-index: 2;
     background: linear-gradient(90deg, #F0F0F0, #242526 40%);
