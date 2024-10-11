@@ -127,7 +127,7 @@ h2 {
 .right-column {
     right: 0;
     align-items: center;
-    height: 100%;
+    height: calc(100% - 80px);
     width: 35%; /* Adjust the width to your desired size */
     margin: 0;
     padding: 30px;
