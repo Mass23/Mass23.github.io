@@ -54,7 +54,7 @@ h2 {
     align-items: center;
     top: 0px;
     width: 100%;
-    height: 68px;
+    height: 58px;
     cursor: pointer;
     z-index: 2;
     background: linear-gradient(90deg, #F0F0F0, #242526 35%);
@@ -152,6 +152,7 @@ h2 {
   .right-column {
     width: 0%;
     padding: 0px;
+    top: 50px;
   }
   }
 
