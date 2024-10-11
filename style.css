@@ -195,13 +195,10 @@ nav ul {
     left: 50%;
     transform: translateY(-50%);
     z-index: 1;
-    margin-left: 20px;
     color: #ff4500; /* Adjust title color */
   }
   
 .title-swarm h1 {
-    margin: 0;
-    margin-left: 20px;
     font-size: 24px;
     color: #ff4500; /* Adjust title color */
     font-weight: bold;
