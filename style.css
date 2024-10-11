@@ -147,6 +147,7 @@ h2 {
 
   .left-column {
     font-size: 5px;
+    padding: 15px;
     width: 100%;  /* Full width for very small screens */
   }
 
