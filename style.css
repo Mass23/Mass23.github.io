@@ -38,6 +38,7 @@ h2 {
         padding-bottom: 5px;
         font-size: 20px;
         }
+    
     .h2 {
         padding-right: 5px;
         padding-left: 2px;
@@ -78,14 +79,14 @@ h2 {
 @media only screen and (max-width: 600px) {
     
   .top-banner {
-    height: 30px;
+    height: 32px;
     background: linear-gradient(90deg, #F0F0F0, #242526 30%);
     }
     
   .banner-element {
     font-weight: lighter;
     letter-spacing: -1px;
-    font-size: 12px;
+    font-size: 10px;
     line-height: 0.1em;
     padding-right: 0px;
     padding-left: 0px;
@@ -139,6 +140,7 @@ h2 {
 @media only screen and (max-width: 600px) {
   .content {
     padding: 5px;
+    top: 34px;
     }
 
   .left-column {
