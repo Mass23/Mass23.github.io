@@ -114,10 +114,11 @@ h2 {
 
 .left-column {
     left: 0;
-    width: calc(65% - 60px);
+    width: 65%;
     background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
     padding: 30px;
     height: 330px;
+    margin-right: calc(35% + 30px)
   }
 
 .right-column {
