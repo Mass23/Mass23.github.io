@@ -36,7 +36,7 @@ h2 {
         padding-left: 5px;
         padding-top: 5px;
         padding-bottom: 5px;
-        font-size: 20px;
+        font-size: 16px;
         line-height: 0.66em;
         }
     
@@ -198,7 +198,7 @@ nav ul {
   }
   
 .title-swarm h1 {
-    font-size: 24px;
+    font-size: 40px;
     color: #ff4500; /* Adjust title color */
     font-weight: bold;
     position: relative;
