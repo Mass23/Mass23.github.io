@@ -161,8 +161,7 @@ h2 {
   }
 
   .right-column {
-    width: 0%;
-    padding: 0px;
+    display: none;
   }
   }
 
