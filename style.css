@@ -79,7 +79,7 @@ h2 {
 @media only screen and (max-width: 600px) {
     
   .top-banner {
-    height: 32px;
+    height: 49px;
     background: linear-gradient(90deg, #F0F0F0, #242526 30%);
     }
     
@@ -140,7 +140,7 @@ h2 {
 @media only screen and (max-width: 600px) {
   .content {
     padding: 5px;
-    top: 34px;
+    top: 51px;
     }
 
   .left-column {
