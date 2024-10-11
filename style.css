@@ -110,6 +110,7 @@ h2 {
     background: linear-gradient(to bottom, #233BD9, #242526 10%);
     height: 900px;
     width: 100%;
+    top: 80px;
     margin: 0;
     padding: 0;
 }
@@ -125,7 +126,6 @@ h2 {
 
 .right-column {
     right: 0;
-    top: 80px;
     align-items: center;
     height: 770px;
     width: 35%; /* Adjust the width to your desired size */
