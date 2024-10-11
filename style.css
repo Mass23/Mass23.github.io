@@ -55,7 +55,7 @@ h2 {
     align-items: center;
     top: 0px;
     width: 100%;
-    height: 68px;
+    height: 78px;
     cursor: pointer;
     z-index: 2;
     background: linear-gradient(90deg, #F0F0F0, #242526 35%);
@@ -102,7 +102,7 @@ h2 {
     background: linear-gradient(to bottom, #233BD9, #242526 10%);
     padding: 30px;
     height: 900px;
-    top: 70px;
+    top: 80px;
   }
 
 .left-column {
@@ -119,7 +119,7 @@ h2 {
     width: 34%; /* Adjust the width to your desired size */
     height: 915px;
     padding: 20px 20px 20px 20px;
-    top: 70px;
+    top: 90px;
     background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
 }
 
