@@ -107,7 +107,7 @@ h2 {
 
 .left-column {
     left: 0;
-    width: calc(65% - 60px);
+    width: calc(60% - 30px);
     background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
     padding: 30px;
     height: 330px;
@@ -117,7 +117,7 @@ h2 {
     position: absolute; /* Set absolute positioning for the right column */
     align-items: center;
     right: 0; /* Position it at the right */
-    width: 35%; /* Adjust the width to your desired size */
+    width: 40%; /* Adjust the width to your desired size */
     height: 915px;
     padding: 30px;
     top: 80px;
