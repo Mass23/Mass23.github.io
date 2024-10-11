@@ -37,6 +37,7 @@ h2 {
         padding-top: 5px;
         padding-bottom: 5px;
         font-size: 20px;
+        line-height: 0.1em;
         }
     
     .h2 {
@@ -87,7 +88,6 @@ h2 {
     font-weight: lighter;
     letter-spacing: -1px;
     font-size: 10px;
-    line-height: 0.1em;
     padding-right: 0px;
     padding-left: 0px;
   }
