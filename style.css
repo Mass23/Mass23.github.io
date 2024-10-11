@@ -9,6 +9,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
+    font-size: 14px;
 }
 
 .title {
@@ -31,6 +32,10 @@ h2 {
     }
     
 @media only screen and (max-width: 600px) {
+    .body {
+        font-size: 10px;
+    }
+    
     .title {
         width: 33%;
         padding-left: 5px;
@@ -43,7 +48,7 @@ h2 {
     .h2 {
         padding-right: 5px;
         padding-left: 2px;
-        font-size: 12px;
+        font-size: 10px;
         }
     }
 
@@ -88,7 +93,7 @@ h2 {
   .banner-element {
     font-weight: lighter;
     letter-spacing: -1px;
-    font-size: 10px;
+    font-size: 12px;
     padding-right: 0px;
     padding-left: 0px;
   }
