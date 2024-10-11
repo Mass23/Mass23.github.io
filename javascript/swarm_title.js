@@ -11,6 +11,19 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => { clearTitleSwarm(); }, 0);
         setTimeout(() => { restoreText(bannerTitle); }, 0);
     });
+
+    // Function to run every 5 seconds (specific to smartphones)
+    function runOnSmartphone() {
+        console.log("Running this code every 5 seconds on smartphones.");
+        replaceText(bannerTitle, 'Massimo Bourquin');
+        setTimeout(() => { restoreText(bannerTitle); }, 0);
+    }
+
+    // Check if the device is a smartphone using max-width media query
+    if (window.matchMedia("(max-width: 600px)").matches) {
+        // Run the function every 5 seconds (5000ms) only on smartphones
+        setInterval(runOnSmartphone, 5000);
+    }
 });
 
 function createTitleSwarm(mainTitle) {
