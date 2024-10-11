@@ -215,7 +215,6 @@ nav ul {
     height: 2px;
     background-color: #ff4500; /* Adjust line color */
     top: 50%;
-    left: 20px;
     transform-origin: left;
     z-index: 0;
   }
