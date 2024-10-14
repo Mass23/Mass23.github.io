@@ -107,7 +107,7 @@ h2 {
 .content {
     display: flex;
     background: linear-gradient(to bottom, #233BD9, #242526 10%);
-    height: 900px;
+    height: 120vh;
     width: 100%;
     top: 80px;
     margin: 0;
