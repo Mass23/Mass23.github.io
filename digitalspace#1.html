@@ -55,8 +55,8 @@
 
         // Variables for sprites
         const sprites = [];
-        const MAX_SPRITES = 1000; // Limit the number of sprites
-        const spriteInterval = 500; // Generate sprites every 5 seconds
+        const MAX_SPRITES = 30; // Limit the number of sprites
+        const spriteInterval = 5000; // Generate sprites every 5 seconds
 
         // Function to create "HELLO WORLD" sprite
         function createHelloWorldSprite() {
@@ -155,17 +155,36 @@
             }, spriteInterval); // Generate sprites every 5 seconds
         };
 
-        // Throttled mouse control for movement
-        let lastMouseMoveTime = 0;
+        // Variables for mouse interaction
+        let isMouseDown = false;
+        let previousMouseX = 0;
+        let previousMouseY = 0;
+
+        // Mouse down event to start rotation
+        document.addEventListener('mousedown', (event) => {
+            isMouseDown = true;
+            previousMouseX = event.clientX;
+            previousMouseY = event.clientY;
+        });
+
+        // Mouse move event to change viewer angle
         document.addEventListener('mousemove', (event) => {
-            const now = Date.now();
-            if (now - lastMouseMoveTime > 100) { // Limit the frequency of updates
-                lastMouseMoveTime = now;
-                const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-                const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-                const direction = new THREE.Vector3(mouseX, mouseY, 0.5).unproject(camera).sub(camera.position).normalize();
-                camera.position.add(direction.multiplyScalar(-1)); // Move opposite to mouse direction
+            if (isMouseDown) {
+                const deltaX = event.clientX - previousMouseX;
+                const deltaY = event.clientY - previousMouseY;
+
+                // Update camera rotation based on mouse movement
+                camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity as needed
+                camera.rotation.x -= deltaY * 0.005; // Adjust sensitivity as needed
+
+                previousMouseX = event.clientX;
+                previousMouseY = event.clientY;
             }
+        });
+
+        // Mouse up event to stop rotation
+        document.addEventListener('mouseup', () => {
+            isMouseDown = false;
         });
 
         // Animation loop
