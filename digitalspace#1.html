@@ -35,9 +35,10 @@
             console.log('Texture loaded:', texture); // Log when texture is loaded
 
             // Create glitches on the image before using it
-            applyGlitchEffect(texture.image, () => {
-                sphereMaterial.map = texture; // Apply the glitched texture to the sphere
+            applyGlitchEffect(texture.image, (glitchedTexture) => {
+                sphereMaterial.map = glitchedTexture; // Apply the glitched texture to the sphere
                 sphereMaterial.needsUpdate = true; // Mark the material as needing an update
+                startGlitching(glitchedTexture); // Start periodic glitching
             });
         }, undefined, (error) => {
             console.error('Error loading texture:', error); // Log errors
@@ -51,10 +52,9 @@
 
         // Function to apply glitch effect directly to the loaded image
         function applyGlitchEffect(image, callback) {
-            // Draw the loaded image onto the glitch canvas
             glitchContext.clearRect(0, 0, glitchCanvas.width, glitchCanvas.height);
             glitchContext.drawImage(image, 0, 0, glitchCanvas.width, glitchCanvas.height);
-
+            
             // Create random glitches with larger patches
             const glitchCount = 15; // Number of glitches
             for (let i = 0; i < glitchCount; i++) {
@@ -78,8 +78,20 @@
                 glitchContext.putImageData(imageData, glitchX, glitchY);
             }
 
-            // Call the callback function to indicate the glitching is done
-            callback();
+            // Create a texture from the glitched canvas
+            const glitchedTexture = new THREE.Texture(glitchCanvas);
+            glitchedTexture.needsUpdate = true; // Update the texture
+            callback(glitchedTexture); // Call the callback with the glitched texture
+        }
+
+        // Function to start periodic glitching of the texture
+        function startGlitching(originalTexture) {
+            setInterval(() => {
+                applyGlitchEffect(originalTexture.image, (glitchedTexture) => {
+                    sphereMaterial.map = glitchedTexture; // Update the material map
+                    sphereMaterial.needsUpdate = true; // Mark the material as needing an update
+                });
+            }, 2000); // Glitch every 2 seconds
         }
 
         // Variables for sprites
@@ -172,20 +184,21 @@
             }
         }
 
-        // Mouse movement handling
+        // Mouse movement tracking
         let isMouseDown = false;
         let previousMouseX = 0;
         let previousMouseY = 0;
 
+        // Mouse down event to start rotation
         document.addEventListener('mousedown', (event) => {
             isMouseDown = true;
             previousMouseX = event.clientX;
             previousMouseY = event.clientY;
         });
 
+        // Mouse move event to rotate camera
         document.addEventListener('mousemove', (event) => {
             if (!isMouseDown) return;
-
             const deltaX = event.clientX - previousMouseX;
             const deltaY = event.clientY - previousMouseY;
 
