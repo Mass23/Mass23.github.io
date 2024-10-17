@@ -21,7 +21,7 @@
 
         // Sphere geometry
         const sphereGeometry = new THREE.SphereGeometry(100, 32, 32);
-        
+
         // Load the texture for the sphere
         const textureLoader = new THREE.TextureLoader();
         textureLoader.load('images/me.webp', (image) => {
@@ -87,7 +87,7 @@
             helloWorldSprites.push(createHelloWorldSpriteTexture(i));
         }
 
-        // Create sprite textures for MeSprites
+        // Declare meImage here, before using it
         const meImage = new Image();
         meImage.src = 'images/me.webp';
         meImage.onload = () => {
@@ -149,6 +149,36 @@
             particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
             particleSystem = new THREE.Points(particleGeometry, particleMaterial);
             scene.add(particleSystem);
+        }
+
+        // Declare spriteInterval before use
+        let spriteInterval; 
+
+        // Function to start creating and adding sprites
+        function startSpriteCreation() {
+            let spriteIndex = 0;
+            spriteInterval = setInterval(() => {
+                if (spriteIndex >= spritePoolSize) {
+                    clearInterval(spriteInterval); // Stop after all sprites are added
+                    return;
+                }
+
+                // Choose a random sprite type
+                const randomSprite = Math.random() < 0.5 ? helloWorldSprites[spriteIndex] : meSprites[spriteIndex];
+                
+                const spriteMaterial = new THREE.SpriteMaterial({ map: randomSprite });
+                const sprite = new THREE.Sprite(spriteMaterial);
+                
+                sprite.position.set(
+                    (Math.random() - 0.5) * 200, 
+                    (Math.random() - 0.5) * 200, 
+                    (Math.random() - 0.5) * 200
+                );
+                
+                sprite.scale.set(5, 5, 1); // Scale of the sprites
+                scene.add(sprite);
+                spriteIndex++;
+            }, 100); // Adjust the interval as needed
         }
 
         // Animation loop
