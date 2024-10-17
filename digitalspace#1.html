@@ -22,23 +22,35 @@
         // Sphere geometry
         const sphereGeometry = new THREE.SphereGeometry(100, 32, 32);
 
-        // Load the texture for the sphere
-        const textureLoader = new THREE.TextureLoader();
-        textureLoader.load('images/me.webp', (image) => {
-            // Shuffle the image pixels and set it as the texture for the sphere
-            shuffleImage(image, (shuffledTexture) => {
-                const sphereMaterial = new THREE.MeshBasicMaterial({ map: shuffledTexture, side: THREE.BackSide });
-                const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-                scene.add(sphere);
-                
-                startSpriteCreation(); // Start creating sprites after loading the texture
-            });
-        }, undefined, (error) => {
-            console.error('Error loading texture:', error); // Log errors
-        });
+        // Declare spriteInterval before use
+        let spriteInterval; 
 
-        // Set camera position to be inside the sphere
-        camera.position.set(0, 0, 0);
+        // Function to start creating and adding sprites
+        function startSpriteCreation() {
+            let spriteIndex = 0;
+            spriteInterval = setInterval(() => {
+                if (spriteIndex >= spritePoolSize) {
+                    clearInterval(spriteInterval); // Stop after all sprites are added
+                    return;
+                }
+
+                // Choose a random sprite type
+                const randomSprite = Math.random() < 0.5 ? helloWorldSprites[spriteIndex] : meSprites[spriteIndex];
+                
+                const spriteMaterial = new THREE.SpriteMaterial({ map: randomSprite });
+                const sprite = new THREE.Sprite(spriteMaterial);
+                
+                sprite.position.set(
+                    (Math.random() - 0.5) * 200, 
+                    (Math.random() - 0.5) * 200, 
+                    (Math.random() - 0.5) * 200
+                );
+                
+                sprite.scale.set(5, 5, 1); // Scale of the sprites
+                scene.add(sprite);
+                spriteIndex++;
+            }, 100); // Adjust the interval as needed
+        }
 
         // Function to shuffle image pixels
         function shuffleImage(image, callback) {
@@ -76,6 +88,24 @@
 
             callback(shuffledTexture); // Pass the shuffled texture back
         }
+
+        // Load the texture for the sphere
+        const textureLoader = new THREE.TextureLoader();
+        textureLoader.load('images/me.webp', (image) => {
+            // Shuffle the image pixels and set it as the texture for the sphere
+            shuffleImage(image, (shuffledTexture) => {
+                const sphereMaterial = new THREE.MeshBasicMaterial({ map: shuffledTexture, side: THREE.BackSide });
+                const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                scene.add(sphere);
+                
+                startSpriteCreation(); // Start creating sprites after loading the texture
+            });
+        }, undefined, (error) => {
+            console.error('Error loading texture:', error); // Log errors
+        });
+
+        // Set camera position to be inside the sphere
+        camera.position.set(0, 0, 0);
 
         // Sprite Pools
         const helloWorldSprites = [];
@@ -149,36 +179,6 @@
             particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
             particleSystem = new THREE.Points(particleGeometry, particleMaterial);
             scene.add(particleSystem);
-        }
-
-        // Declare spriteInterval before use
-        let spriteInterval; 
-
-        // Function to start creating and adding sprites
-        function startSpriteCreation() {
-            let spriteIndex = 0;
-            spriteInterval = setInterval(() => {
-                if (spriteIndex >= spritePoolSize) {
-                    clearInterval(spriteInterval); // Stop after all sprites are added
-                    return;
-                }
-
-                // Choose a random sprite type
-                const randomSprite = Math.random() < 0.5 ? helloWorldSprites[spriteIndex] : meSprites[spriteIndex];
-                
-                const spriteMaterial = new THREE.SpriteMaterial({ map: randomSprite });
-                const sprite = new THREE.Sprite(spriteMaterial);
-                
-                sprite.position.set(
-                    (Math.random() - 0.5) * 200, 
-                    (Math.random() - 0.5) * 200, 
-                    (Math.random() - 0.5) * 200
-                );
-                
-                sprite.scale.set(5, 5, 1); // Scale of the sprites
-                scene.add(sprite);
-                spriteIndex++;
-            }, 100); // Adjust the interval as needed
         }
 
         // Animation loop
