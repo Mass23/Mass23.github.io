@@ -40,17 +40,25 @@
         glitchCanvas.height = 512;
 
         // Function to update the sphere texture
-        function updateSphereTexture(texture) {
+        function updateSphereTexture() {
+            const texture = new THREE.Texture(glitchCanvas);
+            texture.needsUpdate = true;
             sphereMaterial.map = texture;
             sphereMaterial.needsUpdate = true;
         }
 
         // Function to apply glitch effect
         function applyGlitchEffect() {
-            glitchContext.drawImage(meImage, 0, 0, glitchCanvas.width, glitchCanvas.height);
-            const glitchCount = 30; // Number of glitches to apply
+            // Draw the previous frame with a fade-out effect
+            glitchContext.globalAlpha = 0.8; // Adjust this value for more or less fade
+            glitchContext.drawImage(glitchCanvas, 0, 0, glitchCanvas.width, glitchCanvas.height);
 
-            // Randomly distort parts of the image
+            // Draw the new glitch image
+            glitchContext.globalAlpha = 1.0; // Reset alpha for new glitch
+            glitchContext.drawImage(meImage, 0, 0, glitchCanvas.width, glitchCanvas.height);
+
+            // Create random glitches
+            const glitchCount = 30; // Number of glitches to apply
             for (let i = 0; i < glitchCount; i++) {
                 const x = Math.floor(Math.random() * glitchCanvas.width);
                 const y = Math.floor(Math.random() * glitchCanvas.height);
@@ -64,37 +72,13 @@
                 glitchContext.putImageData(imageData, glitchX, glitchY);
             }
 
-            // Create a new texture with the glitched canvas
-            const newTexture = new THREE.Texture(glitchCanvas);
-            newTexture.needsUpdate = true;
-
-            // Fade out the current texture and fade in the new one
-            const oldTexture = sphereMaterial.map;
-
-            // Slow transition effect
-            let opacity = 0; // Start from 0 opacity
-            const fadeDuration = 1000; // Duration of the fade in milliseconds
-            const fadeStep = 16; // Duration for each fade step in milliseconds
-
-            const fadeInterval = setInterval(() => {
-                if (opacity < 1) {
-                    opacity += fadeStep / fadeDuration; // Increment opacity
-                    sphereMaterial.transparent = true; // Enable transparency
-                    sphereMaterial.opacity = opacity; // Set new opacity
-                } else {
-                    clearInterval(fadeInterval);
-                    // Set the new texture once fade in is complete
-                    updateSphereTexture(newTexture);
-                    sphereMaterial.opacity = 1; // Ensure full opacity
-                    oldTexture.dispose(); // Dispose of the old texture to free memory
-                }
-            }, fadeStep);
+            updateSphereTexture(); // Update the sphere's texture with the new glitch canvas
         }
 
         // Create initial glitches upon loading
         meImage.onload = function() {
             // Create the initial glitch and then continue every second
-            for (let i = 0; i < 10; i++) applyGlitchEffect(); // Apply 10 initial glitches
+            applyGlitchEffect();
             setInterval(applyGlitchEffect, 1000); // Continue to create glitches every second
         };
 
@@ -208,29 +192,37 @@
         let previousMouseY = 0;
 
         // Mouse down event to start rotation
-        window.addEventListener('mousedown', (event) => {
+        document.addEventListener('mousedown', (event) => {
             isMouseDown = true;
             previousMouseX = event.clientX;
             previousMouseY = event.clientY;
         });
 
-        // Mouse up event to stop rotation
-        window.addEventListener('mouseup', () => {
-            isMouseDown = false;
-        });
-
-        // Mouse move event to change camera angle
-        window.addEventListener('mousemove', (event) => {
+        // Mouse move event to change viewer angle
+        document.addEventListener('mousemove', (event) => {
             if (isMouseDown) {
                 const deltaX = event.clientX - previousMouseX;
                 const deltaY = event.clientY - previousMouseY;
 
-                camera.rotation.y -= deltaX * 0.005; // Rotate around y-axis
-                camera.rotation.x -= deltaY * 0.005; // Rotate around x-axis
+                // Update camera rotation based on mouse movement
+                camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity
+                camera.rotation.x -= deltaY * 0.005; // Adjust sensitivity
             }
 
             previousMouseX = event.clientX;
             previousMouseY = event.clientY;
+        });
+
+        // Mouse up event to stop rotation
+        document.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
+
+        // Resize event
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
         // Animation loop
@@ -239,13 +231,6 @@
             renderer.render(scene, camera);
         }
         animate();
-
-        // Resize handler
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
     </script>
 </body>
 </html>
