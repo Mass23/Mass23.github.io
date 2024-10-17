@@ -43,7 +43,7 @@
             });
         }
 
-        setInterval(updateSphereTexture, 1000); // Update every second
+        setInterval(updateSphereTexture, 2000); // Update every 2 seconds
 
         // Function to create "HELLO WORLD" sprite
         function createHelloWorldSprite() {
@@ -65,39 +65,39 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 50, (Math.random() - 0.5) * 50, -95);
+            sprite.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, -90); // Closer to the sphere surface
             scene.add(sprite);
         }
 
-        // Function to create small pixel sprites
+        // Function to create larger pixel sprites
         function createPixelSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 32;
-            canvas.height = 32;
+            canvas.width = 64;  // Increased size
+            canvas.height = 64;
 
             // Draw a random pixel sample from the image
-            const x = Math.floor(Math.random() * 100);
-            const y = Math.floor(Math.random() * 100);
-            context.drawImage(document.querySelector('img#meImage'), x, y, 32, 32, 0, 0, 32, 32);
+            const x = Math.floor(Math.random() * (meImage.width - 64));
+            const y = Math.floor(Math.random() * (meImage.height - 64));
+            context.drawImage(meImage, x, y, 64, 64, 0, 0, 64, 64);
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 50, (Math.random() - 0.5) * 50, -95);
+            sprite.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, -90); // Closer to the sphere surface
             scene.add(sprite);
         }
 
         // Create the me.webp image for sampling pixels
         const meImage = new Image();
         meImage.src = 'images/me.webp';
-        meImage.id = 'meImage';
         meImage.onload = function() {
+            // Create sprites every 3 seconds
             setInterval(() => {
                 createHelloWorldSprite();
                 createPixelSprite();
-            }, 1000); // Generate sprites every second
+            }, 3000); // Generate sprites every 3 seconds
         };
 
         // Mouse control for movement
