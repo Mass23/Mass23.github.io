@@ -29,7 +29,7 @@
         // Set camera position
         camera.position.set(0, 0, 0);
 
-        // Load the texture
+        // Load the texture for glitches
         const textureLoader = new THREE.TextureLoader();
         const meImage = textureLoader.load('images/me.webp', (texture) => {
             console.log('Texture loaded:', texture); // Log when texture is loaded
@@ -43,6 +43,32 @@
         }, undefined, (error) => {
             console.error('Error loading texture:', error); // Log errors
         });
+
+        // Function to create a coarse gray noise texture
+        function createGrayNoiseTexture(width, height) {
+            const noiseCanvas = document.createElement('canvas');
+            const noiseContext = noiseCanvas.getContext('2d');
+            noiseCanvas.width = width;
+            noiseCanvas.height = height;
+
+            const imageData = noiseContext.createImageData(width, height);
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                const gray = Math.random() * 255; // Random gray value
+                imageData.data[i] = gray;     // R
+                imageData.data[i + 1] = gray; // G
+                imageData.data[i + 2] = gray; // B
+                imageData.data[i + 3] = 255;  // A
+            }
+            noiseContext.putImageData(imageData, 0, 0);
+            return new THREE.Texture(noiseCanvas);
+        }
+
+        // Create the gray noise texture and set it as background
+        const noiseTexture = createGrayNoiseTexture(512, 512);
+        noiseTexture.needsUpdate = true;
+
+        // Set the background of the scene to gray noise
+        scene.background = noiseTexture;
 
         // Create a canvas for glitches
         const glitchCanvas = document.createElement('canvas');
@@ -167,17 +193,17 @@
             }
         }
 
-        // Function to create a sprite from the me.webp image
+        // Function to create me.webp sprites
         function createMeSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 512;  // Increased size of the sprite
-            canvas.height = 512;
+            canvas.width = 256; // Increased size
+            canvas.height = 256;
 
-            // Draw a random section of the me.webp image
-            const x = Math.floor(Math.random() * (meImage.image.width - canvas.width));
-            const y = Math.floor(Math.random() * (meImage.image.height - canvas.height));
-            context.drawImage(meImage.image, x, y, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+            // Draw a random part of the image
+            const x = Math.floor(Math.random() * (meImage.image.width - 256));
+            const y = Math.floor(Math.random() * (meImage.image.height - 256));
+            context.drawImage(meImage.image, x, y, 256, 256, 0, 0, 256, 256);
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
