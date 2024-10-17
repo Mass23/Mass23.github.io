@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Sphere</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        // Initialize Scene, Camera, and Renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Set camera position
+        camera.position.z = 5;
+
+        // Add orbit controls for mouse interaction
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Smooth camera movement
+        controls.dampingFactor = 0.25;
+        controls.enableZoom = true;
+
+        // Create a sphere geometry and material with an image texture
+        const sphereRadius = 2;
+        const sphereSegments = 64;
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load('images/me.webp'); // Replace with your image path
+
+        // Create particle material for each "pixel"
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.05, 
+            map: texture, 
+            transparent: true
+        });
+
+        // Generate particle geometry for the sphere
+        const particlesGeometry = new THREE.SphereGeometry(sphereRadius, sphereSegments, sphereSegments);
+
+        // Convert each vertex to a particle
+        const particles = new THREE.Points(particlesGeometry, particleMaterial);
+        scene.add(particles);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();  // Update controls (mouse interaction)
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle resizing
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
