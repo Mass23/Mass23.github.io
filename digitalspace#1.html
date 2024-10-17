@@ -32,9 +32,13 @@
         // Load the texture
         const textureLoader = new THREE.TextureLoader();
         const meImage = textureLoader.load('images/me.webp', (texture) => {
-            meImage.texture = texture;
+            // Callback when texture is loaded
+            meImage.texture = texture; // Store texture in meImage
             console.log('Texture loaded:', texture); // Log when texture is loaded
+            
+            // Create initial glitches and sprites once the texture is loaded
             applyInitialGlitches();
+            createInitialSprites();
         }, undefined, (error) => {
             console.error('Error loading texture:', error); // Log errors
         });
@@ -90,6 +94,15 @@
                 applyGlitchEffect();
             }
             setInterval(applyGlitchEffect, 1000); // Continue to create glitches every second
+        }
+
+        // Create initial sprites
+        function createInitialSprites() {
+            for (let i = 0; i < 10; i++) {
+                createHelloWorldSprite();
+                createPixelSprite();
+                createMeSprite(); // Create the me.webp sprite
+            }
         }
 
         // Variables for sprites
@@ -184,17 +197,12 @@
 
         // Create sprites every 5 seconds
         setInterval(() => {
-            createHelloWorldSprite();
-            createPixelSprite();
-            createMeSprite(); // Create the me.webp sprite
+            if (meImage.texture && meImage.texture.image) { // Ensure texture is loaded before creating
+                createHelloWorldSprite();
+                createPixelSprite();
+                createMeSprite(); // Create the me.webp sprite
+            }
         }, spriteInterval); // Generate sprites every 5 seconds
-
-        // Create an initial batch of sprites
-        for (let i = 0; i < 10; i++) {
-            createHelloWorldSprite();
-            createPixelSprite();
-            createMeSprite();
-        }
 
         // Mouse movement for camera rotation
         let isMouseDown = false;
