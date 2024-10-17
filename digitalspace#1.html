@@ -94,8 +94,8 @@
         function createHelloWorldSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 512; // Increased size
-            canvas.height = 512;
+            canvas.width = 1024; // Increased size
+            canvas.height = 1024;
 
             // Draw a noisy square with "HELLO WORLD"
             context.fillStyle = 'rgba(200, 200, 200, 0.5)';
@@ -111,9 +111,8 @@
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
 
-            // Position the sprite close to the sphere's inner surface
-            const distanceFromCenter = SPHERE_RADIUS - 0.5 * canvas.width; // Adjusted to position near the border
-            sprite.position.set((Math.random() - 0.5) * distanceFromCenter * 2, (Math.random() - 0.5) * distanceFromCenter * 2, -distanceFromCenter); 
+            // Position the sprite randomly around the sphere's inner surface
+            positionSprite(sprite);
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -133,8 +132,8 @@
 
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 128;  // Increased size
-            canvas.height = 128;
+            canvas.width = 256;  // Increased size
+            canvas.height = 256;
 
             // Draw a random pixel sample from the image
             const x = Math.floor(Math.random() * (meImage.width - 256));
@@ -146,9 +145,8 @@
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
 
-            // Position the sprite close to the sphere's inner surface
-            const distanceFromCenter = SPHERE_RADIUS - 0.5 * canvas.width; // Adjusted to position near the border
-            sprite.position.set((Math.random() - 0.5) * distanceFromCenter * 2, (Math.random() - 0.5) * distanceFromCenter * 2, -distanceFromCenter); 
+            // Position the sprite randomly around the sphere's inner surface
+            positionSprite(sprite);
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -159,17 +157,71 @@
             }
         }
 
-        // Function to start sprite creation
+        // Function to create MeSprites
+        function createMeSprite() {
+            if (!meImage.complete) {
+                // If the image isn't loaded yet, exit the function
+                return;
+            }
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 1024;  // Size of MeSprites
+            canvas.height = 1024;
+
+            // Draw a random part of the me image
+            const x = Math.floor(Math.random() * (meImage.width - 256));
+            const y = Math.floor(Math.random() * (meImage.height - 256));
+            context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
+
+            const spriteTexture = new THREE.Texture(canvas);
+            spriteTexture.needsUpdate = true;
+            const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+
+            // Position the sprite randomly around the sphere's inner surface
+            positionSprite(sprite);
+            scene.add(sprite);
+            sprites.push(sprite);
+
+            // Remove oldest sprite if limit exceeded
+            if (sprites.length > MAX_SPRITES) {
+                const oldestSprite = sprites.shift();
+                scene.remove(oldestSprite);
+            }
+        }
+
+        // Position sprite randomly around the sphere
+        function positionSprite(sprite) {
+            const distanceFromCenter = SPHERE_RADIUS - 0.5 * sprite.geometry.parameters.size; // Adjusted to position near the border
+            const theta = Math.random() * Math.PI * 2; // Random angle for rotation
+            const phi = Math.acos(Math.random() * 2 - 1); // Random angle for elevation
+
+            // Convert spherical coordinates to Cartesian
+            sprite.position.x = distanceFromCenter * Math.sin(phi) * Math.cos(theta);
+            sprite.position.y = distanceFromCenter * Math.sin(phi) * Math.sin(theta);
+            sprite.position.z = distanceFromCenter * Math.cos(phi);
+        }
+
+        // Function to start creating sprites
         function startSpriteCreation() {
             setInterval(() => {
                 createHelloWorldSprite();
                 createPixelSprite(); // Create pixel sprites in addition
+                createMeSprite(); // Create MeSprite as well
             }, spriteInterval);
         }
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
+            // Update the position of each sprite to follow the camera
+            sprites.forEach(sprite => {
+                const distanceFromCenter = SPHERE_RADIUS - 0.5 * sprite.geometry.parameters.size; // Maintain distance
+                sprite.position.normalize(); // Normalize the sprite's position vector
+                sprite.position.multiplyScalar(distanceFromCenter); // Scale to the sphere's radius
+            });
+
             renderer.render(scene, camera);
         }
         animate();
