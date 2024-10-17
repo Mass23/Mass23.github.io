@@ -118,14 +118,14 @@
         function createHelloWorldSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 256; // Increased size
-            canvas.height = 256;
+            canvas.width = 512; // Increased size
+            canvas.height = 512;
 
             // Draw a noisy square with "HELLO WORLD"
             context.fillStyle = 'rgba(200, 200, 200, 0.5)';
             context.fillRect(0, 0, canvas.width, canvas.height);
             context.fillStyle = 'black';
-            context.font = '24px Arial';
+            context.font = '48px Arial'; // Increased font size
             context.textAlign = 'center';
             context.textBaseline = 'middle';
             context.fillText('HELLO WORLD', canvas.width / 2, canvas.height / 2);
@@ -149,13 +149,13 @@
         function createPixelSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 128;  // Increased size
-            canvas.height = 128;
+            canvas.width = 256;  // Increased size
+            canvas.height = 256;
 
             // Draw a random pixel sample from the image
-            const x = Math.floor(Math.random() * (meImage.texture.image.width - 128));
-            const y = Math.floor(Math.random() * (meImage.texture.image.height - 128));
-            context.drawImage(meImage.texture.image, x, y, 128, 128, 0, 0, 128, 128);
+            const x = Math.floor(Math.random() * (meImage.texture.image.width - 256));
+            const y = Math.floor(Math.random() * (meImage.texture.image.height - 256));
+            context.drawImage(meImage.texture.image, x, y, 256, 256, 0, 0, 256, 256);
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
@@ -176,8 +176,8 @@
         function createMeSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 256;  // Increased size of the sprite
-            canvas.height = 256;
+            canvas.width = 512;  // Increased size of the sprite
+            canvas.height = 512;
 
             // Draw a random section of the me.webp image
             const x = Math.floor(Math.random() * (meImage.texture.image.width - canvas.width));
@@ -199,7 +199,7 @@
             }
         }
 
-        // Create sprites every 2 seconds
+        // Generate sprites at intervals
         setInterval(() => {
             createHelloWorldSprite();
             createPixelSprite();
