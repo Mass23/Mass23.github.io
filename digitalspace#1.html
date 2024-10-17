@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Sphere Viewer</title>
+    <title>Three.js Sphere Viewer with Glitches</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
@@ -32,13 +32,13 @@
         // Load the texture
         const textureLoader = new THREE.TextureLoader();
         const meImage = textureLoader.load('images/me.webp', (texture) => {
-            // Callback when texture is loaded
-            meImage.texture = texture; // Store texture in meImage
             console.log('Texture loaded:', texture); // Log when texture is loaded
-            
-            // Create initial glitches and sprites once the texture is loaded
-            applyInitialGlitches();
-            createInitialSprites();
+
+            // Create glitches on the image before using it
+            applyGlitchEffect(texture.image, () => {
+                sphereMaterial.map = texture; // Apply the glitched texture to the sphere
+                sphereMaterial.needsUpdate = true; // Mark the material as needing an update
+            });
         }, undefined, (error) => {
             console.error('Error loading texture:', error); // Log errors
         });
@@ -49,42 +49,27 @@
         glitchCanvas.width = 512; // Set canvas size
         glitchCanvas.height = 512;
 
-        // Function to update the sphere texture
-        function updateSphereTexture() {
-            const texture = new THREE.Texture(glitchCanvas);
-            texture.needsUpdate = true;
-            sphereMaterial.map = texture;
-            sphereMaterial.needsUpdate = true;
-        }
-
-        // Function to apply glitch effect directly to the sphere background
-        function applyGlitchEffect() {
-            // Clear the canvas
-            glitchContext.clearRect(0, 0, glitchCanvas.width, glitchCanvas.height);
-
+        // Function to apply glitch effect directly to the loaded image
+        function applyGlitchEffect(image, callback) {
             // Draw the loaded image onto the glitch canvas
-            if (meImage.texture && meImage.texture.image) {
-                glitchContext.drawImage(meImage.texture.image, 0, 0, glitchCanvas.width, glitchCanvas.height);
-            } else {
-                console.log('Texture not loaded yet.');
-                return;
-            }
+            glitchContext.clearRect(0, 0, glitchCanvas.width, glitchCanvas.height);
+            glitchContext.drawImage(image, 0, 0, glitchCanvas.width, glitchCanvas.height);
 
             // Create random glitches with larger patches
-            const glitchCount = 15; // Adjusted number of glitches
+            const glitchCount = 15; // Number of glitches
             for (let i = 0; i < glitchCount; i++) {
-                // Increase width and height of the glitch patches
                 const width = Math.floor(Math.random() * 200) + 100; // Width of glitch segment (100-300)
                 const height = Math.floor(Math.random() * 200) + 100; // Height of glitch segment (100-300)
 
-                // Allow x and y coordinates to go beyond the canvas size for edge effects
-                const x = Math.floor(Math.random() * (glitchCanvas.width + 100)) - 50; // Randomize beyond left and right edges
-                const y = Math.floor(Math.random() * (glitchCanvas.height + 100)) - 50; // Randomize beyond top and bottom edges
+                // Randomize x and y coordinates to allow for edge effects
+                const x = Math.floor(Math.random() * (glitchCanvas.width + 100)) - 50; // Allow for edge glitches
+                const y = Math.floor(Math.random() * (glitchCanvas.height + 100)) - 50; // Allow for edge glitches
 
                 // Ensure we do not go out of bounds while getting the imageData
                 const adjustedWidth = Math.min(width, glitchCanvas.width - Math.max(0, x));
                 const adjustedHeight = Math.min(height, glitchCanvas.height - Math.max(0, y));
 
+                // Get image data
                 const imageData = glitchContext.getImageData(Math.max(0, x), Math.max(0, y), adjustedWidth, adjustedHeight);
                 const glitchX = Math.floor(Math.random() * glitchCanvas.width);
                 const glitchY = Math.floor(Math.random() * glitchCanvas.height);
@@ -93,24 +78,8 @@
                 glitchContext.putImageData(imageData, glitchX, glitchY);
             }
 
-            updateSphereTexture(); // Update the sphere's texture with the new glitch canvas
-        }
-
-        // Create initial glitches upon loading
-        function applyInitialGlitches() {
-            for (let i = 0; i < 10; i++) {
-                applyGlitchEffect();
-            }
-            setInterval(applyGlitchEffect, 500); // Continue to create glitches every 0.5 seconds
-        }
-
-        // Create initial sprites
-        function createInitialSprites() {
-            for (let i = 0; i < 10; i++) {
-                createHelloWorldSprite();
-                createPixelSprite();
-                createMeSprite(); // Create the me.webp sprite
-            }
+            // Call the callback function to indicate the glitching is done
+            callback();
         }
 
         // Variables for sprites
@@ -157,9 +126,9 @@
             canvas.height = 256;
 
             // Draw a random pixel sample from the image
-            const x = Math.floor(Math.random() * (meImage.texture.image.width - 256));
-            const y = Math.floor(Math.random() * (meImage.texture.image.height - 256));
-            context.drawImage(meImage.texture.image, x, y, 256, 256, 0, 0, 256, 256);
+            const x = Math.floor(Math.random() * (meImage.image.width - 256));
+            const y = Math.floor(Math.random() * (meImage.image.height - 256));
+            context.drawImage(meImage.image, x, y, 256, 256, 0, 0, 256, 256);
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
@@ -184,9 +153,9 @@
             canvas.height = 512;
 
             // Draw a random section of the me.webp image
-            const x = Math.floor(Math.random() * (meImage.texture.image.width - canvas.width));
-            const y = Math.floor(Math.random() * (meImage.texture.image.height - canvas.height));
-            context.drawImage(meImage.texture.image, x, y, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+            const x = Math.floor(Math.random() * (meImage.image.width - canvas.width));
+            const y = Math.floor(Math.random() * (meImage.image.height - canvas.height));
+            context.drawImage(meImage.image, x, y, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
@@ -245,6 +214,15 @@
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
         }
+
+        // Create initial sprites
+        setInterval(() => {
+            createHelloWorldSprite();
+            createPixelSprite();
+            createMeSprite();
+        }, 2000); // Create sprites every 2 seconds
+
+        // Start animation loop
         animate();
     </script>
 </body>
