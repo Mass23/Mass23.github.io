@@ -56,7 +56,10 @@
             return new THREE.CanvasTexture(canvas);
         };
 
-        // Function to create sprites with randomly sampled pixels from the image
+        // Store sprites
+        const sprites = [];
+
+        // Function to create random pixel sprites
         function createRandomSprites() {
             const spriteMaterial = new THREE.SpriteMaterial({ map: null, transparent: true, opacity: 1 });
 
@@ -85,6 +88,7 @@
 
             // Set size of the sprite (smaller than before)
             sprite.scale.set(0.5, 0.5, 0.5); // Smaller size
+            sprites.push(sprite); // Store the sprite for later updates
             scene.add(sprite);
 
             // Slowly fade away
@@ -94,6 +98,7 @@
                 if (spriteMaterial.opacity <= 0) {
                     clearInterval(fadeOut);
                     scene.remove(sprite); // Remove the sprite when fully transparent
+                    sprites.splice(sprites.indexOf(sprite), 1); // Remove from sprites array
                 }
             }, fadeTime * 1000 / 20); // Fade out over time
         }
@@ -115,6 +120,7 @@
 
             // Set size of the text sprite (same as image size)
             textSprite.scale.set(1, 1, 1); // Adjust this for size
+            sprites.push(textSprite); // Store the sprite for later updates
             scene.add(textSprite);
 
             // Slowly fade out text sprite
@@ -124,18 +130,12 @@
                 if (textMaterial.opacity <= 0) {
                     clearInterval(fadeOut);
                     scene.remove(textSprite); // Remove the sprite when fully transparent
+                    sprites.splice(sprites.indexOf(textSprite), 1); // Remove from sprites array
                 }
             }, fadeTime * 1000 / 20); // Fade out over time
         }
 
-        // Create sprites and text every 50 milliseconds for overwhelming presence
-        setInterval(() => {
-            createRandomSprites();
-            createTextSprite();
-            createImageSprite(); // Generate me.webp image more often
-        }, 50);
-
-        // Function to create me.webp sprites
+        // Create me.webp sprites
         function createImageSprite() {
             const spriteMaterial = new THREE.SpriteMaterial({ map: imageTexture, transparent: true });
             const imageSprite = new THREE.Sprite(spriteMaterial);
@@ -152,6 +152,7 @@
 
             // Set size of the image sprite (same as text size)
             imageSprite.scale.set(1, 1, 1); // Adjust this for size
+            sprites.push(imageSprite); // Store the sprite for later updates
             scene.add(imageSprite);
 
             // Slowly fade out image sprite
@@ -161,9 +162,19 @@
                 if (spriteMaterial.opacity <= 0) {
                     clearInterval(fadeOut);
                     scene.remove(imageSprite); // Remove the sprite when fully transparent
+                    sprites.splice(sprites.indexOf(imageSprite), 1); // Remove from sprites array
                 }
             }, fadeTime * 1000 / 20); // Fade out over time
         }
+
+        // Create sprites and text every 50 milliseconds for overwhelming presence
+        setInterval(() => {
+            for (let i = 0; i < 10; i++) { // Increase number of sprites generated
+                createRandomSprites();
+                createTextSprite();
+                createImageSprite(); // Generate me.webp image more often
+            }
+        }, 50);
 
         // Set camera position inside the sphere
         camera.position.set(0, 0, 0);
@@ -172,6 +183,19 @@
         function animate() {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
+
+            // Update sprite positions to follow the camera
+            sprites.forEach(sprite => {
+                // Calculate new positions based on camera's rotation and position
+                const distance = 15; // Fixed distance from the camera
+                sprite.position.copy(camera.position).add(
+                    new THREE.Vector3(
+                        distance * Math.sin(camera.rotation.x) * Math.cos(camera.rotation.y),
+                        distance * Math.sin(camera.rotation.x) * Math.sin(camera.rotation.y),
+                        distance * Math.cos(camera.rotation.x)
+                    )
+                );
+            });
         }
 
         animate();
