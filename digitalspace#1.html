@@ -17,6 +17,7 @@
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 1); // Set the background to black
         document.body.appendChild(renderer.domElement);
         
         // Sphere geometry
@@ -32,7 +33,10 @@
         const textureLoader = new THREE.TextureLoader();
         const meImage = textureLoader.load('images/me.webp', (texture) => {
             meImage.texture = texture;
+            console.log('Texture loaded:', texture); // Log when texture is loaded
             applyInitialGlitches();
+        }, undefined, (error) => {
+            console.error('Error loading texture:', error); // Log errors
         });
 
         // Create a canvas for glitches
@@ -189,27 +193,26 @@
             createMeSprite(); // Create the me.webp sprite
         }
 
-        // Variables for mouse interaction
+        // Mouse movement for camera rotation
         let isMouseDown = false;
         let previousMouseX = 0;
         let previousMouseY = 0;
 
-        // Mouse down event to start rotation
         document.addEventListener('mousedown', (event) => {
             isMouseDown = true;
             previousMouseX = event.clientX;
             previousMouseY = event.clientY;
         });
 
-        // Mouse move event to change viewer angle
         document.addEventListener('mousemove', (event) => {
-            if (isMouseDown) {
-                const deltaX = event.clientX - previousMouseX;
-                const deltaY = event.clientY - previousMouseY;
+            if (!isMouseDown) return;
 
-                camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity
-                camera.rotation.x -= deltaY * 0.005; // Adjust sensitivity
-            }
+            const deltaX = event.clientX - previousMouseX;
+            const deltaY = event.clientY - previousMouseY;
+
+            // Update camera rotation based on mouse movement
+            camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity
+            camera.rotation.x -= deltaY * 0.005; // Adjust sensitivity
 
             previousMouseX = event.clientX;
             previousMouseY = event.clientY;
