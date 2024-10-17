@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Space #1 - Disruptive Pattern Sphere</title>
+    <title>Digital Space #1 - Inner Sphere Only</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
@@ -22,66 +22,10 @@
         // Sphere geometry
         const sphereGeometry = new THREE.SphereGeometry(100, 32, 32);
         
-        // Create a disruptive pattern texture with specified colors
-        function createDisruptivePatternTexture(size, colors) {
-            const canvas = document.createElement('canvas');
-            canvas.width = size;
-            canvas.height = size;
-            const context = canvas.getContext('2d');
-
-            // Draw random shapes for a disruptive effect
-            const numberOfShapes = 100; // Number of random shapes
-            for (let i = 0; i < numberOfShapes; i++) {
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                context.fillStyle = color;
-
-                const x = Math.random() * size; // Random x position
-                const y = Math.random() * size; // Random y position
-                const shapeType = Math.floor(Math.random() * 3); // Random shape type (rectangle, circle, triangle)
-
-                if (shapeType === 0) {
-                    // Draw a rectangle
-                    const width = Math.random() * 50 + 10; // Random width between 10 and 60
-                    const height = Math.random() * 50 + 10; // Random height between 10 and 60
-                    context.fillRect(x, y, width, height);
-                } else if (shapeType === 1) {
-                    // Draw a circle
-                    const radius = Math.random() * 20 + 5; // Random radius between 5 and 25
-                    context.beginPath();
-                    context.arc(x, y, radius, 0, Math.PI * 2);
-                    context.fill();
-                } else {
-                    // Draw a triangle
-                    const x1 = x + Math.random() * 30 - 15; // Random x offset
-                    const y1 = y + Math.random() * 30 - 15; // Random y offset
-                    context.beginPath();
-                    context.moveTo(x, y);
-                    context.lineTo(x + 20, y + 30);
-                    context.lineTo(x - 20, y + 30);
-                    context.closePath();
-                    context.fill();
-                }
-            }
-
-            const texture = new THREE.Texture(canvas);
-            texture.needsUpdate = true;
-            return texture;
-        }
-
-        // Define colors for the disruptive pattern and particles
-        const disruptivePatternColors = ['#583BBF', '#403527', '#BF8969', '#BF584E']; // Four colors for the pattern
-        const particleColors = ['#D9C6BF', '#583BBF', '#403527', '#BF8969', '#BF584E']; // Colors for particles
-        const disruptivePatternTexture = createDisruptivePatternTexture(256, disruptivePatternColors);
-
-        // Create sphere with a solid color for the inner texture (background)
+        // Create inner sphere with solid color
         const innerSphereMaterial = new THREE.MeshBasicMaterial({ color: '#0D0D0D', side: THREE.BackSide });
         const innerSphere = new THREE.Mesh(sphereGeometry, innerSphereMaterial);
         scene.add(innerSphere);
-
-        // Create outer sphere with disruptive pattern texture
-        const outerSphereMaterial = new THREE.MeshBasicMaterial({ map: disruptivePatternTexture, side: THREE.BackSide });
-        const outerSphere = new THREE.Mesh(sphereGeometry, outerSphereMaterial);
-        scene.add(outerSphere);
 
         // Set camera position to be inside the sphere
         camera.position.set(0, 0, 0);
@@ -91,6 +35,8 @@
         const particleGeometry = new THREE.BufferGeometry();
         const positions = new Float32Array(particleCount * 3); // 3 vertices per particle
         const colors = new Float32Array(particleCount * 3); // 3 color values per particle
+
+        const particleColors = ['#D9C6BF', '#583BBF', '#403527', '#BF8969', '#BF584E']; // Colors for particles
 
         for (let i = 0; i < particleCount; i++) {
             // Generate random positions for the particles
