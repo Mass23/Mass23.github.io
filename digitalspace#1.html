@@ -19,22 +19,26 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Sphere geometry and material
+        // Sphere geometry
         const geometry = new THREE.SphereGeometry(5, 32, 32);
         const textureLoader = new THREE.TextureLoader();
 
         // Load the image and set it as the texture for the sphere
         textureLoader.load('images/me.webp', (texture) => {
-            // Crop the texture to the center
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            const cropSize = 256; // Size of the cropped area
+
+            const cropSize = 100; // Size of the crop
+            const randomX = Math.floor(Math.random() * (texture.image.width - cropSize));
+            const randomY = Math.floor(Math.random() * (texture.image.height - cropSize));
+
             canvas.width = cropSize;
             canvas.height = cropSize;
-            context.drawImage(texture.image, texture.image.width / 2 - cropSize / 2, texture.image.height / 2 - cropSize / 2, cropSize, cropSize, 0, 0, cropSize, cropSize);
+
+            context.drawImage(texture.image, randomX, randomY, cropSize, cropSize, 0, 0, cropSize, cropSize);
 
             const sphereMaterial = new THREE.MeshBasicMaterial({
-                map: new THREE.Texture(canvas), // Use the cropped texture
+                map: new THREE.Texture(canvas), // Use the sampled texture
                 side: THREE.BackSide, // Render the inside of the sphere
             });
             const sphere = new THREE.Mesh(geometry, sphereMaterial);
@@ -81,7 +85,7 @@
             textureLoader.load(imagePath, (texture) => {
                 const spriteMaterial = new THREE.SpriteMaterial({ map: texture, color: 0xffffff });
                 const sprite = new THREE.Sprite(spriteMaterial);
-                sprite.scale.set(1.0, 1.0, 1); // Adjust scale for smaller sprite
+                sprite.scale.set(0.5, 0.5, 1); // Adjust scale for smaller sprite
                 const position = getRandomPosition(3.5); // Position sprite randomly within the sphere
                 sprite.position.copy(position);
                 scene.add(sprite);
