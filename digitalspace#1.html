@@ -69,13 +69,22 @@
                 const adjustedWidth = Math.min(width, glitchCanvas.width - Math.max(0, x));
                 const adjustedHeight = Math.min(height, glitchCanvas.height - Math.max(0, y));
 
-                // Get image data
-                const imageData = glitchContext.getImageData(Math.max(0, x), Math.max(0, y), adjustedWidth, adjustedHeight);
-                const glitchX = Math.floor(Math.random() * glitchCanvas.width);
-                const glitchY = Math.floor(Math.random() * glitchCanvas.height);
+                // Check bounds to avoid accessing out of range
+                if (adjustedWidth <= 0 || adjustedHeight <= 0) {
+                    continue; // Skip this iteration if the dimensions are invalid
+                }
 
-                // Put the distorted segment back onto the canvas
-                glitchContext.putImageData(imageData, glitchX, glitchY);
+                try {
+                    // Get image data
+                    const imageData = glitchContext.getImageData(Math.max(0, x), Math.max(0, y), adjustedWidth, adjustedHeight);
+                    const glitchX = Math.floor(Math.random() * glitchCanvas.width);
+                    const glitchY = Math.floor(Math.random() * glitchCanvas.height);
+
+                    // Put the distorted segment back onto the canvas
+                    glitchContext.putImageData(imageData, glitchX, glitchY);
+                } catch (error) {
+                    console.error('Error getting image data:', error);
+                }
             }
 
             // Create a texture from the glitched canvas
