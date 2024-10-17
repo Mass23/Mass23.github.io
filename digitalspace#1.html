@@ -25,8 +25,8 @@
         // Sphere radius
         const SPHERE_RADIUS = 100;
 
-        // Load the image and create shuffled texture
-        const imageUrl = 'images/me.webp';
+        // Define colors to shuffle for the sphere texture
+        const colors = ['#583BBF', '#403527', '#BF8969', '#BF584E'];
         const textureWidth = 32; // Width of the pixel texture
         const textureHeight = 32; // Height of the pixel texture
         let pixelTexture;
@@ -39,55 +39,35 @@
             }
         }
 
-        // Load image and create shuffled texture
-        const loadImageAndCreateTexture = (url) => {
-            const image = new Image();
-            image.src = url;
+        // Create shuffled texture from defined colors
+        const createShuffledTexture = () => {
+            // Create an array for the shuffled pixel texture
+            pixelTexture = new Uint8Array(textureWidth * textureHeight * 4);
+            const shuffledColors = colors.slice(); // Clone colors array
+            shuffle(shuffledColors); // Shuffle the colors
 
-            image.onload = () => {
-                // Create a canvas to draw the image
-                const canvas = document.createElement('canvas');
-                canvas.width = image.width;
-                canvas.height = image.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(image, 0, 0);
+            // Fill the pixel texture with shuffled colors
+            for (let i = 0; i < pixelTexture.length; i += 4) {
+                const color = shuffledColors[(i / 4) % shuffledColors.length]; // Loop through shuffled colors
+                const hex = parseInt(color.slice(1), 16); // Convert hex to number
+                pixelTexture[i] = (hex >> 16) & 0xff;     // Red
+                pixelTexture[i + 1] = (hex >> 8) & 0xff;  // Green
+                pixelTexture[i + 2] = hex & 0xff;          // Blue
+                pixelTexture[i + 3] = 255;                  // Alpha
+            }
 
-                // Extract pixel data from the image
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const data = imageData.data;
+            // Create texture from pixel data
+            const texture = new THREE.DataTexture(pixelTexture, textureWidth, textureHeight, THREE.RGBAFormat);
+            texture.needsUpdate = true;
 
-                // Create an array for the shuffled pixel texture
-                pixelTexture = new Uint8Array(textureWidth * textureHeight * 4);
-                
-                // Fill the pixel texture with shuffled pixels
-                const pixels = [];
-                for (let i = 0; i < data.length; i += 4) {
-                    pixels.push([data[i], data[i + 1], data[i + 2], data[i + 3]]); // RGBA
-                }
-                shuffle(pixels);
-
-                // Fill the pixel texture with the shuffled pixels
-                for (let i = 0; i < pixelTexture.length; i += 4) {
-                    const pixel = pixels[i / 4 % pixels.length]; // Loop through shuffled pixels
-                    pixelTexture[i] = pixel[0];     // Red
-                    pixelTexture[i + 1] = pixel[1]; // Green
-                    pixelTexture[i + 2] = pixel[2]; // Blue
-                    pixelTexture[i + 3] = pixel[3]; // Alpha
-                }
-
-                // Create texture from pixel data
-                const texture = new THREE.DataTexture(pixelTexture, textureWidth, textureHeight, THREE.RGBAFormat);
-                texture.needsUpdate = true;
-
-                // Create sphere geometry with the pixel texture
-                const sphereGeometry = new THREE.SphereGeometry(SPHERE_RADIUS, 32, 32);
-                const sphereMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-                const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-                scene.add(sphere);
-            };
+            // Create sphere geometry with the pixel texture
+            const sphereGeometry = new THREE.SphereGeometry(SPHERE_RADIUS, 32, 32);
+            const sphereMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            scene.add(sphere);
         };
 
-        loadImageAndCreateTexture(imageUrl); // Load image and create texture
+        createShuffledTexture(); // Create texture using defined colors
 
         // Create particles using THREE.BufferGeometry
         const MAX_PARTICLES = 10000;
@@ -125,7 +105,7 @@
 
         // Create material for the particles
         const particleMaterial = new THREE.PointsMaterial({
-            color: 0x00ff00, // Set particle color to green
+            color: '#D9C6BF', // Set particle color
             size: 0.5,
             transparent: true,
             opacity: 0.8
