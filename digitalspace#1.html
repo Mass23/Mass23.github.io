@@ -81,6 +81,7 @@
         const sprites = [];
         const MAX_SPRITES = 30; // Limit the number of sprites
         const spriteInterval = 2000; // Generate sprites every 2 seconds
+        const SPHERE_RADIUS = 100; // Sphere radius
 
         // Function to create "HELLO WORLD" sprite
         function createHelloWorldSprite() {
@@ -102,7 +103,10 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150, -90); // Random position within the sphere
+
+            // Position the sprite close to the sphere's inner surface
+            const distanceFromCenter = SPHERE_RADIUS - 0.5 * canvas.width; // Adjusted to position near the border
+            sprite.position.set((Math.random() - 0.5) * distanceFromCenter * 2, (Math.random() - 0.5) * distanceFromCenter * 2, -distanceFromCenter); 
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -129,7 +133,10 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150, -90); // Random position within the sphere
+
+            // Position the sprite close to the sphere's inner surface
+            const distanceFromCenter = SPHERE_RADIUS - 0.5 * canvas.width; // Adjusted to position near the border
+            sprite.position.set((Math.random() - 0.5) * distanceFromCenter * 2, (Math.random() - 0.5) * distanceFromCenter * 2, -distanceFromCenter); 
             scene.add(sprite);
             sprites.push(sprite);
 
