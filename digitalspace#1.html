@@ -17,7 +17,6 @@
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x000000, 1); // Set the background to black
         document.body.appendChild(renderer.domElement);
         
         // Sphere geometry
@@ -32,7 +31,6 @@
         // Load the texture for sprites
         const textureLoader = new THREE.TextureLoader();
         const meImage = textureLoader.load('images/me.webp', (texture) => {
-            console.log('Texture loaded:', texture); // Log when texture is loaded
             createGrayNoiseBackground(); // Create and apply gray noise background
             startGlitchingBackground(); // Start glitching the background noise
         }, undefined, (error) => {
