@@ -257,6 +257,34 @@
             }
         });
 
+        // Handle touch events for mobile support
+        window.addEventListener('touchstart', (event) => {
+            isMouseDown = true;
+            lastMouseX = event.touches[0].clientX;
+            lastMouseY = event.touches[0].clientY;
+        });
+
+        window.addEventListener('touchend', () => {
+            isMouseDown = false;
+        });
+
+        window.addEventListener('touchmove', (event) => {
+            if (isMouseDown) {
+                const deltaX = event.touches[0].clientX - lastMouseX;
+                const deltaY = event.touches[0].clientY - lastMouseY;
+
+                // Update camera rotation based on touch movement
+                camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity as needed
+                camera.rotation.x -= deltaY * 0.005;
+
+                // Clamp the camera's x rotation to prevent flipping
+                camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
+
+                lastMouseX = event.touches[0].clientX;
+                lastMouseY = event.touches[0].clientY;
+            }
+        });
+
         // Handle window resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
