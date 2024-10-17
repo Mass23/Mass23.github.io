@@ -80,10 +80,15 @@
         // Variables for sprites
         const sprites = [];
         const MAX_SPRITES = 1000; // Limit the number of sprites
-        const spriteInterval = 100; // Generate sprites every 2 seconds
+        const spriteInterval = 100; // Generate sprites every 100 milliseconds
         const SPHERE_RADIUS = 100; // Sphere radius
         const meImage = new Image(); // Image for MeSprites
         meImage.src = 'images/me.webp'; // Path to me.webp
+
+        meImage.onload = () => {
+            // Start sprite creation after the image is loaded
+            startSpriteCreation();
+        };
 
         // Function to create "HELLO WORLD" sprite
         function createHelloWorldSprite() {
@@ -121,6 +126,11 @@
 
         // Function to create larger pixel sprites
         function createPixelSprite() {
+            if (!meImage.complete) {
+                // If the image isn't loaded yet, exit the function
+                return;
+            }
+
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             canvas.width = 128;  // Increased size
@@ -149,80 +159,19 @@
             }
         }
 
-        // Function to create MeSprites
-        function createMeSprite() {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 512;  // Size of MeSprites
-            canvas.height = 512;
-
-            // Draw a random part of the me image
-            const x = Math.floor(Math.random() * (meImage.width - 256));
-            const y = Math.floor(Math.random() * (meImage.height - 256));
-            context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
-
-            const spriteTexture = new THREE.Texture(canvas);
-            spriteTexture.needsUpdate = true;
-            const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
-            const sprite = new THREE.Sprite(spriteMaterial);
-
-            // Position the sprite close to the sphere's inner surface
-            const distanceFromCenter = SPHERE_RADIUS - 0.5 * canvas.width; // Adjusted to position near the border
-            sprite.position.set((Math.random() - 0.5) * distanceFromCenter * 2, (Math.random() - 0.5) * distanceFromCenter * 2, -distanceFromCenter); 
-            scene.add(sprite);
-            sprites.push(sprite);
-
-            // Remove oldest sprite if limit exceeded
-            if (sprites.length > MAX_SPRITES) {
-                const oldestSprite = sprites.shift();
-                scene.remove(oldestSprite);
-            }
-        }
-
-        // Function to start creating sprites
+        // Function to start sprite creation
         function startSpriteCreation() {
             setInterval(() => {
                 createHelloWorldSprite();
-                createPixelSprite();
-                createMeSprite(); // Create MeSprite as well
-            }, spriteInterval); // Create sprites every 2 seconds
+                createPixelSprite(); // Create pixel sprites in addition
+            }, spriteInterval);
         }
-
-        // Mouse control for sprite and camera movement
-        let isMouseDown = false;
-        let mouseX = 0;
-        let mouseY = 0;
-
-        window.addEventListener('mousedown', (event) => {
-            isMouseDown = true;
-            mouseX = event.clientX;
-            mouseY = event.clientY;
-        });
-
-        window.addEventListener('mouseup', () => {
-            isMouseDown = false;
-        });
-
-        window.addEventListener('mousemove', (event) => {
-            if (isMouseDown) {
-                const deltaX = event.clientX - mouseX;
-                const deltaY = event.clientY - mouseY;
-
-                // Rotate camera based on mouse movement
-                camera.rotation.y -= deltaX * 0.005;
-                camera.rotation.x -= deltaY * 0.005;
-
-                mouseX = event.clientX;
-                mouseY = event.clientY;
-            }
-        });
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
         }
-
         animate();
     </script>
 </body>
