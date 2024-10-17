@@ -3,10 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Fixed Pixel Sprites</title>
+    <title>Three.js Glitched Sphere with Sprites</title>
     <style>
-        body { margin: 0; }
-        canvas { display: block; }
+        :root {
+            --red: #FF0000;
+            --green: #00FF00;
+            --blue: #0000FF;
+            --black: #000000;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            height: 100vh;
+            font-family: 'Inter';
+            background-color: var(--black);
+            overflow: hidden; /* Prevent scrolling */
+        }
+
+        canvas {
+            display: block; /* Ensures the canvas fills the window */
+            position: absolute; /* Remove any margin or padding */
+        }
     </style>
 </head>
 <body>
@@ -15,207 +35,216 @@
         // Scene setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({ alpha: true }); // Allow transparency
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
         // Texture loader
         const textureLoader = new THREE.TextureLoader();
-        const imageTexture = textureLoader.load('images/me.webp', (texture) => {
+        let imageTexture = textureLoader.load('images/me.webp', (texture) => {
             // Crop 50 pixels from each side
             const cropAmount = 50;
             const width = texture.image.width;
             const height = texture.image.height;
 
-            texture.offset.set(cropAmount / width, cropAmount / height); // Set the offset to start cropping from (50px from each side)
-            texture.repeat.set((width - 2 * cropAmount) / width, (height - 2 * cropAmount) / height); // Repeat to fill the sphere with the cropped image
-            texture.needsUpdate = true; // Update the texture
+            texture.offset.set(cropAmount / width, cropAmount / height);
+            texture.repeat.set((width - 2 * cropAmount) / width, (height - 2 * cropAmount) / height);
+            texture.needsUpdate = true;
         });
 
         // Create a sphere geometry (textured inside)
         const geometry = new THREE.SphereGeometry(20, 32, 32);
         const material = new THREE.MeshBasicMaterial({
             map: imageTexture,
-            side: THREE.BackSide  // Texture is applied inside the sphere
+            side: THREE.BackSide // Texture is applied inside the sphere
         });
         const sphere = new THREE.Mesh(geometry, material);
         scene.add(sphere);
 
-        // Create a basic texture for the text background
-        const createTextBackground = () => {
+        // Create a glitch effect on the sphere texture
+        function applyGlitchEffect() {
             const canvas = document.createElement('canvas');
-            canvas.width = 200;  // Increased size for the square
-            canvas.height = 200; // Increased size for the square
             const context = canvas.getContext('2d');
-            context.fillStyle = '#cccccc'; // Light grey background
-            context.fillRect(0, 0, canvas.width, canvas.height);
-            context.fillStyle = 'rgba(255, 255, 255, 0.8)'; // White text
-            context.font = 'bold 30px Arial'; // Adjusted font size
-            context.textAlign = 'center';
-            context.fillText('HELLO WORLD', canvas.width / 2, canvas.height / 2 + 10); // Adjusted position
-            return new THREE.CanvasTexture(canvas);
-        };
 
-        // Store sprites
-        const sprites = [];
+            // Set canvas dimensions
+            canvas.width = imageTexture.image.width;
+            canvas.height = imageTexture.image.height;
 
-        // Function to create random pixel sprites
-        function createRandomSprites() {
-            const spriteMaterial = new THREE.SpriteMaterial({ map: null, transparent: true, opacity: 1 });
+            // Draw the image on the canvas
+            context.drawImage(imageTexture.image, 0, 0);
 
-            // Randomly sample a small portion from the texture
-            const sampleX = Math.random() * (imageTexture.image.width - 1);
-            const sampleY = Math.random() * (imageTexture.image.height - 1);
+            // Glitch effect logic: randomly distort parts of the image
+            for (let i = 0; i < 100; i++) { // Adjust number of glitches
+                const x = Math.floor(Math.random() * canvas.width);
+                const y = Math.floor(Math.random() * canvas.height);
+                const width = Math.floor(Math.random() * 50); // Width of glitch segment
+                const height = Math.floor(Math.random() * 50); // Height of glitch segment
+                const imageData = context.getImageData(x, y, width, height);
+                const glitchX = Math.floor(Math.random() * (canvas.width - width));
+                const glitchY = Math.floor(Math.random() * (canvas.height - height));
 
-            const croppedTexture = new THREE.Texture(imageTexture.image);
-            croppedTexture.offset.set(sampleX / imageTexture.image.width, sampleY / imageTexture.image.height);
-            croppedTexture.repeat.set(0.1, 0.1); // Sample larger portion for visibility
-            croppedTexture.needsUpdate = true;
-
-            spriteMaterial.map = croppedTexture;
-
-            const sprite = new THREE.Sprite(spriteMaterial);
-
-            // Set a fixed position for the sprite within the sphere
-            const radius = 15; // Random distance from the center
-            const theta = Math.random() * 2 * Math.PI;
-            const phi = Math.acos(2 * Math.random() - 1);
-            sprite.position.set(
-                radius * Math.sin(phi) * Math.cos(theta),
-                radius * Math.sin(phi) * Math.sin(theta),
-                radius * Math.cos(phi)
-            );
-
-            // Set size of the sprite (smaller than before)
-            sprite.scale.set(0.5, 0.5, 0.5); // Smaller size
-            sprites.push(sprite); // Store the sprite for later updates
-            scene.add(sprite);
-
-            // Slowly fade away
-            const fadeTime = 3; // Seconds to fade
-            let fadeOut = setInterval(() => {
-                spriteMaterial.opacity -= 0.05;
-                if (spriteMaterial.opacity <= 0) {
-                    clearInterval(fadeOut);
-                    scene.remove(sprite); // Remove the sprite when fully transparent
-                    sprites.splice(sprites.indexOf(sprite), 1); // Remove from sprites array
-                }
-            }, fadeTime * 1000 / 20); // Fade out over time
-        }
-
-        // Create text sprite at a fixed position inside the sphere
-        function createTextSprite() {
-            const textMaterial = new THREE.SpriteMaterial({ map: createTextBackground(), transparent: true });
-            const textSprite = new THREE.Sprite(textMaterial);
-
-            // Set a fixed position for the text sprite within the sphere
-            const radius = 12; // Distance from the center
-            const theta = Math.random() * 2 * Math.PI;
-            const phi = Math.acos(2 * Math.random() - 1);
-            textSprite.position.set(
-                radius * Math.sin(phi) * Math.cos(theta),
-                radius * Math.sin(phi) * Math.sin(theta),
-                radius * Math.cos(phi)
-            );
-
-            // Set size of the text sprite (same as image size)
-            textSprite.scale.set(1, 1, 1); // Adjust this for size
-            sprites.push(textSprite); // Store the sprite for later updates
-            scene.add(textSprite);
-
-            // Slowly fade out text sprite
-            const fadeTime = 3; // Seconds to fade
-            let fadeOut = setInterval(() => {
-                textMaterial.opacity -= 0.05;
-                if (textMaterial.opacity <= 0) {
-                    clearInterval(fadeOut);
-                    scene.remove(textSprite); // Remove the sprite when fully transparent
-                    sprites.splice(sprites.indexOf(textSprite), 1); // Remove from sprites array
-                }
-            }, fadeTime * 1000 / 20); // Fade out over time
-        }
-
-        // Create me.webp sprites
-        function createImageSprite() {
-            const spriteMaterial = new THREE.SpriteMaterial({ map: imageTexture, transparent: true });
-            const imageSprite = new THREE.Sprite(spriteMaterial);
-
-            // Set a fixed position for the image sprite within the sphere
-            const radius = 10; // Distance from the center
-            const theta = Math.random() * 2 * Math.PI;
-            const phi = Math.acos(2 * Math.random() - 1);
-            imageSprite.position.set(
-                radius * Math.sin(phi) * Math.cos(theta),
-                radius * Math.sin(phi) * Math.sin(theta),
-                radius * Math.cos(phi)
-            );
-
-            // Set size of the image sprite (same as text size)
-            imageSprite.scale.set(1, 1, 1); // Adjust this for size
-            sprites.push(imageSprite); // Store the sprite for later updates
-            scene.add(imageSprite);
-
-            // Slowly fade out image sprite
-            const fadeTime = 3; // Seconds to fade
-            let fadeOut = setInterval(() => {
-                spriteMaterial.opacity -= 0.05;
-                if (spriteMaterial.opacity <= 0) {
-                    clearInterval(fadeOut);
-                    scene.remove(imageSprite); // Remove the sprite when fully transparent
-                    sprites.splice(sprites.indexOf(imageSprite), 1); // Remove from sprites array
-                }
-            }, fadeTime * 1000 / 20); // Fade out over time
-        }
-
-        // Create sprites and text every 50 milliseconds for overwhelming presence
-        setInterval(() => {
-            for (let i = 0; i < 10; i++) { // Increase number of sprites generated
-                createRandomSprites();
-                createTextSprite();
-                createImageSprite(); // Generate me.webp image more often
+                // Put the distorted segment back onto the canvas
+                context.putImageData(imageData, glitchX, glitchY);
             }
-        }, 50);
 
-        // Set camera position inside the sphere
-        camera.position.set(0, 0, 0);
+            // Update the texture with the new canvas
+            const newTexture = new THREE.Texture(canvas);
+            newTexture.needsUpdate = true;
+            material.map = newTexture;
+        }
+
+        // Create a sprite for "HELLO WORLD"
+        function createTextSprite(text, size, color) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
+
+            context.fillStyle = 'rgba(128, 128, 128, 0.5)'; // Grey background
+            context.fillRect(0, 0, size, size);
+
+            context.font = `${size / 5}px Arial`;
+            context.fillStyle = color;
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText(text, size / 2, size / 2);
+
+            const texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;
+
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.scale.set(size / 100, size / 100, 1); // Adjust the size of the sprite
+            return sprite;
+        }
+
+        // Create a sprite for "me.webp" image
+        function createImageSprite(texture, size) {
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.scale.set(size / 100, size / 100, 1); // Adjust the size of the sprite
+            return sprite;
+        }
+
+        // Array to hold sprites
+        const sprites = [];
+        function addSprites() {
+            const numberOfSprites = 5; // Number of text sprites to create
+            for (let i = 0; i < numberOfSprites; i++) {
+                const size = 150; // Size of the square sprite
+                const textSprite = createTextSprite("HELLO WORLD", size, "white");
+                
+                // Random position on the sphere
+                const theta = Math.random() * Math.PI * 2; // Random angle
+                const phi = Math.random() * Math.PI; // Random elevation
+
+                textSprite.position.set(
+                    20 * Math.sin(phi) * Math.cos(theta),
+                    20 * Math.cos(phi),
+                    20 * Math.sin(phi) * Math.sin(theta)
+                );
+
+                sprites.push(textSprite);
+                scene.add(textSprite);
+                
+                // Create a random image sprite
+                const imageSprite = createImageSprite(imageTexture, size);
+                imageSprite.position.copy(textSprite.position);
+                sprites.push(imageSprite);
+                scene.add(imageSprite);
+            }
+        }
+
+        // Fade out effect for sprites
+        function fadeOutSprite(sprite) {
+            const fadeDuration = 3000; // Duration in milliseconds
+            let startTime = null;
+
+            function animateFadeOut(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+
+                // Calculate the opacity based on elapsed time
+                const opacity = Math.max(1 - (elapsed / fadeDuration), 0);
+                sprite.material.opacity = opacity;
+
+                if (opacity > 0) {
+                    requestAnimationFrame(animateFadeOut);
+                } else {
+                    scene.remove(sprite); // Remove the sprite once faded out
+                }
+            }
+            requestAnimationFrame(animateFadeOut);
+        }
+
+        // Generate sprites periodically
+        setInterval(() => {
+            addSprites();
+            sprites.forEach(sprite => fadeOutSprite(sprite));
+        }, 1000); // Adjust interval time
+
+        // Generate pixel sprites
+        const pixelSprites = [];
+        function createPixelSprite() {
+            const size = 50; // Size of pixel sprites
+            const pixelSprite = new THREE.Sprite(new THREE.SpriteMaterial({ color: Math.random() * 0xffffff }));
+
+            // Random position on the sphere
+            const theta = Math.random() * Math.PI * 2; // Random angle
+            const phi = Math.random() * Math.PI; // Random elevation
+
+            pixelSprite.position.set(
+                20 * Math.sin(phi) * Math.cos(theta),
+                20 * Math.cos(phi),
+                20 * Math.sin(phi) * Math.sin(theta)
+            );
+
+            pixelSprite.scale.set(size / 100, size / 100, 1); // Adjust size
+            pixelSprites.push(pixelSprite);
+            scene.add(pixelSprite);
+        }
+
+        // Update pixel sprite positions based on mouse movement
+        function updatePixelSprites() {
+            pixelSprites.forEach(sprite => {
+                sprite.position.copy(camera.position);
+                sprite.position.add(camera.getWorldDirection(new THREE.Vector3()).normalize().multiplyScalar(20)); // Move the sprite away from the camera
+            });
+        }
+
+        // Generate pixel sprites periodically
+        setInterval(() => {
+            createPixelSprite();
+        }, 300); // Generate pixel sprites every 300 milliseconds
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
-            renderer.render(scene, camera);
+            applyGlitchEffect(); // Apply the glitch effect to the sphere's texture
+            
+            // Update pixel sprite positions based on camera direction
+            updatePixelSprites();
 
-            // Update sprite positions to follow the camera
-            sprites.forEach(sprite => {
-                // Calculate new positions based on camera's rotation and position
-                const distance = 15; // Fixed distance from the camera
-                sprite.position.copy(camera.position).add(
-                    new THREE.Vector3(
-                        distance * Math.sin(camera.rotation.x) * Math.cos(camera.rotation.y),
-                        distance * Math.sin(camera.rotation.x) * Math.sin(camera.rotation.y),
-                        distance * Math.cos(camera.rotation.x)
-                    )
-                );
-            });
+            renderer.render(scene, camera);
         }
 
         animate();
 
-        // Rotate camera in the opposite direction when clicking
-        let isMouseDown = false;
-        document.addEventListener('mousedown', () => { isMouseDown = true; });
-        document.addEventListener('mouseup', () => { isMouseDown = false; });
+        // Set camera position inside the sphere
+        camera.position.set(0, 0, 0);
 
+        // Mouse movement handling
+        let mouseX = 0;
+        let mouseY = 0;
         document.addEventListener('mousemove', (event) => {
-            if (isMouseDown) {
-                const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-                const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-
-                // Move camera in the opposite direction
-                camera.rotation.y -= movementX * 0.002; // Reverse direction
-                camera.rotation.x -= movementY * 0.002; // Reverse direction
-            }
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
         });
 
+        document.addEventListener('click', () => {
+            // Here you can add functionality for click events
+            // E.g. change camera direction or other interactions
+        });
     </script>
 </body>
 </html>
