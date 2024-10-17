@@ -39,7 +39,7 @@
         const sphere = new THREE.Mesh(geometry, material);
         scene.add(sphere);
 
-        camera.position.z = 50;  // Set camera inside the sphere
+        camera.position.set(0, 0, 0);  // Set camera inside the sphere
 
         // Generate noisy background for text
         function generateNoisyTexture(width, height) {
@@ -74,7 +74,7 @@
             context.drawImage(noisyTexture.image, 0, 0);
 
             // Draw text
-            context.font = 'Bold 40px Arial';
+            context.font = 'Bold 80px Arial';  // Increased font size
             context.fillStyle = 'white';
             context.textAlign = 'center';
             context.textBaseline = 'middle';
@@ -84,7 +84,7 @@
             const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
             const sprite = new THREE.Sprite(spriteMaterial);
 
-            sprite.scale.set(5, 5, 1);  // Set size of sprite
+            sprite.scale.set(10, 10, 1);  // Increased size of sprite
             return sprite;
         }
 
