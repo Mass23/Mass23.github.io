@@ -57,7 +57,7 @@
             sphereMaterial.needsUpdate = true;
         }
 
-        // Function to apply glitch effect
+        // Function to apply glitch effect directly to the sphere background
         function applyGlitchEffect() {
             // Clear the canvas
             glitchContext.clearRect(0, 0, glitchCanvas.width, glitchCanvas.height);
@@ -134,7 +134,7 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150, -90); // Random position within the sphere
+            sprite.position.set((Math.random() - 0.5) * 200, (Math.random() - 0.5) * 200, -90); // Random position within the sphere
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -161,7 +161,7 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150, -90); // Random position within the sphere
+            sprite.position.set((Math.random() - 0.5) * 200, (Math.random() - 0.5) * 200, -90); // Random position within the sphere
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -188,7 +188,7 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150, -90); // Random position within the sphere
+            sprite.position.set((Math.random() - 0.5) * 200, (Math.random() - 0.5) * 200, -90); // Random position within the sphere
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -201,11 +201,9 @@
 
         // Create sprites every 2 seconds
         setInterval(() => {
-            if (meImage.texture) { // Ensure texture is loaded
-                createHelloWorldSprite();
-                createPixelSprite();
-                createMeSprite();
-            }
+            createHelloWorldSprite();
+            createPixelSprite();
+            createMeSprite();
         }, spriteInterval);
 
         // Mouse movement for camera rotation
