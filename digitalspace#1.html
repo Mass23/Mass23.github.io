@@ -53,6 +53,11 @@
         // Create initial glitches upon loading
         setTimeout(() => createGlitches(10), 1000); // Create 10 glitches after 1 second
 
+        // Variables for sprites
+        const sprites = [];
+        const MAX_SPRITES = 1000; // Limit the number of sprites
+        const spriteInterval = 500; // Generate sprites every 5 seconds
+
         // Function to create "HELLO WORLD" sprite
         function createHelloWorldSprite() {
             const canvas = document.createElement('canvas');
@@ -75,6 +80,13 @@
             const sprite = new THREE.Sprite(spriteMaterial);
             sprite.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, -90); // Closer to the sphere surface
             scene.add(sprite);
+            sprites.push(sprite);
+
+            // Remove oldest sprite if limit exceeded
+            if (sprites.length > MAX_SPRITES) {
+                const oldestSprite = sprites.shift();
+                scene.remove(oldestSprite);
+            }
         }
 
         // Function to create larger pixel sprites
@@ -95,6 +107,13 @@
             const sprite = new THREE.Sprite(spriteMaterial);
             sprite.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, -90); // Closer to the sphere surface
             scene.add(sprite);
+            sprites.push(sprite);
+
+            // Remove oldest sprite if limit exceeded
+            if (sprites.length > MAX_SPRITES) {
+                const oldestSprite = sprites.shift();
+                scene.remove(oldestSprite);
+            }
         }
 
         // Function to create a sprite from the me.webp image
@@ -115,26 +134,38 @@
             const sprite = new THREE.Sprite(spriteMaterial);
             sprite.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, -90); // Closer to the sphere surface
             scene.add(sprite);
+            sprites.push(sprite);
+
+            // Remove oldest sprite if limit exceeded
+            if (sprites.length > MAX_SPRITES) {
+                const oldestSprite = sprites.shift();
+                scene.remove(oldestSprite);
+            }
         }
 
         // Create the me.webp image for sampling pixels
         const meImage = new Image();
         meImage.src = 'images/me.webp';
         meImage.onload = function() {
-            // Create sprites every 3 seconds
+            // Create sprites every 5 seconds
             setInterval(() => {
                 createHelloWorldSprite();
                 createPixelSprite();
                 createMeSprite(); // Create the me.webp sprite
-            }, 3000); // Generate sprites every 3 seconds
+            }, spriteInterval); // Generate sprites every 5 seconds
         };
 
-        // Mouse control for movement
-        document.addEventListener('click', (event) => {
-            const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-            const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-            const direction = new THREE.Vector3(mouseX, mouseY, 0.5).unproject(camera).sub(camera.position).normalize();
-            camera.position.add(direction.multiplyScalar(-1)); // Move opposite to mouse direction
+        // Throttled mouse control for movement
+        let lastMouseMoveTime = 0;
+        document.addEventListener('mousemove', (event) => {
+            const now = Date.now();
+            if (now - lastMouseMoveTime > 100) { // Limit the frequency of updates
+                lastMouseMoveTime = now;
+                const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+                const direction = new THREE.Vector3(mouseX, mouseY, 0.5).unproject(camera).sub(camera.position).normalize();
+                camera.position.add(direction.multiplyScalar(-1)); // Move opposite to mouse direction
+            }
         });
 
         // Animation loop
