@@ -73,10 +73,14 @@
             // Create random glitches
             const glitchCount = 30; // Number of glitches to apply
             for (let i = 0; i < glitchCount; i++) {
-                const x = Math.floor(Math.random() * glitchCanvas.width);
-                const y = Math.floor(Math.random() * glitchCanvas.height);
-                const width = Math.floor(Math.random() * 50); // Width of glitch segment
-                const height = Math.floor(Math.random() * 50); // Height of glitch segment
+                // Ensure the width and height are within a reasonable range
+                const width = Math.floor(Math.random() * 50) + 1; // At least 1 pixel
+                const height = Math.floor(Math.random() * 50) + 1; // At least 1 pixel
+
+                // Ensure x and y coordinates are within bounds
+                const x = Math.floor(Math.random() * (glitchCanvas.width - width));
+                const y = Math.floor(Math.random() * (glitchCanvas.height - height));
+
                 const imageData = glitchContext.getImageData(x, y, width, height);
                 const glitchX = Math.floor(Math.random() * (glitchCanvas.width - width));
                 const glitchY = Math.floor(Math.random() * (glitchCanvas.height - height));
@@ -197,14 +201,14 @@
 
         // Create sprites every 5 seconds
         setInterval(() => {
-            if (meImage.texture && meImage.texture.image) { // Ensure texture is loaded before creating
+            if (meImage.texture) { // Ensure texture is loaded
                 createHelloWorldSprite();
                 createPixelSprite();
-                createMeSprite(); // Create the me.webp sprite
+                createMeSprite();
             }
-        }, spriteInterval); // Generate sprites every 5 seconds
+        }, spriteInterval);
 
-        // Mouse movement for camera rotation
+        // Variables for mouse control
         let isMouseDown = false;
         let previousMouseX = 0;
         let previousMouseY = 0;
