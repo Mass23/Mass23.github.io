@@ -24,13 +24,10 @@
         
         // Load the texture for the sphere
         const textureLoader = new THREE.TextureLoader();
-        const meImage = textureLoader.load('images/me.webp', (texture) => {
-            // Shuffle the image pixels
-            shuffleImage(meImage.image, (shuffledTexture) => {
-                scene.background = shuffledTexture; // Set the shuffled texture as the background
-
-                // Apply the shuffled texture to the sphere
-                const sphereMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide });
+        textureLoader.load('images/me.webp', (image) => {
+            // Shuffle the image pixels and set it as the texture for the sphere
+            shuffleImage(image, (shuffledTexture) => {
+                const sphereMaterial = new THREE.MeshBasicMaterial({ map: shuffledTexture, side: THREE.BackSide });
                 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
                 scene.add(sphere);
 
