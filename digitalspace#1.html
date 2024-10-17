@@ -29,29 +29,25 @@
         // Set camera position
         camera.position.set(0, 0, 0);
 
-        // Load the texture for glitches
+        // Load the texture for sprites
         const textureLoader = new THREE.TextureLoader();
         const meImage = textureLoader.load('images/me.webp', (texture) => {
             console.log('Texture loaded:', texture); // Log when texture is loaded
-
-            // Create glitches on the image before using it
-            applyGlitchEffect(texture.image, (glitchedTexture) => {
-                sphereMaterial.map = glitchedTexture; // Apply the glitched texture to the sphere
-                sphereMaterial.needsUpdate = true; // Mark the material as needing an update
-                startGlitching(texture.image); // Start periodic glitching
-            });
+            createGrayNoiseBackground(); // Create and apply gray noise background
+            startGlitchingBackground(); // Start glitching the background noise
         }, undefined, (error) => {
             console.error('Error loading texture:', error); // Log errors
         });
 
-        // Function to create a coarse gray noise texture
-        function createGrayNoiseTexture(width, height) {
-            const noiseCanvas = document.createElement('canvas');
-            const noiseContext = noiseCanvas.getContext('2d');
-            noiseCanvas.width = width;
-            noiseCanvas.height = height;
+        // Create a canvas for background noise and apply it to the scene
+        const noiseCanvas = document.createElement('canvas');
+        const noiseContext = noiseCanvas.getContext('2d');
+        noiseCanvas.width = 512;
+        noiseCanvas.height = 512;
 
-            const imageData = noiseContext.createImageData(width, height);
+        // Function to create a coarse gray noise texture
+        function createGrayNoiseBackground() {
+            const imageData = noiseContext.createImageData(noiseCanvas.width, noiseCanvas.height);
             for (let i = 0; i < imageData.data.length; i += 4) {
                 const gray = Math.random() * 255; // Random gray value
                 imageData.data[i] = gray;     // R
@@ -60,26 +56,21 @@
                 imageData.data[i + 3] = 255;  // A
             }
             noiseContext.putImageData(imageData, 0, 0);
-            return new THREE.Texture(noiseCanvas);
+            const noiseTexture = new THREE.Texture(noiseCanvas);
+            noiseTexture.needsUpdate = true;
+            scene.background = noiseTexture; // Set the noise texture as the scene background
         }
 
-        // Create the gray noise texture and set it as background
-        const noiseTexture = createGrayNoiseTexture(512, 512);
-        noiseTexture.needsUpdate = true;
-
-        // Set the background of the scene to gray noise
-        scene.background = noiseTexture;
-
-        // Create a canvas for glitches
+        // Create a canvas for glitches on the background
         const glitchCanvas = document.createElement('canvas');
         const glitchContext = glitchCanvas.getContext('2d');
         glitchCanvas.width = 512; // Set canvas size
         glitchCanvas.height = 512;
 
-        // Function to apply glitch effect directly to the loaded image
-        function applyGlitchEffect(image, callback) {
+        // Function to apply glitch effect directly to the noise canvas
+        function applyGlitchEffect() {
             glitchContext.clearRect(0, 0, glitchCanvas.width, glitchCanvas.height);
-            glitchContext.drawImage(image, 0, 0, glitchCanvas.width, glitchCanvas.height);
+            glitchContext.drawImage(noiseCanvas, 0, 0, glitchCanvas.width, glitchCanvas.height);
             
             // Create random glitches with larger patches
             const glitchCount = 15; // Number of glitches
@@ -113,20 +104,16 @@
                 }
             }
 
-            // Create a texture from the glitched canvas
+            // Update the scene background with the glitched canvas
             const glitchedTexture = new THREE.Texture(glitchCanvas);
-            glitchedTexture.needsUpdate = true; // Update the texture
-            callback(glitchedTexture); // Call the callback with the glitched texture
+            glitchedTexture.needsUpdate = true;
+            scene.background = glitchedTexture; // Update the background texture
         }
 
-        // Function to start periodic glitching of the texture
-        function startGlitching(originalImage) {
+        // Function to start periodic glitching of the background
+        function startGlitchingBackground() {
             setInterval(() => {
-                applyGlitchEffect(originalImage, (glitchedTexture) => {
-                    sphereMaterial.map = glitchedTexture; // Update the material map
-                    sphereMaterial.needsUpdate = true; // Mark the material as needing an update
-                    console.log('Updated glitched texture'); // Log texture updates
-                });
+                applyGlitchEffect(); // Apply glitch effect every 2 seconds
             }, 2000); // Glitch every 2 seconds
         }
 
