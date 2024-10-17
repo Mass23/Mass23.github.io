@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Sphere with Opposite Mouse Control</title>
+    <title>Three.js Sphere with Noisy Background and Fixed Objects</title>
     <style>
         body { margin: 0; }
         canvas { display: block; }
@@ -19,17 +19,18 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Texture loader and random sampling function
+        // Texture loader
         const textureLoader = new THREE.TextureLoader();
         const imageTexture = textureLoader.load('images/me.webp');
 
-        // Creating a sphere
+        // Create a sphere geometry
         const geometry = new THREE.SphereGeometry(20, 32, 32);
 
         // Apply texture to the inside of the sphere
         imageTexture.wrapS = THREE.RepeatWrapping;
         imageTexture.wrapT = THREE.RepeatWrapping;
         imageTexture.repeat.set(-1, 1);  // Flip texture horizontally
+
         const material = new THREE.MeshBasicMaterial({
             map: imageTexture,
             side: THREE.BackSide,  // Texture applied to the inside of the sphere
@@ -40,84 +41,133 @@
 
         camera.position.z = 50;  // Set camera inside the sphere
 
+        // Generate noisy background for "Hello World" text
+        function generateNoisyTexture(width, height) {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const context = canvas.getContext('2d');
+            const imageData = context.createImageData(width, height);
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                const value = Math.random() * 255; // Generate random grey value
+                imageData.data[i] = value;
+                imageData.data[i + 1] = value;
+                imageData.data[i + 2] = value;
+                imageData.data[i + 3] = 255; // Full opacity
+            }
+            context.putImageData(imageData, 0, 0);
+            const texture = new THREE.CanvasTexture(canvas);
+            return texture;
+        }
+
+        // Create a sprite with "Hello World" text on a noisy background
+        function createTextSprite(text) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const width = 512;  // Same size as the texture (e.g. me.webp)
+            const height = 512;
+            canvas.width = width;
+            canvas.height = height;
+
+            // Draw noisy background
+            const noisyTexture = generateNoisyTexture(width, height);
+            context.drawImage(noisyTexture.image, 0, 0);
+
+            // Draw text
+            context.font = 'Bold 40px Arial';
+            context.fillStyle = 'white';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText(text, width / 2, height / 2);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+
+            sprite.scale.set(10, 10, 1);  // Set size of sprite
+            return sprite;
+        }
+
+        // Place the text sprite randomly inside the sphere
+        function placeSpriteInsideSphere(sprite) {
+            const phi = Math.random() * Math.PI * 2;
+            const theta = Math.random() * Math.PI;
+            const radius = 18;  // Slightly inside the sphere
+
+            sprite.position.set(
+                radius * Math.sin(theta) * Math.cos(phi),
+                radius * Math.sin(theta) * Math.sin(phi),
+                radius * Math.cos(theta)
+            );
+
+            scene.add(sprite);
+
+            // Slowly fade away after 3 seconds
+            setTimeout(() => {
+                sprite.material.transparent = true;
+                const fadeInterval = setInterval(() => {
+                    sprite.material.opacity -= 0.01;
+                    if (sprite.material.opacity <= 0) {
+                        clearInterval(fadeInterval);
+                        scene.remove(sprite);  // Remove sprite when fully transparent
+                    }
+                }, 50);
+            }, 3000);
+        }
+
+        // Create and place multiple text and image sprites
+        function createFloatingObjects() {
+            // Create "Hello World" sprite
+            const helloWorldSprite = createTextSprite('HELLO WORLD');
+            placeSpriteInsideSphere(helloWorldSprite);
+
+            // Create image sprite
+            const imageMaterial = new THREE.SpriteMaterial({ map: imageTexture });
+            const imageSprite = new THREE.Sprite(imageMaterial);
+            imageSprite.scale.set(10, 10, 1);  // Set size of image
+            placeSpriteInsideSphere(imageSprite);
+
+            // Repeat every 5 seconds
+            setTimeout(createFloatingObjects, 5000);
+        }
+
+        // Call the function to start generating objects
+        createFloatingObjects();
+
         // Mouse control variables
         let isMouseDown = false;
         let mouseX = 0, mouseY = 0;
         let prevMouseX = 0, prevMouseY = 0;
 
         // Mouse down event to start moving the camera
-        document.addEventListener('mousedown', function(event) {
+        document.addEventListener('mousedown', function (event) {
             isMouseDown = true;
             prevMouseX = event.clientX;
             prevMouseY = event.clientY;
         });
 
         // Mouse up event to stop moving the camera
-        document.addEventListener('mouseup', function() {
+        document.addEventListener('mouseup', function () {
             isMouseDown = false;
         });
 
-        // Mouse move event
-        document.addEventListener('mousemove', function(event) {
+        // Mouse move event to rotate the camera in the opposite direction of the mouse movement
+        document.addEventListener('mousemove', function (event) {
             if (!isMouseDown) return;
 
             mouseX = event.clientX;
             mouseY = event.clientY;
 
-            // Calculate the delta (change in mouse position)
             const deltaX = mouseX - prevMouseX;
             const deltaY = mouseY - prevMouseY;
 
-            // Move camera in the opposite direction to the mouse
-            camera.rotation.y += deltaX * 0.002;  // Yaw (left/right)
-            camera.rotation.x += deltaY * 0.002;  // Pitch (up/down)
+            // Move camera in the opposite direction
+            camera.rotation.y -= deltaX * 0.002;  // Yaw (left/right)
+            camera.rotation.x -= deltaY * 0.002;  // Pitch (up/down)
 
-            // Save current mouse position for next movement
             prevMouseX = mouseX;
             prevMouseY = mouseY;
         });
-
-        // Randomly generate images and text inside the sphere
-        function createFloatingObjects() {
-            // Create "Hello World" text
-            const textGeometry = new THREE.TextGeometry('HELLO WORLD', {
-                font: new THREE.FontLoader().parse(/* Load a font JSON object here */),
-                size: 1,
-                height: 0.1,
-            });
-            const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff4500 });
-            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-
-            // Random position inside the sphere
-            const phi = Math.random() * Math.PI * 2;
-            const theta = Math.random() * Math.PI;
-            const radius = 15; // Distance from center (inside the sphere)
-
-            textMesh.position.set(
-                radius * Math.sin(theta) * Math.cos(phi),
-                radius * Math.sin(theta) * Math.sin(phi),
-                radius * Math.cos(theta)
-            );
-            scene.add(textMesh);
-
-            // Fade away after a few seconds
-            setTimeout(() => {
-                textMesh.material.transparent = true;
-                const fadeInterval = setInterval(() => {
-                    textMesh.material.opacity -= 0.01;
-                    if (textMesh.material.opacity <= 0) {
-                        clearInterval(fadeInterval);
-                        scene.remove(textMesh);  // Remove the text once it disappears
-                    }
-                }, 50);
-            }, 3000);  // Delay before starting the fade-out
-
-            // Repeat this process every few seconds for more floating objects
-            setTimeout(createFloatingObjects, 5000);
-        }
-
-        // Call the function initially to start generating objects
-        createFloatingObjects();
 
         // Render loop
         function render() {
@@ -128,7 +178,7 @@
         render();
 
         // Handle window resizing
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
