@@ -38,7 +38,7 @@
             applyGlitchEffect(texture.image, (glitchedTexture) => {
                 sphereMaterial.map = glitchedTexture; // Apply the glitched texture to the sphere
                 sphereMaterial.needsUpdate = true; // Mark the material as needing an update
-                startGlitching(glitchedTexture); // Start periodic glitching
+                startGlitching(texture.image); // Start periodic glitching
             });
         }, undefined, (error) => {
             console.error('Error loading texture:', error); // Log errors
@@ -85,11 +85,12 @@
         }
 
         // Function to start periodic glitching of the texture
-        function startGlitching(originalTexture) {
+        function startGlitching(originalImage) {
             setInterval(() => {
-                applyGlitchEffect(originalTexture.image, (glitchedTexture) => {
+                applyGlitchEffect(originalImage, (glitchedTexture) => {
                     sphereMaterial.map = glitchedTexture; // Update the material map
                     sphereMaterial.needsUpdate = true; // Mark the material as needing an update
+                    console.log('Updated glitched texture'); // Log texture updates
                 });
             }, 2000); // Glitch every 2 seconds
         }
