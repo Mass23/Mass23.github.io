@@ -30,7 +30,7 @@
                 const sphereMaterial = new THREE.MeshBasicMaterial({ map: shuffledTexture, side: THREE.BackSide });
                 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
                 scene.add(sphere);
-
+                
                 startSpriteCreation(); // Start creating sprites
             });
         }, undefined, (error) => {
@@ -44,10 +44,10 @@
         function shuffleImage(image, callback) {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = image.width;
-            canvas.height = image.height;
+            canvas.width = image.image.width;  // Use image.image.width
+            canvas.height = image.image.height; // Use image.image.height
 
-            context.drawImage(image, 0, 0);
+            context.drawImage(image.image, 0, 0); // Ensure we're using image.image
 
             const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
@@ -121,36 +121,9 @@
             canvas.height = 256;
 
             // Draw a random pixel sample from the image
-            const x = Math.floor(Math.random() * (image.width - 256));
-            const y = Math.floor(Math.random() * (image.height - 256));
-            context.drawImage(image, x, y, 256, 256, 0, 0, 256, 256);
-
-            const spriteTexture = new THREE.Texture(canvas);
-            spriteTexture.needsUpdate = true;
-            const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
-            const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150, -90); // Random position within the sphere
-            scene.add(sprite);
-            sprites.push(sprite);
-
-            // Remove oldest sprite if limit exceeded
-            if (sprites.length > MAX_SPRITES) {
-                const oldestSprite = sprites.shift();
-                scene.remove(oldestSprite);
-            }
-        }
-
-        // Function to create me.webp sprites
-        function createMeSprite() {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 256; // Increased size
-            canvas.height = 256;
-
-            // Draw a random part of the image
-            const x = Math.floor(Math.random() * (image.width - 256));
-            const y = Math.floor(Math.random() * (image.height - 256));
-            context.drawImage(image, x, y, 256, 256, 0, 0, 256, 256);
+            const x = Math.floor(Math.random() * (image.image.width - 256));
+            const y = Math.floor(Math.random() * (image.image.height - 256));
+            context.drawImage(image.image, x, y, 256, 256, 0, 0, 256, 256);
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
@@ -172,7 +145,6 @@
             setInterval(() => {
                 createHelloWorldSprite();
                 createPixelSprite();
-                createMeSprite();
             }, spriteInterval); // Create sprites every 2 seconds
         }
 
