@@ -57,6 +57,24 @@
             const noiseTexture = new THREE.Texture(noiseCanvas);
             noiseTexture.needsUpdate = true;
             scene.background = noiseTexture; // Set the noise texture as the scene background
+
+            // Create noise texture for animation
+            animateNoise();
+        }
+
+        // Function to animate the noise background
+        function animateNoise() {
+            setInterval(() => {
+                const imageData = noiseContext.getImageData(0, 0, noiseCanvas.width, noiseCanvas.height);
+                for (let i = 0; i < imageData.data.length; i += 4) {
+                    const gray = Math.random() * 255; // Random gray value
+                    imageData.data[i] = gray;     // R
+                    imageData.data[i + 1] = gray; // G
+                    imageData.data[i + 2] = gray; // B
+                }
+                noiseContext.putImageData(imageData, 0, 0);
+                noiseCanvas.needsUpdate = true;
+            }, 1000); // Update noise every second
         }
 
         // Variables for sprites
