@@ -3,95 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Glitched Sphere with Sprites</title>
+    <title>Three.js Sphere Viewer</title>
     <style>
-        /* Additional styles to make the canvas fill the window */
-        canvas {
-            display: block; /* Ensures the canvas fills the window */
-            position: absolute; /* Remove any margin or padding */
-        }
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
     </style>
 </head>
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Scene setup
+        // Set up scene, camera, and renderer
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true }); // Allow transparency
+        const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
-
-        // Texture loader
-        const textureLoader = new THREE.TextureLoader();
-        let imageTexture = textureLoader.load('images/me.webp', (texture) => {
-            // Crop 50 pixels from each side
-            const cropAmount = 50;
-            const width = texture.image.width;
-            const height = texture.image.height;
-
-            texture.offset.set(cropAmount / width, cropAmount / height);
-            texture.repeat.set((width - 2 * cropAmount) / width, (height - 2 * cropAmount) / height);
-            texture.needsUpdate = true;
-        });
-
-        // Create a sphere geometry (textured inside)
-        const geometry = new THREE.SphereGeometry(20, 32, 32);
-        const material = new THREE.MeshBasicMaterial({
-            map: imageTexture,
-            side: THREE.BackSide // Texture is applied inside the sphere
-        });
-        const sphere = new THREE.Mesh(geometry, material);
+        
+        // Sphere geometry
+        const sphereGeometry = new THREE.SphereGeometry(100, 32, 32);
+        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide });
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
         scene.add(sphere);
 
-        // Create a glitch effect on the sphere texture
-        function applyGlitchEffect() {
+        // Set camera position
+        camera.position.set(0, 0, 0);
+
+        // Load the texture
+        const textureLoader = new THREE.TextureLoader();
+        let sphereTexture = textureLoader.load('images/me.webp');
+
+        // Function to update the texture with a glitch effect
+        function updateSphereTexture() {
+            sphereTexture = textureLoader.load('images/me.webp', function(texture) {
+                texture.wrapS = THREE.RepeatWrapping;
+                texture.wrapT = THREE.RepeatWrapping;
+                texture.repeat.set(1, 1);
+                sphereMaterial.map = texture;
+                sphereMaterial.needsUpdate = true;
+            });
+        }
+
+        // Function to create glitches
+        function createGlitches(numGlitches) {
+            for (let i = 0; i < numGlitches; i++) {
+                setTimeout(updateSphereTexture, i * 200); // Delay each glitch slightly
+            }
+        }
+
+        // Create initial glitches upon loading
+        setTimeout(() => createGlitches(10), 1000); // Create 10 glitches after 1 second
+
+        // Function to create "HELLO WORLD" sprite
+        function createHelloWorldSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
+            canvas.width = 128;
+            canvas.height = 128;
 
-            // Set canvas dimensions
-            canvas.width = imageTexture.image.width;
-            canvas.height = imageTexture.image.height;
+            // Draw a noisy square with "HELLO WORLD"
+            context.fillStyle = 'rgba(200, 200, 200, 0.5)';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = 'black';
+            context.font = '20px Arial';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText('HELLO WORLD', canvas.width / 2, canvas.height / 2);
 
-            // Draw the image on the canvas
-            context.drawImage(imageTexture.image, 0, 0);
-
-            // Glitch effect logic: randomly distort parts of the image
-            for (let i = 0; i < 10; i++) { // Fewer glitches for performance
-                const x = Math.floor(Math.random() * canvas.width);
-                const y = Math.floor(Math.random() * canvas.height);
-                const width = Math.floor(Math.random() * 50); // Width of glitch segment
-                const height = Math.floor(Math.random() * 50); // Height of glitch segment
-                const imageData = context.getImageData(x, y, width, height);
-                const glitchX = Math.floor(Math.random() * (canvas.width - width));
-                const glitchY = Math.floor(Math.random() * (canvas.height - height));
-
-                // Put the distorted segment back onto the canvas
-                context.putImageData(imageData, glitchX, glitchY);
-            }
-
-            // Update the texture
-            imageTexture.image.src = canvas.toDataURL();
-            imageTexture.needsUpdate = true;
-        }
-
-        // Sprite generation
-        const sprites = [];
-        const spriteMaterial = new THREE.SpriteMaterial({ color: 0xffffff });
-        
-        function createSprite() {
+            const spriteTexture = new THREE.Texture(canvas);
+            spriteTexture.needsUpdate = true;
+            const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.scale.set(0.2, 0.2, 1); // Increase the size of sprites
-            sprite.position.set(
-                (Math.random() - 0.5) * 40,
-                (Math.random() - 0.5) * 40,
-                (Math.random() - 0.5) * 40
-            );
+            sprite.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, -90); // Closer to the sphere surface
             scene.add(sprite);
-            sprites.push(sprite);
         }
 
-        setInterval(createSprite, 1000); // Slower sprite generation
+        // Function to create larger pixel sprites
+        function createPixelSprite() {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 64;  // Increased size
+            canvas.height = 64;
+
+            // Draw a random pixel sample from the image
+            const x = Math.floor(Math.random() * (meImage.width - 64));
+            const y = Math.floor(Math.random() * (meImage.height - 64));
+            context.drawImage(meImage, x, y, 64, 64, 0, 0, 64, 64);
+
+            const spriteTexture = new THREE.Texture(canvas);
+            spriteTexture.needsUpdate = true;
+            const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, -90); // Closer to the sphere surface
+            scene.add(sprite);
+        }
+
+        // Function to create a sprite from the me.webp image
+        function createMeSprite() {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 128;  // Size of the sprite
+            canvas.height = 128;
+
+            // Draw a random section of the me.webp image
+            const x = Math.floor(Math.random() * (meImage.width - canvas.width));
+            const y = Math.floor(Math.random() * (meImage.height - canvas.height));
+            context.drawImage(meImage, x, y, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+
+            const spriteTexture = new THREE.Texture(canvas);
+            spriteTexture.needsUpdate = true;
+            const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, -90); // Closer to the sphere surface
+            scene.add(sprite);
+        }
+
+        // Create the me.webp image for sampling pixels
+        const meImage = new Image();
+        meImage.src = 'images/me.webp';
+        meImage.onload = function() {
+            // Create sprites every 3 seconds
+            setInterval(() => {
+                createHelloWorldSprite();
+                createPixelSprite();
+                createMeSprite(); // Create the me.webp sprite
+            }, 3000); // Generate sprites every 3 seconds
+        };
+
+        // Mouse control for movement
+        document.addEventListener('click', (event) => {
+            const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            const direction = new THREE.Vector3(mouseX, mouseY, 0.5).unproject(camera).sub(camera.position).normalize();
+            camera.position.add(direction.multiplyScalar(-1)); // Move opposite to mouse direction
+        });
 
         // Animation loop
         function animate() {
@@ -99,25 +143,7 @@
             renderer.render(scene, camera);
         }
 
-        // Mouse movement tracking
-        document.addEventListener('mousemove', (event) => {
-            const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-            const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-            camera.rotation.x = mouseY * Math.PI; // Adjust pitch
-            camera.rotation.y = mouseX * Math.PI; // Adjust yaw
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // Apply glitch effect every 5 seconds
-        setInterval(applyGlitchEffect, 5000);
-
-        animate(); // Start the animation
+        animate();
     </script>
 </body>
 </html>
