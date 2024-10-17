@@ -79,7 +79,7 @@
 
         // Variables for sprites
         const sprites = [];
-        const MAX_SPRITES = 1000; // Limit the number of sprites
+        const MAX_SPRITES = 200; // Limit the number of sprites
         const spriteInterval = 100; // Generate sprites every 100 milliseconds
         const SPHERE_RADIUS = 100; // Sphere radius
         const meImage = new Image(); // Image for MeSprites
@@ -94,8 +94,8 @@
         function createHelloWorldSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 512 * 10; // Increased size
-            canvas.height = 512 * 10;
+            canvas.width = 512; // Increased size
+            canvas.height = 512;
 
             // Draw a noisy square with "HELLO WORLD"
             context.fillStyle = 'rgba(200, 200, 200, 0.5)';
@@ -112,7 +112,7 @@
             const sprite = new THREE.Sprite(spriteMaterial);
 
             // Position the sprite close to the sphere's inner surface
-            positionSprite(sprite, SPHERE_RADIUS - 10); // Adjust position
+            positionSprite(sprite, SPHERE_RADIUS - 5); // Adjust position
 
             scene.add(sprite);
             sprites.push(sprite);
@@ -120,6 +120,9 @@
             // Remove oldest sprite if limit exceeded
             if (sprites.length > MAX_SPRITES) {
                 const oldestSprite = sprites.shift();
+                if (oldestSprite && oldestSprite.material.map) {
+                    oldestSprite.material.map.dispose(); // Dispose of the texture
+                }
                 scene.remove(oldestSprite);
             }
         }
@@ -128,8 +131,8 @@
         function createPixelSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 512;  // Increased size
-            canvas.height = 512;
+            canvas.width = 128;  // Increased size
+            canvas.height = 128;
 
             // Draw a random pixel sample from the image
             const x = Math.floor(Math.random() * (meImage.width - 256));
@@ -142,7 +145,7 @@
             const sprite = new THREE.Sprite(spriteMaterial);
 
             // Position the sprite closer to the center of the sphere
-            positionSprite(sprite, SPHERE_RADIUS - 5); // Adjust position
+            positionSprite(sprite, SPHERE_RADIUS - 3); // Adjust position
             sprite.userData.type = 'pixel'; // Set userData for pixel sprite
 
             scene.add(sprite);
@@ -151,6 +154,9 @@
             // Remove oldest sprite if limit exceeded
             if (sprites.length > MAX_SPRITES) {
                 const oldestSprite = sprites.shift();
+                if (oldestSprite && oldestSprite.material.map) {
+                    oldestSprite.material.map.dispose(); // Dispose of the texture
+                }
                 scene.remove(oldestSprite);
             }
         }
@@ -159,8 +165,8 @@
         function createMeSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 512 * 7;  // Size of MeSprites
-            canvas.height = 512 * 7;
+            canvas.width = 256;  // Size of MeSprites
+            canvas.height = 256;
 
             // Draw a random part of the me image
             const x = Math.floor(Math.random() * (meImage.width - 256));
@@ -173,7 +179,7 @@
             const sprite = new THREE.Sprite(spriteMaterial);
 
             // Position the sprite close to the sphere's inner surface
-            positionSprite(sprite, SPHERE_RADIUS - 15); // Adjust position
+            positionSprite(sprite, SPHERE_RADIUS - 4); // Adjust position
             sprite.userData.type = 'me'; // Set userData for MeSprite
 
             scene.add(sprite);
@@ -181,9 +187,13 @@
 
             // Remove oldest sprite if limit exceeded
             if (sprites.length > MAX_SPRITES) {
-                const oldestSprite = sprites.shift();
-                scene.remove(oldestSprite);
-            }
+                if (sprites.length > MAX_SPRITES) {
+                    const oldestSprite = sprites.shift();
+                    if (oldestSprite && oldestSprite.material.map) {
+                        oldestSprite.material.map.dispose(); // Dispose of the texture
+                    }
+                    scene.remove(oldestSprite);
+    }
         }
 
         // Function to position sprites
