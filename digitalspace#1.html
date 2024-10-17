@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Space #1 - Particles in Sphere</title>
+    <title>Digital Space #1 - Checkerboard Sphere</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
@@ -19,145 +19,85 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Set camera position to be inside the sphere
-        camera.position.set(0, 0, 0);
+        // Sphere geometry
+        const sphereGeometry = new THREE.SphereGeometry(100, 32, 32);
+        
+        // Create a checkerboard texture with four colors
+        function createCheckerboardTexture(size, colors) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const context = canvas.getContext('2d');
 
-        // Sphere radius
-        const SPHERE_RADIUS = 100;
-
-        // Define colors to shuffle for the sphere texture
-        const colors = ['#583BBF', '#403527', '#BF8969', '#BF584E'];
-        const textureWidth = 32; // Width of the pixel texture
-        const textureHeight = 32; // Height of the pixel texture
-        let pixelTexture;
-
-        // Function to shuffle an array
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        // Create shuffled texture from defined colors
-        const createShuffledTexture = () => {
-            // Create an array for the shuffled pixel texture
-            pixelTexture = new Uint8Array(textureWidth * textureHeight * 4);
-            const shuffledColors = colors.slice(); // Clone colors array
-            shuffle(shuffledColors); // Shuffle the colors
-
-            // Fill the pixel texture with shuffled colors
-            for (let i = 0; i < pixelTexture.length; i += 4) {
-                const color = shuffledColors[(i / 4) % shuffledColors.length]; // Loop through shuffled colors
-                const hex = parseInt(color.slice(1), 16); // Convert hex to number
-                pixelTexture[i] = (hex >> 16) & 0xff;     // Red
-                pixelTexture[i + 1] = (hex >> 8) & 0xff;  // Green
-                pixelTexture[i + 2] = hex & 0xff;          // Blue
-                pixelTexture[i + 3] = 255;                  // Alpha
-            }
-
-            // Create texture from pixel data
-            const texture = new THREE.DataTexture(pixelTexture, textureWidth, textureHeight, THREE.RGBAFormat);
-            texture.needsUpdate = true;
-
-            // Create sphere geometry with the pixel texture
-            const sphereGeometry = new THREE.SphereGeometry(SPHERE_RADIUS, 32, 32);
-            const sphereMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-            scene.add(sphere);
-        };
-
-        createShuffledTexture(); // Create texture using defined colors
-
-        // Create particles using THREE.BufferGeometry
-        const MAX_PARTICLES = 10000;
-        const particleGeometry = new THREE.BufferGeometry();
-        const particlePositions = new Float32Array(MAX_PARTICLES * 3);
-        const particleVelocities = new Float32Array(MAX_PARTICLES * 3);
-
-        // Function to generate a random position inside the sphere
-        function randomPointInSphere(radius) {
-            const theta = Math.random() * 2 * Math.PI; // Random angle
-            const phi = Math.acos(2 * Math.random() - 1); // Random inclination
-            const r = Math.cbrt(Math.random()) * radius; // Random distance within the sphere
-            return [
-                r * Math.sin(phi) * Math.cos(theta), // x-coordinate
-                r * Math.sin(phi) * Math.sin(theta), // y-coordinate
-                r * Math.cos(phi)                    // z-coordinate
-            ];
-        }
-
-        // Initialize particle positions and velocities
-        for (let i = 0; i < MAX_PARTICLES; i++) {
-            const [x, y, z] = randomPointInSphere(SPHERE_RADIUS);
-            particlePositions[i * 3] = x;
-            particlePositions[i * 3 + 1] = y;
-            particlePositions[i * 3 + 2] = z;
-
-            // Assign random velocities
-            particleVelocities[i * 3] = (Math.random() - 0.5) * 0.1;
-            particleVelocities[i * 3 + 1] = (Math.random() - 0.5) * 0.1;
-            particleVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.1;
-        }
-
-        // Set attributes for the particle geometry
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-
-        // Create material for the particles
-        const particleMaterial = new THREE.PointsMaterial({
-            color: 14272191, // Set particle color
-            size: 0.5,
-            transparent: true,
-            opacity: 0.8
-        });
-
-        // Create particle system
-        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
-        scene.add(particleSystem);
-
-        // Function to animate particles
-        function animateParticles() {
-            const positions = particleSystem.geometry.attributes.position.array;
-
-            for (let i = 0; i < MAX_PARTICLES; i++) {
-                // Update positions using velocities
-                positions[i * 3] += particleVelocities[i * 3];
-                positions[i * 3 + 1] += particleVelocities[i * 3 + 1];
-                positions[i * 3 + 2] += particleVelocities[i * 3 + 2];
-
-                // Calculate distance from origin (0, 0, 0)
-                const distance = Math.sqrt(
-                    positions[i * 3] * positions[i * 3] +
-                    positions[i * 3 + 1] * positions[i * 3 + 1] +
-                    positions[i * 3 + 2] * positions[i * 3 + 2]
-                );
-
-                // If particle is outside the sphere, reset it to a random position inside the sphere
-                if (distance > SPHERE_RADIUS) {
-                    const [x, y, z] = randomPointInSphere(SPHERE_RADIUS);
-                    positions[i * 3] = x;
-                    positions[i * 3 + 1] = y;
-                    positions[i * 3 + 2] = z;
+            const squareSize = size / 8; // 8x8 squares
+            for (let x = 0; x < 8; x++) {
+                for (let y = 0; y < 8; y++) {
+                    context.fillStyle = colors[(x % 2) + (y % 2) * 2]; // Alternate colors
+                    context.fillRect(x * squareSize, y * squareSize, squareSize, squareSize);
                 }
             }
 
-            // Notify Three.js that positions have been updated
-            particleSystem.geometry.attributes.position.needsUpdate = true;
+            const texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;
+            return texture;
         }
+
+        // Define colors for the checkerboard
+        const checkerboardColors = ['#583BBF', '#403527', '#BF8969', '#BF584E']; // Four colors for the checkerboard
+        const checkerboardTexture = createCheckerboardTexture(256, checkerboardColors);
+
+        // Create sphere with checkerboard texture
+        const sphereMaterial = new THREE.MeshBasicMaterial({ map: checkerboardTexture, side: THREE.BackSide });
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        scene.add(sphere);
+
+        // Set camera position to be inside the sphere
+        camera.position.set(0, 0, 0);
+
+        // Particles setup
+        const particleCount = 1000; // Number of particles
+        const particleGeometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3); // 3 vertices per particle
+        const colors = new Float32Array(particleCount * 3); // 3 color values per particle
+        const particleColor = new THREE.Color('#D9C6BF');
+
+        for (let i = 0; i < particleCount; i++) {
+            // Generate random positions for the particles
+            const theta = Math.random() * Math.PI; // 0 to PI
+            const phi = Math.random() * 2 * Math.PI; // 0 to 2PI
+
+            // Convert spherical coordinates to Cartesian coordinates
+            const radius = 100; // Radius of the sphere
+            const x = radius * Math.sin(theta) * Math.cos(phi);
+            const y = radius * Math.sin(theta) * Math.sin(phi);
+            const z = radius * Math.cos(theta);
+
+            positions.set([x, y, z], i * 3);
+            colors.set([particleColor.r, particleColor.g, particleColor.b], i * 3);
+        }
+
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({ size: 2, vertexColors: true });
+        const particles = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particles);
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
 
-            // Animate the particles
-            animateParticles();
+            // Rotate the sphere for a dynamic effect
+            sphere.rotation.y += 0.01;
 
-            // Render the scene
+            // Optionally, animate particles here (e.g., moving them)
+            particles.rotation.y += 0.005; // Slow rotation of particles
+
             renderer.render(scene, camera);
         }
         animate(); // Start the animation loop
 
-        // Handle mouse movement for camera rotation
+        // Handle mouse movement
         let isMouseDown = false;
         let lastMouseX = 0;
         let lastMouseY = 0;
