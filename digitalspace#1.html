@@ -70,12 +70,12 @@
                 return;
             }
 
-            // Create random glitches
-            const glitchCount = 30; // Number of glitches to apply
+            // Create random glitches with larger patches
+            const glitchCount = 15; // Adjusted number of glitches
             for (let i = 0; i < glitchCount; i++) {
-                // Ensure the width and height are within a reasonable range
-                const width = Math.floor(Math.random() * 50) + 1; // At least 1 pixel
-                const height = Math.floor(Math.random() * 50) + 1; // At least 1 pixel
+                // Increase width and height of the glitch patches
+                const width = Math.floor(Math.random() * 100) + 30; // Width of glitch segment (30-130)
+                const height = Math.floor(Math.random() * 100) + 30; // Height of glitch segment (30-130)
 
                 // Ensure x and y coordinates are within bounds
                 const x = Math.floor(Math.random() * (glitchCanvas.width - width));
