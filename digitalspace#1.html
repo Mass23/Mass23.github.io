@@ -196,10 +196,14 @@
         }, spriteInterval); // Generate sprites every 5 seconds
 
         // Create an initial batch of sprites
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 50; i++) {
             createHelloWorldSprite();
-            createPixelSprite();
-            createMeSprite(); // Create the me.webp sprite
+            for (let i = 0; i < 3; i++) {
+                createMeSprite();
+            }
+            for (let i = 0; i < 10; i++) {
+                createPixelSprite();
+            }
         }
 
         // Variables for mouse interaction
