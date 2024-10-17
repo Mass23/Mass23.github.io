@@ -3,13 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Interior Sphere</title>
+    <title>Three.js Interior Sphere with Fade Image and Text</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
+
+        /* Style for Hello World text */
+        #hello-world {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Arial', sans-serif;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            z-index: 1;
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
+    <!-- Hello World Text -->
+    <div id="hello-world">Hello World</div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         // Scene setup
@@ -17,45 +35,111 @@
 
         // Camera setup
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 0;  // Set the camera in the center of the sphere
+        camera.position.z = 0;  // Center of the sphere
 
         // Renderer setup
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Load texture
+        // Load texture for the sphere's inside
         const textureLoader = new THREE.TextureLoader();
-        const texture = textureLoader.load('images/me.webp');  // Path to your image
+        const sphereTexture = textureLoader.load('images/me.webp');  // Path to your image
 
-        // Create the sphere geometry
-        const geometry = new THREE.SphereGeometry(10, 32, 32);  // Larger radius, 10 units, so you're "inside"
-        
-        // Apply the texture to the interior of the sphere
+        // Create sphere geometry
+        const geometry = new THREE.SphereGeometry(10, 32, 32);  // Inside a large sphere
         const material = new THREE.MeshBasicMaterial({
-            map: texture,
-            side: THREE.BackSide  // Render the texture on the inner side of the sphere
+            map: sphereTexture,
+            side: THREE.BackSide  // Render on the inside of the sphere
         });
-
         const sphere = new THREE.Mesh(geometry, material);
         scene.add(sphere);
 
-        // Mouse control for camera rotation
-        let mouseX = 0, mouseY = 0;
+        // Variables for mouse control and rotation
+        let mouseX = 0, mouseY = 0, isNearEdge = false;
+        const edgeThreshold = 0.05;  // How close to the edge the mouse needs to be to rotate
+        const rotationSpeed = 0.02;  // Speed of rotation
+
+        // Mouse move event listener
         document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX / window.innerWidth) * 4 - 1;
-            mouseY = (event.clientY / window.innerHeight) * 4 - 1;
+            mouseX = event.clientX / window.innerWidth;
+            mouseY = event.clientY / window.innerHeight;
         });
+
+        // Rotation logic
+        function rotateCamera() {
+            // If mouse is near left or right edge, rotate horizontally
+            if (mouseX < edgeThreshold) {
+                camera.rotation.y += rotationSpeed;
+            } else if (mouseX > 1 - edgeThreshold) {
+                camera.rotation.y -= rotationSpeed;
+            }
+
+            // If mouse is near top or bottom edge, rotate vertically
+            if (mouseY < edgeThreshold) {
+                camera.rotation.x += rotationSpeed;
+            } else if (mouseY > 1 - edgeThreshold) {
+                camera.rotation.x -= rotationSpeed;
+            }
+
+            // Re-render scene after rotating camera
+            renderer.render(scene, camera);
+        }
+
+        // Show and fade the image inside the sphere
+        function fadeImage() {
+            let imageOpacity = 1;
+            const imageMaterial = new THREE.MeshBasicMaterial({
+                map: sphereTexture,
+                transparent: true,
+                opacity: 0
+            });
+            const imageMesh = new THREE.Mesh(geometry, imageMaterial);
+            scene.add(imageMesh);
+
+            // Fade-in and fade-out animation
+            function fadeInOut() {
+                imageOpacity = 1;
+                imageMaterial.opacity = 1;
+                const fadeOutInterval = setInterval(() => {
+                    imageOpacity -= 0.02;
+                    if (imageOpacity <= 0) {
+                        imageOpacity = 0;
+                        scene.remove(imageMesh);
+                        clearInterval(fadeOutInterval);
+                    }
+                    imageMaterial.opacity = imageOpacity;
+                }, 100);  // Fades over time
+            }
+
+            // Trigger the fade every 5 seconds
+            setInterval(fadeInOut, 5000);
+        }
+
+        // Start rendering and rotating camera based on mouse position
+        function render() {
+            rotateCamera();
+            requestAnimationFrame(render);  // Keep the loop running for smooth rotation
+        }
+
+        // Initial render
+        render();
+        fadeImage();  // Start the fading image animation
 
         // Handle window resizing
         window.addEventListener('resize', () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
+            renderer.render(scene, camera);  // Re-render on resize
         });
 
-        // Start animation
-        animate();
+        // Fade in the "Hello World" text after 2 seconds
+        const helloWorld = document.getElementById('hello-world');
+        setTimeout(() => {
+            helloWorld.style.transition = 'opacity 2s';
+            helloWorld.style.opacity = 1;
+        }, 2000);
     </script>
 </body>
 </html>
