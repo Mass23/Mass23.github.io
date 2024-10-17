@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Sphere with Random Image Sampling</title>
+    <title>Three.js Sphere with Opposite Mouse Control</title>
     <style>
         body { margin: 0; }
         canvas { display: block; }
@@ -15,166 +15,123 @@
         // Scene setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Sphere geometry
-        const geometry = new THREE.SphereGeometry(5, 32, 32);
-
-        // Function to create a random texture from an image
-        function createRandomTexture(image, cropSize) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-
-            const randomX = Math.floor(Math.random() * (image.width - cropSize));
-            const randomY = Math.floor(Math.random() * (image.height - cropSize));
-
-            canvas.width = cropSize;
-            canvas.height = cropSize;
-
-            context.drawImage(image, randomX, randomY, cropSize, cropSize, 0, 0, cropSize, cropSize);
-
-            return new THREE.CanvasTexture(canvas);
-        }
-
-        // Load the image and set it as the texture for the sphere
+        // Texture loader and random sampling function
         const textureLoader = new THREE.TextureLoader();
-        textureLoader.load('images/me.webp', (texture) => {
-            const cropSize = 100; // Size of the crop
-            const randomTexture = createRandomTexture(texture.image, cropSize);
+        const imageTexture = textureLoader.load('images/me.webp');
 
-            const sphereMaterial = new THREE.MeshBasicMaterial({
-                map: randomTexture, 
-                side: THREE.BackSide, // Render the inside of the sphere
-            });
+        // Creating a sphere
+        const geometry = new THREE.SphereGeometry(20, 32, 32);
 
-            const sphere = new THREE.Mesh(geometry, sphereMaterial);
-            scene.add(sphere);
+        // Apply texture to the inside of the sphere
+        imageTexture.wrapS = THREE.RepeatWrapping;
+        imageTexture.wrapT = THREE.RepeatWrapping;
+        imageTexture.repeat.set(-1, 1);  // Flip texture horizontally
+        const material = new THREE.MeshBasicMaterial({
+            map: imageTexture,
+            side: THREE.BackSide,  // Texture applied to the inside of the sphere
         });
 
-        // Set camera position
-        camera.position.set(0, 0, 0); // Camera at the center of the sphere
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
 
-        // Function to create text texture
-        function createTextTexture(text) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            const width = 512;
-            const height = 256;
-            canvas.width = width;
-            canvas.height = height;
+        camera.position.z = 50;  // Set camera inside the sphere
 
-            // Draw text on canvas
-            context.fillStyle = 'rgba(255, 255, 255, 0.8)';
-            context.fillRect(0, 0, width, height);
-            context.font = 'bold 30px Arial'; // Adjusted font size
-            context.textAlign = 'center';
-            context.fillStyle = 'black'; // Text color
-            context.fillText(text, width / 2, height / 2);
-            
-            const texture = new THREE.CanvasTexture(canvas);
-            return texture;
-        }
+        // Mouse control variables
+        let isMouseDown = false;
+        let mouseX = 0, mouseY = 0;
+        let prevMouseX = 0, prevMouseY = 0;
 
-        // Function to generate random positions inside the sphere
-        function getRandomPosition(radius) {
-            const theta = Math.random() * Math.PI * 2; // Random angle
-            const phi = Math.acos(Math.random() * 2 - 1); // Random elevation
-            const x = radius * Math.sin(phi) * Math.cos(theta);
-            const y = radius * Math.sin(phi) * Math.sin(theta);
-            const z = radius * Math.cos(phi);
-            return new THREE.Vector3(x, y, z);
-        }
+        // Mouse down event to start moving the camera
+        document.addEventListener('mousedown', function(event) {
+            isMouseDown = true;
+            prevMouseX = event.clientX;
+            prevMouseY = event.clientY;
+        });
 
-        // Function to create a sprite with image texture
-        function createImageSprite(imagePath) {
-            const textureLoader = new THREE.TextureLoader();
-            textureLoader.load(imagePath, (texture) => {
-                const spriteMaterial = new THREE.SpriteMaterial({ map: texture, color: 0xffffff });
-                const sprite = new THREE.Sprite(spriteMaterial);
-                sprite.scale.set(0.5, 0.5, 1); // Adjust scale for smaller sprite
-                const position = getRandomPosition(3.5); // Position sprite randomly within the sphere
-                sprite.position.copy(position);
-                scene.add(sprite);
+        // Mouse up event to stop moving the camera
+        document.addEventListener('mouseup', function() {
+            isMouseDown = false;
+        });
 
-                // Fade out effect
-                setTimeout(() => {
-                    sprite.material.opacity = 1; // Reset opacity to fully visible
-                    const fadeOut = () => {
-                        if (sprite.material.opacity > 0) {
-                            sprite.material.opacity -= 0.02; // Reduce opacity
-                            requestAnimationFrame(fadeOut);
-                        } else {
-                            scene.remove(sprite); // Remove sprite after fade out
-                        }
-                    };
-                    fadeOut();
-                }, 2000); // Wait for 2 seconds before fading out
+        // Mouse move event
+        document.addEventListener('mousemove', function(event) {
+            if (!isMouseDown) return;
+
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+
+            // Calculate the delta (change in mouse position)
+            const deltaX = mouseX - prevMouseX;
+            const deltaY = mouseY - prevMouseY;
+
+            // Move camera in the opposite direction to the mouse
+            camera.rotation.y += deltaX * 0.002;  // Yaw (left/right)
+            camera.rotation.x += deltaY * 0.002;  // Pitch (up/down)
+
+            // Save current mouse position for next movement
+            prevMouseX = mouseX;
+            prevMouseY = mouseY;
+        });
+
+        // Randomly generate images and text inside the sphere
+        function createFloatingObjects() {
+            // Create "Hello World" text
+            const textGeometry = new THREE.TextGeometry('HELLO WORLD', {
+                font: new THREE.FontLoader().parse(/* Load a font JSON object here */),
+                size: 1,
+                height: 0.1,
             });
-        }
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff4500 });
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
 
-        // Function to add text inside the sphere
-        function addTextToSphere(text) {
-            const textTexture = createTextTexture(text);
-            const textMaterial = new THREE.SpriteMaterial({ map: textTexture });
-            const textSprite = new THREE.Sprite(textMaterial);
-            textSprite.scale.set(1.5, 0.75, 1); // Smaller text sprite
-            const position = getRandomPosition(3.5); // Position text randomly within the sphere
-            textSprite.position.copy(position);
-            scene.add(textSprite);
+            // Random position inside the sphere
+            const phi = Math.random() * Math.PI * 2;
+            const theta = Math.random() * Math.PI;
+            const radius = 15; // Distance from center (inside the sphere)
 
-            // Fade out text after a delay
+            textMesh.position.set(
+                radius * Math.sin(theta) * Math.cos(phi),
+                radius * Math.sin(theta) * Math.sin(phi),
+                radius * Math.cos(theta)
+            );
+            scene.add(textMesh);
+
+            // Fade away after a few seconds
             setTimeout(() => {
-                textSprite.material.opacity = 1; // Reset opacity to fully visible
-                const fadeOutText = () => {
-                    if (textSprite.material.opacity > 0) {
-                        textSprite.material.opacity -= 0.02; // Reduce opacity
-                        requestAnimationFrame(fadeOutText);
-                    } else {
-                        scene.remove(textSprite); // Remove text after fade out
+                textMesh.material.transparent = true;
+                const fadeInterval = setInterval(() => {
+                    textMesh.material.opacity -= 0.01;
+                    if (textMesh.material.opacity <= 0) {
+                        clearInterval(fadeInterval);
+                        scene.remove(textMesh);  // Remove the text once it disappears
                     }
-                };
-                fadeOutText();
-            }, 2000); // Wait for 2 seconds before fading out
+                }, 50);
+            }, 3000);  // Delay before starting the fade-out
+
+            // Repeat this process every few seconds for more floating objects
+            setTimeout(createFloatingObjects, 5000);
         }
 
-        // Create images and text at random intervals
-        setInterval(() => {
-            const numElements = 5; // Number of images and texts to create each time
-            for (let i = 0; i < numElements; i++) {
-                createImageSprite('images/me.webp'); // Adjust the image path as needed
-                addTextToSphere('HELLO WORLD');
-            }
-        }, 4000); // New sprites every 4 seconds
+        // Call the function initially to start generating objects
+        createFloatingObjects();
 
-        // Mouse controls
-        let mouseX = 0;
-        let mouseY = 0;
-
-        document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX / window.innerWidth) * 2 - 1; // Normalized device coordinates
-            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-        });
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Move camera based on mouse position
-            camera.position.x += (mouseX - camera.position.x) * 0.1; // Interpolate towards mouse
-            camera.position.y += (-mouseY - camera.position.y) * 0.1;
-            camera.lookAt(0, 0, 0); // Look at the center of the sphere
-
+        // Render loop
+        function render() {
             renderer.render(scene, camera);
+            requestAnimationFrame(render);
         }
 
-        animate(); // Start the animation loop
+        render();
 
         // Handle window resizing
-        window.addEventListener('resize', () => {
+        window.addEventListener('resize', function() {
+            renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
 </body>
