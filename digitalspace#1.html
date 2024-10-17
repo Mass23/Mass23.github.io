@@ -51,9 +51,6 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // Slowly rotate the sphere
-            sphere.rotation.y += 0.005;
-
             // Adjust camera rotation based on mouse movement
             camera.rotation.x = mouseY * 0.5;
             camera.rotation.y = -mouseX * 0.5;
