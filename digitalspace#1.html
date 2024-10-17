@@ -74,8 +74,8 @@
             const glitchCount = 15; // Adjusted number of glitches
             for (let i = 0; i < glitchCount; i++) {
                 // Increase width and height of the glitch patches
-                const width = Math.floor(Math.random() * 100) + 30; // Width of glitch segment (30-130)
-                const height = Math.floor(Math.random() * 100) + 30; // Height of glitch segment (30-130)
+                const width = Math.floor(Math.random() * 100) + 50; // Width of glitch segment (50-150)
+                const height = Math.floor(Math.random() * 100) + 50; // Height of glitch segment (50-150)
 
                 // Ensure x and y coordinates are within bounds
                 const x = Math.floor(Math.random() * (glitchCanvas.width - width));
@@ -97,7 +97,7 @@
             for (let i = 0; i < 10; i++) {
                 applyGlitchEffect();
             }
-            setInterval(applyGlitchEffect, 1000); // Continue to create glitches every second
+            setInterval(applyGlitchEffect, 500); // Continue to create glitches every 0.5 seconds
         }
 
         // Create initial sprites
