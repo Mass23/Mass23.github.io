@@ -112,7 +112,7 @@
             const sprite = new THREE.Sprite(spriteMaterial);
 
             // Position the sprite randomly around the sphere's inner surface
-            positionSprite(sprite);
+            positionSprite(sprite, 'HelloWorldSprite');
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -146,7 +146,7 @@
             const sprite = new THREE.Sprite(spriteMaterial);
 
             // Position the sprite randomly around the sphere's inner surface
-            positionSprite(sprite);
+            positionSprite(sprite, 'PixelSprite');
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -180,7 +180,7 @@
             const sprite = new THREE.Sprite(spriteMaterial);
 
             // Position the sprite randomly around the sphere's inner surface
-            positionSprite(sprite);
+            positionSprite(sprite, 'MeSprite');
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -192,16 +192,31 @@
         }
 
         // Position sprite randomly around the sphere
-        function positionSprite(sprite) {
-            const distanceFromCenter = SPHERE_RADIUS - 0.5 * sprite.geometry.parameters.size; // Adjusted to position near the border
-            const theta = Math.random() * Math.PI * 2; // Random angle for rotation
-            const phi = Math.acos(Math.random() * 2 - 1); // Random angle for elevation
-
-            // Convert spherical coordinates to Cartesian
-            sprite.position.x = distanceFromCenter * Math.sin(phi) * Math.cos(theta);
-            sprite.position.y = distanceFromCenter * Math.sin(phi) * Math.sin(theta);
-            sprite.position.z = distanceFromCenter * Math.cos(phi);
+        // Position sprite based on type (MeSprite, HelloWorldSprite, or PixelSprite)
+        function positionSprite(sprite, type) {
+            const phi = Math.random() * 2 * Math.PI;
+            const theta = Math.random() * Math.PI;
+        
+            let radius = SPHERE_RADIUS; // Default radius is at the surface of the sphere
+        
+            // Adjust the position based on sprite type
+            if (type === 'PixelSprite') {
+                // Position PixelSprites closer to the center
+                radius = SPHERE_RADIUS * 0.7; // 70% of the sphere's radius
+            } else if (type === 'MeSprite' || type === 'HelloWorldSprite') {
+                // Position MeSprites and HelloWorldSprites farther from the center
+                radius = SPHERE_RADIUS * 0.9; // 90% of the sphere's radius
+            }
+        
+            // Spherical coordinates to cartesian coordinates
+            const x = radius * Math.sin(theta) * Math.cos(phi);
+            const y = radius * Math.sin(theta) * Math.sin(phi);
+            const z = radius * Math.cos(theta);
+        
+            sprite.position.set(x, y, z);
+            sprite.lookAt(camera.position); // Make sprite face the camera
         }
+
 
         // Function to start creating sprites
         function startSpriteCreation() {
