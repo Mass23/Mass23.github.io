@@ -77,13 +77,13 @@
                 const width = Math.floor(Math.random() * 100) + 50; // Width of glitch segment (50-150)
                 const height = Math.floor(Math.random() * 100) + 50; // Height of glitch segment (50-150)
 
-                // Ensure x and y coordinates are within bounds
-                const x = Math.floor(Math.random() * (glitchCanvas.width - width));
-                const y = Math.floor(Math.random() * (glitchCanvas.height - height));
+                // Ensure x and y coordinates are within bounds but allow them to go outside for edge effect
+                const x = Math.floor(Math.random() * glitchCanvas.width);
+                const y = Math.floor(Math.random() * glitchCanvas.height);
 
-                const imageData = glitchContext.getImageData(x, y, width, height);
-                const glitchX = Math.floor(Math.random() * (glitchCanvas.width - width));
-                const glitchY = Math.floor(Math.random() * (glitchCanvas.height - height));
+                const imageData = glitchContext.getImageData(x, y, Math.min(width, glitchCanvas.width - x), Math.min(height, glitchCanvas.height - y));
+                const glitchX = Math.floor(Math.random() * glitchCanvas.width);
+                const glitchY = Math.floor(Math.random() * glitchCanvas.height);
 
                 // Put the distorted segment back onto the canvas
                 glitchContext.putImageData(imageData, glitchX, glitchY);
@@ -206,7 +206,7 @@
             createMeSprite();
         }, spriteInterval);
 
-        // Mouse movement for camera rotation
+        // Mouse movement handling
         let isMouseDown = false;
         let previousMouseX = 0;
         let previousMouseY = 0;
