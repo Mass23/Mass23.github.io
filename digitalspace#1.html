@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital-space #1</title>
+    <title>Three.js Glitched Sphere with Sprites</title>
     <style>
         /* Additional styles to make the canvas fill the window */
         canvas {
@@ -76,66 +76,22 @@
         }
 
         // Sprite generation
-        const pixelSprites = [];
+        const sprites = [];
         const spriteMaterial = new THREE.SpriteMaterial({ color: 0xffffff });
         
-        function createPixelSprite() {
+        function createSprite() {
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.scale.set(0.05, 0.05, 1); // Size of pixel sprites
+            sprite.scale.set(0.2, 0.2, 1); // Increase the size of sprites
             sprite.position.set(
                 (Math.random() - 0.5) * 40,
                 (Math.random() - 0.5) * 40,
                 (Math.random() - 0.5) * 40
             );
             scene.add(sprite);
-            pixelSprites.push(sprite);
+            sprites.push(sprite);
         }
 
-        function createTextSprite() {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 100; // Width for the text canvas
-            canvas.height = 100; // Height for the text canvas
-
-            // Draw text onto the canvas
-            context.fillStyle = "rgba(128, 128, 128, 1)"; // Grey background
-            context.fillRect(0, 0, canvas.width, canvas.height);
-            context.font = '30px Arial';
-            context.fillStyle = "white"; // Text color
-            context.fillText("HELLO WORLD", 5, 50); // Draw text
-
-            const texture = new THREE.Texture(canvas);
-            texture.needsUpdate = true;
-
-            const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture }));
-            sprite.scale.set(1.5, 1.5, 1); // Larger size for text sprites
-            sprite.position.set(
-                (Math.random() - 0.5) * 40,
-                (Math.random() - 0.5) * 40,
-                (Math.random() - 0.5) * 40
-            );
-            scene.add(sprite);
-        }
-
-        // Create a me.webp sprite
-        function createImageSprite() {
-            const spriteMaterial = new THREE.SpriteMaterial({ map: imageTexture });
-            const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.scale.set(1.5, 1.5, 1); // Same size as text
-            sprite.position.set(
-                (Math.random() - 0.5) * 40,
-                (Math.random() - 0.5) * 40,
-                (Math.random() - 0.5) * 40
-            );
-            scene.add(sprite);
-        }
-
-        // Generate sprites
-        setInterval(() => {
-            createPixelSprite();
-            createTextSprite();
-            createImageSprite();
-        }, 500); // Increase sprite generation frequency
+        setInterval(createSprite, 1000); // Slower sprite generation
 
         // Animation loop
         function animate() {
@@ -147,8 +103,6 @@
         document.addEventListener('mousemove', (event) => {
             const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
             const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-
-            // Adjust camera rotation
             camera.rotation.x = mouseY * Math.PI; // Adjust pitch
             camera.rotation.y = mouseX * Math.PI; // Adjust yaw
         });
