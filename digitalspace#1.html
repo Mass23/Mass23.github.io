@@ -30,8 +30,10 @@
 
         // Load the texture
         const textureLoader = new THREE.TextureLoader();
-        const meImage = new Image();
-        meImage.src = 'images/me.webp';
+        const meImage = textureLoader.load('images/me.webp', (texture) => {
+            meImage.texture = texture;
+            applyInitialGlitches();
+        });
 
         // Create a canvas for glitches
         const glitchCanvas = document.createElement('canvas');
@@ -55,7 +57,7 @@
 
             // Draw the new glitch image
             glitchContext.globalAlpha = 1.0; // Reset alpha for new glitch
-            glitchContext.drawImage(meImage, 0, 0, glitchCanvas.width, glitchCanvas.height);
+            glitchContext.drawImage(meImage.texture.image, 0, 0, glitchCanvas.width, glitchCanvas.height);
 
             // Create random glitches
             const glitchCount = 30; // Number of glitches to apply
@@ -76,11 +78,12 @@
         }
 
         // Create initial glitches upon loading
-        meImage.onload = function() {
-            // Create the initial glitch and then continue every second
-            applyGlitchEffect();
+        function applyInitialGlitches() {
+            for (let i = 0; i < 10; i++) {
+                applyGlitchEffect();
+            }
             setInterval(applyGlitchEffect, 1000); // Continue to create glitches every second
-        };
+        }
 
         // Variables for sprites
         const sprites = [];
@@ -126,9 +129,9 @@
             canvas.height = 64;
 
             // Draw a random pixel sample from the image
-            const x = Math.floor(Math.random() * (meImage.width - 64));
-            const y = Math.floor(Math.random() * (meImage.height - 64));
-            context.drawImage(meImage, x, y, 64, 64, 0, 0, 64, 64);
+            const x = Math.floor(Math.random() * (meImage.texture.image.width - 64));
+            const y = Math.floor(Math.random() * (meImage.texture.image.height - 64));
+            context.drawImage(meImage.texture.image, x, y, 64, 64, 0, 0, 64, 64);
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
@@ -153,9 +156,9 @@
             canvas.height = 128;
 
             // Draw a random section of the me.webp image
-            const x = Math.floor(Math.random() * (meImage.width - canvas.width));
-            const y = Math.floor(Math.random() * (meImage.height - canvas.height));
-            context.drawImage(meImage, x, y, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+            const x = Math.floor(Math.random() * (meImage.texture.image.width - canvas.width));
+            const y = Math.floor(Math.random() * (meImage.texture.image.height - canvas.height));
+            context.drawImage(meImage.texture.image, x, y, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
@@ -204,7 +207,6 @@
                 const deltaX = event.clientX - previousMouseX;
                 const deltaY = event.clientY - previousMouseY;
 
-                // Update camera rotation based on mouse movement
                 camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity
                 camera.rotation.x -= deltaY * 0.005; // Adjust sensitivity
             }
