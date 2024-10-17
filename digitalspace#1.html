@@ -15,27 +15,27 @@
         // Set up scene, camera, and renderer
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
         // Sphere geometry
         const sphereGeometry = new THREE.SphereGeometry(100, 32, 32);
-        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide });
-        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        scene.add(sphere);
-
-        // Set camera position
-        camera.position.set(0, 0, 0);
-
-        // Load the texture for sprites
+        
+        // Load the texture for the sphere (glitch texture)
         const textureLoader = new THREE.TextureLoader();
         const meImage = textureLoader.load('images/me.webp', (texture) => {
-            createGrayNoiseBackground(); // Create and apply gray noise background
+            const sphereMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            scene.add(sphere);
+            createGrayNoiseBackground(); // Create gray noise background
             startSpriteCreation(); // Start creating sprites
         }, undefined, (error) => {
             console.error('Error loading texture:', error); // Log errors
         });
+
+        // Set camera position to be inside the sphere
+        camera.position.set(0, 0, 0);
 
         // Create a canvas for gray noise
         const noiseCanvas = document.createElement('canvas');
