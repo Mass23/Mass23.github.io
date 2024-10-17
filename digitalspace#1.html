@@ -19,6 +19,9 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
+        // Set the background color
+        scene.background = new THREE.Color('#0D0D0D');
+
         // Sphere geometry
         const sphereGeometry = new THREE.SphereGeometry(100, 32, 32);
         
@@ -68,8 +71,9 @@
             return texture;
         }
 
-        // Define colors for the disruptive pattern
+        // Define colors for the disruptive pattern and particles
         const disruptivePatternColors = ['#583BBF', '#403527', '#BF8969', '#BF584E']; // Four colors for the pattern
+        const particleColors = ['#D9C6BF', '#583BBF', '#403527', '#BF8969', '#BF584E']; // Colors for particles
         const disruptivePatternTexture = createDisruptivePatternTexture(256, disruptivePatternColors);
 
         // Create sphere with disruptive pattern texture
@@ -85,11 +89,12 @@
         const particleGeometry = new THREE.BufferGeometry();
         const positions = new Float32Array(particleCount * 3); // 3 vertices per particle
         const colors = new Float32Array(particleCount * 3); // 3 color values per particle
-        const particleColor = new THREE.Color('#D9C6BF');
 
         for (let i = 0; i < particleCount; i++) {
             // Generate random positions for the particles
             resetParticle(i, positions);
+            const color = particleColors[Math.floor(Math.random() * particleColors.length)];
+            const particleColor = new THREE.Color(color);
             colors.set([particleColor.r, particleColor.g, particleColor.b], i * 3);
         }
 
@@ -141,10 +146,14 @@
                 const distanceSquared = positions[i * 3] ** 2 + positions[i * 3 + 1] ** 2 + positions[i * 3 + 2] ** 2;
                 if (distanceSquared > (100 ** 2)) {
                     resetParticle(i, positions); // Reset particle position
+                    const color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                    const particleColor = new THREE.Color(color);
+                    colors.set([particleColor.r, particleColor.g, particleColor.b], i * 3); // Update color
                 }
             }
 
             particles.geometry.attributes.position.needsUpdate = true; // Notify that position attribute has changed
+            particles.geometry.attributes.color.needsUpdate = true; // Notify that color attribute has changed
             renderer.render(scene, camera);
         }
         animate(); // Start the animation loop
