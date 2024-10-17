@@ -79,8 +79,8 @@
 
         // Variables for sprites
         const sprites = [];
-        const MAX_SPRITES = 200; // Limit the number of sprites
-        const spriteInterval = 100; // Generate sprites every 100 milliseconds
+        const MAX_SPRITES = 200; // Further limit the number of sprites
+        const spriteInterval = 500; // Increase interval to reduce sprite creation frequency
         const SPHERE_RADIUS = 100; // Sphere radius
         const meImage = new Image(); // Image for MeSprites
         meImage.src = 'images/me.webp'; // Path to me.webp
@@ -90,18 +90,31 @@
             startSpriteCreation();
         };
 
+        // Pooling Canvas Resources
+        const canvasPool = [];
+        const MAX_CANVAS_POOL_SIZE = 10;
+
+        function getCanvasFromPool() {
+            return canvasPool.length > 0 ? canvasPool.pop() : document.createElement('canvas');
+        }
+
+        function returnCanvasToPool(canvas) {
+            if (canvasPool.length < MAX_CANVAS_POOL_SIZE) {
+                canvasPool.push(canvas);
+            }
+        }
+
         // Function to create "HELLO WORLD" sprite
         function createHelloWorldSprite() {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 512; // Increased size
-            canvas.height = 512;
+            const canvas = getCanvasFromPool();
+            canvas.width = 128; // Reduced size
+            canvas.height = 128;
 
-            // Draw a noisy square with "HELLO WORLD"
+            const context = canvas.getContext('2d');
             context.fillStyle = 'rgba(200, 200, 200, 0.5)';
             context.fillRect(0, 0, canvas.width, canvas.height);
             context.fillStyle = 'black';
-            context.font = '48px Arial'; // Increased font size
+            context.font = '16px Arial'; // Reduced font size
             context.textAlign = 'center';
             context.textBaseline = 'middle';
             context.fillText('HELLO WORLD', canvas.width / 2, canvas.height / 2);
@@ -112,7 +125,7 @@
             const sprite = new THREE.Sprite(spriteMaterial);
 
             // Position the sprite close to the sphere's inner surface
-            positionSprite(sprite, SPHERE_RADIUS - 5); // Adjust position
+            positionSprite(sprite, SPHERE_RADIUS - 10); // Adjust position
 
             scene.add(sprite);
             sprites.push(sprite);
@@ -121,7 +134,8 @@
             if (sprites.length > MAX_SPRITES) {
                 const oldestSprite = sprites.shift();
                 if (oldestSprite && oldestSprite.material.map) {
-                    oldestSprite.material.map.dispose(); // Dispose of the texture
+                    oldestSprite.material.map.dispose(); // Dispose the texture
+                    returnCanvasToPool(oldestSprite.material.map.image); // Return canvas to pool
                 }
                 scene.remove(oldestSprite);
             }
@@ -129,15 +143,15 @@
 
         // Function to create larger pixel sprites
         function createPixelSprite() {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 128;  // Increased size
-            canvas.height = 128;
+            const canvas = getCanvasFromPool();
+            canvas.width = 256; // Reduced size
+            canvas.height = 256;
 
             // Draw a random pixel sample from the image
-            const x = Math.floor(Math.random() * (meImage.width - 256));
-            const y = Math.floor(Math.random() * (meImage.height - 256));
-            context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
+            const x = Math.floor(Math.random() * (meImage.width - 128));
+            const y = Math.floor(Math.random() * (meImage.height - 128));
+            const context = canvas.getContext('2d');
+            context.drawImage(meImage, x, y, 128, 128, 0, 0, 256, 256); // Scale down
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
@@ -145,7 +159,7 @@
             const sprite = new THREE.Sprite(spriteMaterial);
 
             // Position the sprite closer to the center of the sphere
-            positionSprite(sprite, SPHERE_RADIUS - 3); // Adjust position
+            positionSprite(sprite, SPHERE_RADIUS - 5); // Adjust position
             sprite.userData.type = 'pixel'; // Set userData for pixel sprite
 
             scene.add(sprite);
@@ -155,7 +169,8 @@
             if (sprites.length > MAX_SPRITES) {
                 const oldestSprite = sprites.shift();
                 if (oldestSprite && oldestSprite.material.map) {
-                    oldestSprite.material.map.dispose(); // Dispose of the texture
+                    oldestSprite.material.map.dispose(); // Dispose the texture
+                    returnCanvasToPool(oldestSprite.material.map.image); // Return canvas to pool
                 }
                 scene.remove(oldestSprite);
             }
@@ -163,15 +178,15 @@
 
         // Function to create MeSprites
         function createMeSprite() {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 256;  // Size of MeSprites
+            const canvas = getCanvasFromPool();
+            canvas.width = 256; // Reduced size
             canvas.height = 256;
 
+            const context = canvas.getContext('2d');
             // Draw a random part of the me image
-            const x = Math.floor(Math.random() * (meImage.width - 256));
-            const y = Math.floor(Math.random() * (meImage.height - 256));
-            context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
+            const x = Math.floor(Math.random() * (meImage.width - 128));
+            const y = Math.floor(Math.random() * (meImage.height - 128));
+            context.drawImage(meImage, x, y, 128, 128, 0, 0, 256, 256); // Scale down
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
@@ -179,7 +194,7 @@
             const sprite = new THREE.Sprite(spriteMaterial);
 
             // Position the sprite close to the sphere's inner surface
-            positionSprite(sprite, SPHERE_RADIUS - 4); // Adjust position
+            positionSprite(sprite, SPHERE_RADIUS - 15); // Adjust position
             sprite.userData.type = 'me'; // Set userData for MeSprite
 
             scene.add(sprite);
@@ -187,13 +202,13 @@
 
             // Remove oldest sprite if limit exceeded
             if (sprites.length > MAX_SPRITES) {
-                if (sprites.length > MAX_SPRITES) {
-                    const oldestSprite = sprites.shift();
-                    if (oldestSprite && oldestSprite.material.map) {
-                        oldestSprite.material.map.dispose(); // Dispose of the texture
-                    }
-                    scene.remove(oldestSprite);
-    }
+                const oldestSprite = sprites.shift();
+                if (oldestSprite && oldestSprite.material.map) {
+                    oldestSprite.material.map.dispose(); // Dispose the texture
+                    returnCanvasToPool(oldestSprite.material.map.image); // Return canvas to pool
+                }
+                scene.remove(oldestSprite);
+            }
         }
 
         // Function to position sprites
@@ -204,104 +219,28 @@
 
             sprite.position.set(
                 distanceFromCenter * Math.sin(phi) * Math.cos(theta),
-                distanceFromCenter * Math.sin(phi) * Math.sin(theta),
-                distanceFromCenter * Math.cos(phi)
+                distanceFromCenter * Math.cos(phi),
+                distanceFromCenter * Math.sin(phi) * Math.sin(theta)
             );
         }
 
-        // Function to start creating sprites
+        // Function to start sprite creation
         function startSpriteCreation() {
             setInterval(() => {
-                for (let i = 0; i < 1; i++) {
-                    createHelloWorldSprite();
-                    }
-                for (let i = 0; i < 10; i++) {
-                    createPixelSprite();
-                    }
-                for (let i = 0; i < 3; i++) {
-                    createMeSprite();
-                    }
+                createHelloWorldSprite();
+                createPixelSprite();
+                createMeSprite();
             }, spriteInterval);
         }
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
-
-            // Update the position of pixel sprites to follow the camera
-            sprites.forEach(sprite => {
-                if (sprite.userData.type === 'pixel') { // Only update pixel sprites
-                    const distanceFromCenter = SPHERE_RADIUS - 20; // Maintain distance
-                    sprite.position.normalize(); // Normalize the sprite's position vector
-                    sprite.position.multiplyScalar(distanceFromCenter); // Scale to the sphere's radius
-                }
-            });
-
             renderer.render(scene, camera);
         }
-        animate(); // Start the animation loop
+        animate();
 
-        // Handle mouse movement
-        let isMouseDown = false;
-        let lastMouseX = 0;
-        let lastMouseY = 0;
-
-        window.addEventListener('mousedown', (event) => {
-            isMouseDown = true;
-            lastMouseX = event.clientX;
-            lastMouseY = event.clientY;
-        });
-
-        window.addEventListener('mouseup', () => {
-            isMouseDown = false;
-        });
-
-        window.addEventListener('mousemove', (event) => {
-            if (isMouseDown) {
-                const deltaX = event.clientX - lastMouseX;
-                const deltaY = event.clientY - lastMouseY;
-
-                // Update camera rotation based on mouse movement
-                camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity as needed
-                camera.rotation.x -= deltaY * 0.005;
-
-                // Clamp the camera's x rotation to prevent flipping
-                camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
-
-                lastMouseX = event.clientX;
-                lastMouseY = event.clientY;
-            }
-        });
-
-        // Handle touch events for mobile support
-        window.addEventListener('touchstart', (event) => {
-            isMouseDown = true;
-            lastMouseX = event.touches[0].clientX;
-            lastMouseY = event.touches[0].clientY;
-        });
-
-        window.addEventListener('touchend', () => {
-            isMouseDown = false;
-        });
-
-        window.addEventListener('touchmove', (event) => {
-            if (isMouseDown) {
-                const deltaX = event.touches[0].clientX - lastMouseX;
-                const deltaY = event.touches[0].clientY - lastMouseY;
-
-                // Update camera rotation based on touch movement
-                camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity as needed
-                camera.rotation.x -= deltaY * 0.005;
-
-                // Clamp the camera's x rotation to prevent flipping
-                camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
-
-                lastMouseX = event.touches[0].clientX;
-                lastMouseY = event.touches[0].clientY;
-            }
-        });
-
-        // Handle window resize
+        // Adjust camera aspect ratio on resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
