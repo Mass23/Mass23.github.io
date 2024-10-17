@@ -19,9 +19,6 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Set the background color
-        scene.background = new THREE.Color('#0D0D0D');
-
         // Sphere geometry
         const sphereGeometry = new THREE.SphereGeometry(100, 32, 32);
         
@@ -76,10 +73,15 @@
         const particleColors = ['#D9C6BF', '#583BBF', '#403527', '#BF8969', '#BF584E']; // Colors for particles
         const disruptivePatternTexture = createDisruptivePatternTexture(256, disruptivePatternColors);
 
-        // Create sphere with disruptive pattern texture
-        const sphereMaterial = new THREE.MeshBasicMaterial({ map: disruptivePatternTexture, side: THREE.BackSide });
-        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        scene.add(sphere);
+        // Create sphere with a solid color for the inner texture (background)
+        const innerSphereMaterial = new THREE.MeshBasicMaterial({ color: '#0D0D0D', side: THREE.BackSide });
+        const innerSphere = new THREE.Mesh(sphereGeometry, innerSphereMaterial);
+        scene.add(innerSphere);
+
+        // Create outer sphere with disruptive pattern texture
+        const outerSphereMaterial = new THREE.MeshBasicMaterial({ map: disruptivePatternTexture, side: THREE.BackSide });
+        const outerSphere = new THREE.Mesh(sphereGeometry, outerSphereMaterial);
+        scene.add(outerSphere);
 
         // Set camera position to be inside the sphere
         camera.position.set(0, 0, 0);
@@ -187,34 +189,6 @@
 
                 lastMouseX = event.clientX;
                 lastMouseY = event.clientY;
-            }
-        });
-
-        // Handle touch events for mobile support
-        window.addEventListener('touchstart', (event) => {
-            isMouseDown = true;
-            lastMouseX = event.touches[0].clientX;
-            lastMouseY = event.touches[0].clientY;
-        });
-
-        window.addEventListener('touchend', () => {
-            isMouseDown = false;
-        });
-
-        window.addEventListener('touchmove', (event) => {
-            if (isMouseDown) {
-                const deltaX = event.touches[0].clientX - lastMouseX;
-                const deltaY = event.touches[0].clientY - lastMouseY;
-
-                // Update camera rotation based on touch movement
-                camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity as needed
-                camera.rotation.x -= deltaY * 0.005;
-
-                // Clamp the camera's x rotation to prevent flipping
-                camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
-
-                lastMouseX = event.touches[0].clientX;
-                lastMouseY = event.touches[0].clientY;
             }
         });
 
