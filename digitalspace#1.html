@@ -249,7 +249,7 @@
                 camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity as needed
                 camera.rotation.x -= deltaY * 0.005;
 
-                // Clamp the camera's x rotation
+                // Clamp the camera's x rotation to prevent flipping
                 camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
 
                 lastMouseX = event.clientX;
