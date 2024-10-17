@@ -22,10 +22,14 @@
         // Texture loader
         const textureLoader = new THREE.TextureLoader();
         const imageTexture = textureLoader.load('images/me.webp', (texture) => {
-            // Set the texture's wrap and filter modes
-            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-            texture.minFilter = THREE.LinearMipMapLinearFilter;
-            texture.magFilter = THREE.LinearFilter;
+            // Crop 50 pixels from each side
+            const cropAmount = 50;
+            const width = texture.image.width;
+            const height = texture.image.height;
+
+            texture.offset.set(cropAmount / width, cropAmount / height); // Set the offset to start cropping from (50px from each side)
+            texture.repeat.set((width - 2 * cropAmount) / width, (height - 2 * cropAmount) / height); // Repeat to fill the sphere with the cropped image
+            texture.needsUpdate = true; // Update the texture
         });
 
         // Create a sphere geometry (textured inside)
@@ -46,7 +50,7 @@
             context.fillStyle = '#cccccc'; // Light grey background
             context.fillRect(0, 0, canvas.width, canvas.height);
             context.fillStyle = 'rgba(255, 255, 255, 0.8)'; // White text
-            context.font = 'bold 40px Arial';
+            context.font = 'bold 60px Arial'; // Increased font size
             context.textAlign = 'center';
             context.fillText('HELLO WORLD', canvas.width / 2, canvas.height / 2);
             return new THREE.CanvasTexture(canvas);
@@ -62,7 +66,7 @@
 
             const croppedTexture = new THREE.Texture(imageTexture.image);
             croppedTexture.offset.set(sampleX / imageTexture.image.width, sampleY / imageTexture.image.height);
-            croppedTexture.repeat.set(0.05, 0.05); // Sample small portion
+            croppedTexture.repeat.set(0.1, 0.1); // Sample larger portion for visibility
             croppedTexture.needsUpdate = true;
 
             spriteMaterial.map = croppedTexture;
@@ -79,6 +83,8 @@
                 radius * Math.cos(phi)
             );
 
+            // Set size of the sprite (larger than before)
+            sprite.scale.set(1, 1, 1); // You can increase this to make them bigger
             scene.add(sprite);
 
             // Slowly fade away
@@ -107,6 +113,8 @@
                 radius * Math.cos(phi)
             );
 
+            // Set size of the text sprite (same as image size)
+            textSprite.scale.set(3, 1, 1); // Adjust this for size
             scene.add(textSprite);
 
             // Slowly fade out text sprite
@@ -120,11 +128,11 @@
             }, fadeTime * 1000 / 20); // Fade out over time
         }
 
-        // Create sprites and text every second
+        // Create sprites and text every 100 milliseconds for overwhelming presence
         setInterval(() => {
             createRandomSprites();
             createTextSprite();
-        }, 1000);
+        }, 100);
 
         // Set camera position inside the sphere
         camera.position.set(0, 0, 0);
