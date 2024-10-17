@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Space #1 - Checkerboard Sphere</title>
+    <title>Digital Space #1 - Disruptive Pattern Sphere</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
@@ -22,19 +22,24 @@
         // Sphere geometry
         const sphereGeometry = new THREE.SphereGeometry(100, 32, 32);
         
-        // Create a checkerboard texture with four colors
-        function createCheckerboardTexture(size, colors) {
+        // Create a disruptive pattern texture with specified colors
+        function createDisruptivePatternTexture(size, colors) {
             const canvas = document.createElement('canvas');
             canvas.width = size;
             canvas.height = size;
             const context = canvas.getContext('2d');
 
-            const squareSize = size / 8; // 8x8 squares
-            for (let x = 0; x < 8; x++) {
-                for (let y = 0; y < 8; y++) {
-                    context.fillStyle = colors[(x % 2) + (y % 2) * 2]; // Alternate colors
-                    context.fillRect(x * squareSize, y * squareSize, squareSize, squareSize);
-                }
+            const numberOfShapes = 50; // Number of random shapes
+            for (let i = 0; i < numberOfShapes; i++) {
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                context.fillStyle = color;
+
+                const x = Math.random() * size; // Random x position
+                const y = Math.random() * size; // Random y position
+                const width = Math.random() * 50 + 10; // Random width between 10 and 60
+                const height = Math.random() * 50 + 10; // Random height between 10 and 60
+
+                context.fillRect(x, y, width, height); // Draw the rectangle
             }
 
             const texture = new THREE.Texture(canvas);
@@ -42,12 +47,12 @@
             return texture;
         }
 
-        // Define colors for the checkerboard
-        const checkerboardColors = ['#583BBF', '#403527', '#BF8969', '#BF584E']; // Four colors for the checkerboard
-        const checkerboardTexture = createCheckerboardTexture(256, checkerboardColors);
+        // Define colors for the disruptive pattern
+        const disruptivePatternColors = ['#583BBF', '#403527', '#BF8969', '#BF584E']; // Four colors for the pattern
+        const disruptivePatternTexture = createDisruptivePatternTexture(256, disruptivePatternColors);
 
-        // Create sphere with checkerboard texture
-        const sphereMaterial = new THREE.MeshBasicMaterial({ map: checkerboardTexture, side: THREE.BackSide });
+        // Create sphere with disruptive pattern texture
+        const sphereMaterial = new THREE.MeshBasicMaterial({ map: disruptivePatternTexture, side: THREE.BackSide });
         const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
         scene.add(sphere);
 
