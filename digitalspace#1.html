@@ -143,6 +143,7 @@
 
             // Position the sprite closer to the center of the sphere
             positionSprite(sprite, SPHERE_RADIUS - 20); // Adjust position
+            sprite.userData.type = 'pixel'; // Set userData for pixel sprite
 
             scene.add(sprite);
             sprites.push(sprite);
@@ -173,6 +174,7 @@
 
             // Position the sprite close to the sphere's inner surface
             positionSprite(sprite, SPHERE_RADIUS - 40); // Adjust position
+            sprite.userData.type = 'me'; // Set userData for MeSprite
 
             scene.add(sprite);
             sprites.push(sprite);
@@ -221,8 +223,39 @@
 
             renderer.render(scene, camera);
         }
-
         animate(); // Start the animation loop
+
+        // Handle mouse movement
+        let isMouseDown = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+
+        window.addEventListener('mousedown', (event) => {
+            isMouseDown = true;
+            lastMouseX = event.clientX;
+            lastMouseY = event.clientY;
+        });
+
+        window.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
+
+        window.addEventListener('mousemove', (event) => {
+            if (isMouseDown) {
+                const deltaX = event.clientX - lastMouseX;
+                const deltaY = event.clientY - lastMouseY;
+
+                // Update camera rotation based on mouse movement
+                camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity as needed
+                camera.rotation.x -= deltaY * 0.005;
+
+                // Clamp the camera's x rotation
+                camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
+
+                lastMouseX = event.clientX;
+                lastMouseY = event.clientY;
+            }
+        });
 
         // Handle window resize
         window.addEventListener('resize', () => {
