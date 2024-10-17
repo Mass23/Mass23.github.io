@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Sphere Viewer</title>
+    <title>Three.js Sphere Viewer with Shuffled Background</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
@@ -22,13 +22,19 @@
         // Sphere geometry
         const sphereGeometry = new THREE.SphereGeometry(100, 32, 32);
         
-        // Load the texture for the sphere (glitch texture)
+        // Load the texture for the sphere
         const textureLoader = new THREE.TextureLoader();
         const meImage = textureLoader.load('images/me.webp', (texture) => {
+            // Apply the shuffled texture to the sphere
             const sphereMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide });
             const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
             scene.add(sphere);
-            createGrayNoiseBackground(); // Create gray noise background
+
+            // Shuffle the image and set it as the background
+            shuffleImage(meImage.image, (shuffledTexture) => {
+                scene.background = shuffledTexture; // Set the shuffled texture as the background
+            });
+
             startSpriteCreation(); // Start creating sprites
         }, undefined, (error) => {
             console.error('Error loading texture:', error); // Log errors
@@ -37,44 +43,41 @@
         // Set camera position to be inside the sphere
         camera.position.set(0, 0, 0);
 
-        // Create a canvas for gray noise
-        const noiseCanvas = document.createElement('canvas');
-        const noiseContext = noiseCanvas.getContext('2d');
-        noiseCanvas.width = 512;
-        noiseCanvas.height = 512;
+        // Function to shuffle image pixels
+        function shuffleImage(image, callback) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = image.width;
+            canvas.height = image.height;
 
-        // Function to create a coarse gray noise texture
-        function createGrayNoiseBackground() {
-            const imageData = noiseContext.createImageData(noiseCanvas.width, noiseCanvas.height);
-            for (let i = 0; i < imageData.data.length; i += 4) {
-                const gray = Math.random() * 255; // Random gray value
-                imageData.data[i] = gray;     // R
-                imageData.data[i + 1] = gray; // G
-                imageData.data[i + 2] = gray; // B
-                imageData.data[i + 3] = 255;  // A
+            context.drawImage(image, 0, 0);
+
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+
+            // Shuffle the pixels
+            for (let i = data.length / 4 - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                // Swap pixels
+                const tmpR = data[i * 4];
+                const tmpG = data[i * 4 + 1];
+                const tmpB = data[i * 4 + 2];
+                const tmpA = data[i * 4 + 3];
+                data[i * 4] = data[j * 4];
+                data[i * 4 + 1] = data[j * 4 + 1];
+                data[i * 4 + 2] = data[j * 4 + 2];
+                data[i * 4 + 3] = data[j * 4 + 3];
+                data[j * 4] = tmpR;
+                data[j * 4 + 1] = tmpG;
+                data[j * 4 + 2] = tmpB;
+                data[j * 4 + 3] = tmpA;
             }
-            noiseContext.putImageData(imageData, 0, 0);
-            const noiseTexture = new THREE.Texture(noiseCanvas);
-            noiseTexture.needsUpdate = true;
-            scene.background = noiseTexture; // Set the noise texture as the scene background
 
-            // Create noise texture for animation
-            animateNoise();
-        }
+            context.putImageData(imageData, 0, 0);
+            const shuffledTexture = new THREE.Texture(canvas);
+            shuffledTexture.needsUpdate = true;
 
-        // Function to animate the noise background
-        function animateNoise() {
-            setInterval(() => {
-                const imageData = noiseContext.getImageData(0, 0, noiseCanvas.width, noiseCanvas.height);
-                for (let i = 0; i < imageData.data.length; i += 4) {
-                    const gray = Math.random() * 255; // Random gray value
-                    imageData.data[i] = gray;     // R
-                    imageData.data[i + 1] = gray; // G
-                    imageData.data[i + 2] = gray; // B
-                }
-                noiseContext.putImageData(imageData, 0, 0);
-                noiseCanvas.needsUpdate = true;
-            }, 1000); // Update noise every second
+            callback(shuffledTexture); // Pass the shuffled texture back
         }
 
         // Variables for sprites
