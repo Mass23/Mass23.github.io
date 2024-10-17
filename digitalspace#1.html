@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Sphere with Image and Text</title>
+    <title>Three.js Sphere with Random Image Sampling</title>
     <style>
         body { margin: 0; }
         canvas { display: block; }
@@ -21,26 +21,34 @@
 
         // Sphere geometry
         const geometry = new THREE.SphereGeometry(5, 32, 32);
-        const textureLoader = new THREE.TextureLoader();
 
-        // Load the image and set it as the texture for the sphere
-        textureLoader.load('images/me.webp', (texture) => {
+        // Function to create a random texture from an image
+        function createRandomTexture(image, cropSize) {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
 
-            const cropSize = 100; // Size of the crop
-            const randomX = Math.floor(Math.random() * (texture.image.width - cropSize));
-            const randomY = Math.floor(Math.random() * (texture.image.height - cropSize));
+            const randomX = Math.floor(Math.random() * (image.width - cropSize));
+            const randomY = Math.floor(Math.random() * (image.height - cropSize));
 
             canvas.width = cropSize;
             canvas.height = cropSize;
 
-            context.drawImage(texture.image, randomX, randomY, cropSize, cropSize, 0, 0, cropSize, cropSize);
+            context.drawImage(image, randomX, randomY, cropSize, cropSize, 0, 0, cropSize, cropSize);
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        // Load the image and set it as the texture for the sphere
+        const textureLoader = new THREE.TextureLoader();
+        textureLoader.load('images/me.webp', (texture) => {
+            const cropSize = 100; // Size of the crop
+            const randomTexture = createRandomTexture(texture.image, cropSize);
 
             const sphereMaterial = new THREE.MeshBasicMaterial({
-                map: new THREE.Texture(canvas), // Use the sampled texture
+                map: randomTexture, 
                 side: THREE.BackSide, // Render the inside of the sphere
             });
+
             const sphere = new THREE.Mesh(geometry, sphereMaterial);
             scene.add(sphere);
         });
@@ -151,7 +159,6 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            // sphere.rotation.y += 0.01; // Slow rotation for sphere
 
             // Move camera based on mouse position
             camera.position.x += (mouseX - camera.position.x) * 0.1; // Interpolate towards mouse
