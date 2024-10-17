@@ -25,28 +25,69 @@
         // Sphere radius
         const SPHERE_RADIUS = 100;
 
-        // Create texture for the sphere
+        // Load the image and create shuffled texture
+        const imageUrl = 'images/me.webp';
         const textureWidth = 32; // Width of the pixel texture
         const textureHeight = 32; // Height of the pixel texture
-        const pixelTexture = new Uint8Array(textureWidth * textureHeight * 4);
+        let pixelTexture;
 
-        // Fill the pixel texture with random colors
-        for (let i = 0; i < pixelTexture.length; i += 4) {
-            pixelTexture[i] = Math.random() * 255;     // Red
-            pixelTexture[i + 1] = Math.random() * 255; // Green
-            pixelTexture[i + 2] = Math.random() * 255; // Blue
-            pixelTexture[i + 3] = 255;                  // Alpha
+        // Function to shuffle an array
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
         }
 
-        // Create texture from pixel data
-        const texture = new THREE.DataTexture(pixelTexture, textureWidth, textureHeight, THREE.RGBAFormat);
-        texture.needsUpdate = true;
+        // Load image and create shuffled texture
+        const loadImageAndCreateTexture = (url) => {
+            const image = new Image();
+            image.src = url;
 
-        // Create sphere geometry with the pixel texture
-        const sphereGeometry = new THREE.SphereGeometry(SPHERE_RADIUS, 32, 32);
-        const sphereMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        scene.add(sphere);
+            image.onload = () => {
+                // Create a canvas to draw the image
+                const canvas = document.createElement('canvas');
+                canvas.width = image.width;
+                canvas.height = image.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(image, 0, 0);
+
+                // Extract pixel data from the image
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+
+                // Create an array for the shuffled pixel texture
+                pixelTexture = new Uint8Array(textureWidth * textureHeight * 4);
+                
+                // Fill the pixel texture with shuffled pixels
+                const pixels = [];
+                for (let i = 0; i < data.length; i += 4) {
+                    pixels.push([data[i], data[i + 1], data[i + 2], data[i + 3]]); // RGBA
+                }
+                shuffle(pixels);
+
+                // Fill the pixel texture with the shuffled pixels
+                for (let i = 0; i < pixelTexture.length; i += 4) {
+                    const pixel = pixels[i / 4 % pixels.length]; // Loop through shuffled pixels
+                    pixelTexture[i] = pixel[0];     // Red
+                    pixelTexture[i + 1] = pixel[1]; // Green
+                    pixelTexture[i + 2] = pixel[2]; // Blue
+                    pixelTexture[i + 3] = pixel[3]; // Alpha
+                }
+
+                // Create texture from pixel data
+                const texture = new THREE.DataTexture(pixelTexture, textureWidth, textureHeight, THREE.RGBAFormat);
+                texture.needsUpdate = true;
+
+                // Create sphere geometry with the pixel texture
+                const sphereGeometry = new THREE.SphereGeometry(SPHERE_RADIUS, 32, 32);
+                const sphereMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+                const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                scene.add(sphere);
+            };
+        };
+
+        loadImageAndCreateTexture(imageUrl); // Load image and create texture
 
         // Create particles using THREE.BufferGeometry
         const MAX_PARTICLES = 10000;
