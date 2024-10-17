@@ -30,28 +30,33 @@
 
         // Load the texture
         const textureLoader = new THREE.TextureLoader();
-        let sphereTexture = textureLoader.load('images/me.webp');
+        let sphereTexture = textureLoader.load('images/me.webp', updateSphereTexture);
 
         // Function to update the texture with a glitch effect
         function updateSphereTexture() {
-            sphereTexture = textureLoader.load('images/me.webp', function(texture) {
-                texture.wrapS = THREE.RepeatWrapping;
-                texture.wrapT = THREE.RepeatWrapping;
-                texture.repeat.set(1, 1);
-                sphereMaterial.map = texture;
-                sphereMaterial.needsUpdate = true;
-            });
+            sphereMaterial.map = sphereTexture;
+            sphereMaterial.needsUpdate = true;
         }
 
-        // Function to create glitches
-        function createGlitches(numGlitches) {
-            for (let i = 0; i < numGlitches; i++) {
-                setTimeout(updateSphereTexture, i * 200); // Delay each glitch slightly
-            }
+        // Function to create glitches on the texture
+        function createGlitch() {
+            // Generate a random offset and scale to simulate a glitch
+            sphereTexture.offset.x = Math.random() * 0.1;
+            sphereTexture.offset.y = Math.random() * 0.1;
+            sphereTexture.repeat.x = 1 + Math.random() * 0.05;
+            sphereTexture.repeat.y = 1 + Math.random() * 0.05;
+            sphereTexture.needsUpdate = true; // Inform Three.js that the texture has changed
         }
 
         // Create initial glitches upon loading
-        setTimeout(() => createGlitches(10), 1000); // Create 10 glitches after 1 second
+        setTimeout(() => {
+            for (let i = 0; i < 10; i++) {
+                createGlitch();
+            }
+        }, 1000); // Create 10 glitches after 1 second
+
+        // Create a glitch every second
+        setInterval(createGlitch, 1000); // Continue to create glitches every second
 
         // Variables for sprites
         const sprites = [];
@@ -78,7 +83,7 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, -90); // Closer to the sphere surface
+            sprite.position.set((Math.random() - 0.5) * 80, (Math.random() - 0.5) * 80, -90); // Closer to the sphere surface
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -105,7 +110,7 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, -90); // Closer to the sphere surface
+            sprite.position.set((Math.random() - 0.5) * 80, (Math.random() - 0.5) * 80, -90); // Closer to the sphere surface
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -132,7 +137,7 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, -90); // Closer to the sphere surface
+            sprite.position.set((Math.random() - 0.5) * 80, (Math.random() - 0.5) * 80, -90); // Closer to the sphere surface
             scene.add(sprite);
             sprites.push(sprite);
 
