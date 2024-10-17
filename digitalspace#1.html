@@ -94,8 +94,8 @@
         function createHelloWorldSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 512; // Increased size
-            canvas.height = 512;
+            canvas.width = 4096; // Increased size
+            canvas.height = 4096;
 
             // Draw a noisy square with "HELLO WORLD"
             context.fillStyle = 'rgba(200, 200, 200, 0.5)';
@@ -112,7 +112,7 @@
             const sprite = new THREE.Sprite(spriteMaterial);
 
             // Position the sprite close to the sphere's inner surface
-            positionSprite(sprite, SPHERE_RADIUS - 40); // Adjust position
+            positionSprite(sprite, SPHERE_RADIUS - 30); // Adjust position
 
             scene.add(sprite);
             sprites.push(sprite);
@@ -128,8 +128,8 @@
         function createPixelSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 128;  // Increased size
-            canvas.height = 128;
+            canvas.width = 256;  // Increased size
+            canvas.height = 256;
 
             // Draw a random pixel sample from the image
             const x = Math.floor(Math.random() * (meImage.width - 256));
@@ -142,7 +142,7 @@
             const sprite = new THREE.Sprite(spriteMaterial);
 
             // Position the sprite closer to the center of the sphere
-            positionSprite(sprite, SPHERE_RADIUS - 20); // Adjust position
+            positionSprite(sprite, SPHERE_RADIUS - 50); // Adjust position
             sprite.userData.type = 'pixel'; // Set userData for pixel sprite
 
             scene.add(sprite);
@@ -159,8 +159,8 @@
         function createMeSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 512;  // Size of MeSprites
-            canvas.height = 512;
+            canvas.width = 3012;  // Size of MeSprites
+            canvas.height = 3012;
 
             // Draw a random part of the me image
             const x = Math.floor(Math.random() * (meImage.width - 256));
@@ -202,9 +202,15 @@
         // Function to start creating sprites
         function startSpriteCreation() {
             setInterval(() => {
-                createHelloWorldSprite();
-                createPixelSprite(); // Create pixel sprites
-                createMeSprite(); // Create MeSprites as well
+                for (let i = 0; i < 1; i++) {
+                    createHelloWorldSprite();
+                    }
+                for (let i = 0; i < 10; i++) {
+                    createPixelSprite();
+                    }
+                for (let i = 0; i < 3; i++) {
+                    createMeSprite();
+                    }
             }, spriteInterval);
         }
 
