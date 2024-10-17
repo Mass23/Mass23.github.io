@@ -80,7 +80,6 @@
         // Sprite Pools
         const helloWorldSprites = [];
         const meSprites = [];
-        const pixelSprites = [];
         const spritePoolSize = 10; // Number of each sprite type
 
         // Create sprite textures for HelloWorldSprites
@@ -89,18 +88,13 @@
         }
 
         // Create sprite textures for MeSprites
-        for (let i = 0; i < spritePoolSize; i++) {
-            meSprites.push(createMeSpriteTexture(i));
-        }
-
-        // Create sprite textures for PixelSprites
         const meImage = new Image();
         meImage.src = 'images/me.webp';
         meImage.onload = () => {
             for (let i = 0; i < spritePoolSize; i++) {
-                pixelSprites.push(createPixelSpriteTexture(i));
+                meSprites.push(createMeSpriteTexture(i));
             }
-            startSpriteCreation(); // Start sprite creation after loading images
+            startParticleCreation(); // Start particle creation after loading images
         };
 
         // Function to create a HelloWorldSprite texture
@@ -139,71 +133,22 @@
             return spriteTexture;
         }
 
-        // Function to create a PixelSprite texture
-        function createPixelSpriteTexture(index) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 256; // Size of the texture
-            canvas.height = 256;
+        // Particles
+        let particleSystem;
+        const MAX_PARTICLES = 1000; // Limit the number of particles
+        const particleGeometry = new THREE.BufferGeometry();
+        const particleMaterial = new THREE.PointsMaterial({ size: 2, color: 0xffffff, transparent: true, opacity: 0.6 });
 
-            const x = Math.floor(Math.random() * (meImage.width - 256));
-            const y = Math.floor(Math.random() * (meImage.height - 256));
-            context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
-
-            const spriteTexture = new THREE.Texture(canvas);
-            spriteTexture.needsUpdate = true;
-            return spriteTexture;
-        }
-
-        // Variables for sprites
-        const sprites = [];
-        const MAX_SPRITES = 1000; // Limit the number of sprites
-        const spriteInterval = 100; // Generate sprites every 100 milliseconds
-        const SPHERE_RADIUS = 100; // Sphere radius
-
-        // Function to create and reuse sprites
-        function createSprite() {
-            const type = Math.floor(Math.random() * 3); // Randomly choose sprite type
-            let sprite;
-
-            if (type === 0) { // HelloWorldSprite
-                sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: helloWorldSprites[Math.floor(Math.random() * spritePoolSize)] }));
-            } else if (type === 1) { // MeSprite
-                sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: meSprites[Math.floor(Math.random() * spritePoolSize)] }));
-            } else { // PixelSprite
-                sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: pixelSprites[Math.floor(Math.random() * spritePoolSize)] }));
+        function startParticleCreation() {
+            const positions = new Float32Array(MAX_PARTICLES * 3); // 3 vertices per particle
+            for (let i = 0; i < MAX_PARTICLES; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 200; // X
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 200; // Y
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 200; // Z
             }
-
-            positionSprite(sprite, SPHERE_RADIUS - 10);
-            scene.add(sprite);
-            sprites.push(sprite);
-
-            // Remove oldest sprite if limit exceeded
-            if (sprites.length > MAX_SPRITES) {
-                const oldestSprite = sprites.shift();
-                scene.remove(oldestSprite);
-            }
-        }
-
-        // Function to position sprites
-        function positionSprite(sprite, distanceFromCenter) {
-            const phi = Math.random() * Math.PI; // Random angle
-            const theta = Math.random() * 2 * Math.PI; // Random angle
-
-            sprite.position.set(
-                distanceFromCenter * Math.sin(phi) * Math.cos(theta),
-                distanceFromCenter * Math.sin(phi) * Math.sin(theta),
-                distanceFromCenter * Math.cos(phi)
-            );
-        }
-
-        // Function to start creating sprites
-        function startSpriteCreation() {
-            setInterval(() => {
-                for (let i = 0; i < 1; i++) {
-                    createSprite();
-                }
-            }, spriteInterval);
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particleSystem);
         }
 
         // Animation loop
