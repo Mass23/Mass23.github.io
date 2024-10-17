@@ -94,8 +94,8 @@
         function createHelloWorldSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 4096; // Increased size
-            canvas.height = 4096;
+            canvas.width = 512 * 10; // Increased size
+            canvas.height = 512 * 10;
 
             // Draw a noisy square with "HELLO WORLD"
             context.fillStyle = 'rgba(200, 200, 200, 0.5)';
@@ -128,8 +128,8 @@
         function createPixelSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 256;  // Increased size
-            canvas.height = 256;
+            canvas.width = 512;  // Increased size
+            canvas.height = 512;
 
             // Draw a random pixel sample from the image
             const x = Math.floor(Math.random() * (meImage.width - 256));
@@ -159,8 +159,8 @@
         function createMeSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 3012;  // Size of MeSprites
-            canvas.height = 3012;
+            canvas.width = 512 * 7;  // Size of MeSprites
+            canvas.height = 512 * 7;
 
             // Draw a random part of the me image
             const x = Math.floor(Math.random() * (meImage.width - 256));
