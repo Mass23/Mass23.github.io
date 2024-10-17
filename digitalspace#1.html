@@ -25,6 +25,29 @@
         // Sphere radius
         const SPHERE_RADIUS = 100;
 
+        // Create texture for the sphere
+        const textureWidth = 32; // Width of the pixel texture
+        const textureHeight = 32; // Height of the pixel texture
+        const pixelTexture = new Uint8Array(textureWidth * textureHeight * 4);
+
+        // Fill the pixel texture with random colors
+        for (let i = 0; i < pixelTexture.length; i += 4) {
+            pixelTexture[i] = Math.random() * 255;     // Red
+            pixelTexture[i + 1] = Math.random() * 255; // Green
+            pixelTexture[i + 2] = Math.random() * 255; // Blue
+            pixelTexture[i + 3] = 255;                  // Alpha
+        }
+
+        // Create texture from pixel data
+        const texture = new THREE.DataTexture(pixelTexture, textureWidth, textureHeight, THREE.RGBAFormat);
+        texture.needsUpdate = true;
+
+        // Create sphere geometry with the pixel texture
+        const sphereGeometry = new THREE.SphereGeometry(SPHERE_RADIUS, 32, 32);
+        const sphereMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        scene.add(sphere);
+
         // Create particles using THREE.BufferGeometry
         const MAX_PARTICLES = 10000;
         const particleGeometry = new THREE.BufferGeometry();
@@ -61,7 +84,7 @@
 
         // Create material for the particles
         const particleMaterial = new THREE.PointsMaterial({
-            color: 0xffffff,
+            color: 0x00ff00, // Set particle color to green
             size: 0.5,
             transparent: true,
             opacity: 0.8
