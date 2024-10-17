@@ -55,13 +55,16 @@
 
         // Function to apply glitch effect
         function applyGlitchEffect() {
-            // Draw the previous frame with a fade-out effect
-            glitchContext.globalAlpha = 0.8; // Adjust this value for more or less fade
-            glitchContext.drawImage(glitchCanvas, 0, 0, glitchCanvas.width, glitchCanvas.height);
+            // Clear the canvas
+            glitchContext.clearRect(0, 0, glitchCanvas.width, glitchCanvas.height);
 
-            // Draw the new glitch image
-            glitchContext.globalAlpha = 1.0; // Reset alpha for new glitch
-            glitchContext.drawImage(meImage.texture.image, 0, 0, glitchCanvas.width, glitchCanvas.height);
+            // Draw the loaded image onto the glitch canvas
+            if (meImage.texture && meImage.texture.image) {
+                glitchContext.drawImage(meImage.texture.image, 0, 0, glitchCanvas.width, glitchCanvas.height);
+            } else {
+                console.log('Texture not loaded yet.');
+                return;
+            }
 
             // Create random glitches
             const glitchCount = 30; // Number of glitches to apply
@@ -190,7 +193,7 @@
         for (let i = 0; i < 10; i++) {
             createHelloWorldSprite();
             createPixelSprite();
-            createMeSprite(); // Create the me.webp sprite
+            createMeSprite();
         }
 
         // Mouse movement for camera rotation
