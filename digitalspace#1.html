@@ -79,9 +79,11 @@
 
         // Variables for sprites
         const sprites = [];
-        const MAX_SPRITES = 30; // Limit the number of sprites
-        const spriteInterval = 2000; // Generate sprites every 2 seconds
+        const MAX_SPRITES = 1000; // Limit the number of sprites
+        const spriteInterval = 100; // Generate sprites every 2 seconds
         const SPHERE_RADIUS = 100; // Sphere radius
+        const meImage = new Image(); // Image for MeSprites
+        meImage.src = 'images/me.webp'; // Path to me.webp
 
         // Function to create "HELLO WORLD" sprite
         function createHelloWorldSprite() {
@@ -121,13 +123,43 @@
         function createPixelSprite() {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            canvas.width = 256;  // Increased size
-            canvas.height = 256;
+            canvas.width = 128;  // Increased size
+            canvas.height = 128;
 
             // Draw a random pixel sample from the image
-            const x = Math.floor(Math.random() * (image.image.width - 256));
-            const y = Math.floor(Math.random() * (image.image.height - 256));
-            context.drawImage(image.image, x, y, 256, 256, 0, 0, 256, 256);
+            const x = Math.floor(Math.random() * (meImage.width - 256));
+            const y = Math.floor(Math.random() * (meImage.height - 256));
+            context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
+
+            const spriteTexture = new THREE.Texture(canvas);
+            spriteTexture.needsUpdate = true;
+            const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+
+            // Position the sprite close to the sphere's inner surface
+            const distanceFromCenter = SPHERE_RADIUS - 0.5 * canvas.width; // Adjusted to position near the border
+            sprite.position.set((Math.random() - 0.5) * distanceFromCenter * 2, (Math.random() - 0.5) * distanceFromCenter * 2, -distanceFromCenter); 
+            scene.add(sprite);
+            sprites.push(sprite);
+
+            // Remove oldest sprite if limit exceeded
+            if (sprites.length > MAX_SPRITES) {
+                const oldestSprite = sprites.shift();
+                scene.remove(oldestSprite);
+            }
+        }
+
+        // Function to create MeSprites
+        function createMeSprite() {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 512;  // Size of MeSprites
+            canvas.height = 512;
+
+            // Draw a random part of the me image
+            const x = Math.floor(Math.random() * (meImage.width - 256));
+            const y = Math.floor(Math.random() * (meImage.height - 256));
+            context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
@@ -152,6 +184,7 @@
             setInterval(() => {
                 createHelloWorldSprite();
                 createPixelSprite();
+                createMeSprite(); // Create MeSprite as well
             }, spriteInterval); // Create sprites every 2 seconds
         }
 
