@@ -121,9 +121,9 @@
             canvas.height = 256;
 
             // Draw a random pixel sample from the image
-            const x = Math.floor(Math.random() * (meImage.image.width - 256));
-            const y = Math.floor(Math.random() * (meImage.image.height - 256));
-            context.drawImage(meImage.image, x, y, 256, 256, 0, 0, 256, 256);
+            const x = Math.floor(Math.random() * (image.width - 256));
+            const y = Math.floor(Math.random() * (image.height - 256));
+            context.drawImage(image, x, y, 256, 256, 0, 0, 256, 256);
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
@@ -148,9 +148,9 @@
             canvas.height = 256;
 
             // Draw a random part of the image
-            const x = Math.floor(Math.random() * (meImage.image.width - 256));
-            const y = Math.floor(Math.random() * (meImage.image.height - 256));
-            context.drawImage(meImage.image, x, y, 256, 256, 0, 0, 256, 256);
+            const x = Math.floor(Math.random() * (image.width - 256));
+            const y = Math.floor(Math.random() * (image.height - 256));
+            context.drawImage(image, x, y, 256, 256, 0, 0, 256, 256);
 
             const spriteTexture = new THREE.Texture(canvas);
             spriteTexture.needsUpdate = true;
