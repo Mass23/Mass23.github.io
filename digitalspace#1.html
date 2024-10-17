@@ -3,46 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Interior Sphere with Fade Image and Text</title>
+    <title>Three.js Sphere with Text and Image Fade</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
-
-        /* Style for Hello World text */
-        #hello-world {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Arial', sans-serif;
-            font-size: 48px;
-            font-weight: bold;
-            color: white;
-            text-transform: uppercase;
-            z-index: 2;  /* Layered on top of the canvas */
-            opacity: 0;
-        }
-
-        /* Style for overlay image */
-        #overlay-image {
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;  /* Adjust the size as needed */
-            height: auto;
-            z-index: 2;  /* Layered on top of the canvas */
-            opacity: 0;  /* Start invisible */
-        }
     </style>
 </head>
 <body>
-    <!-- Hello World Text -->
-    <div id="hello-world">Hello World</div>
-
-    <!-- Overlay Image -->
-    <img id="overlay-image" src="images/me.webp" alt="Fading Image">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         // Scene setup
@@ -65,10 +32,85 @@
         const geometry = new THREE.SphereGeometry(10, 32, 32);  // Large sphere around the camera
         const material = new THREE.MeshBasicMaterial({
             map: sphereTexture,
-            side: THREE.BackSide  // Render inside of the sphere
+            side: THREE.BackSide  // Render the inside of the sphere
         });
         const sphere = new THREE.Mesh(geometry, material);
         scene.add(sphere);
+
+        // Text sprite creation
+        function createTextSprite(text) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            context.font = 'Bold 48px Arial';
+            context.fillStyle = 'white';
+            context.fillText(text, 0, 50);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.scale.set(2, 1, 1);  // Adjust the size
+            sprite.position.set(0, 0, -5);  // Position it inside the sphere
+
+            return sprite;
+        }
+
+        // Add "Hello World" text to the scene
+        const helloText = createTextSprite('HELLO WORLD');
+        scene.add(helloText);
+
+        // Fade out effect for text
+        function fadeOutText(textSprite) {
+            let opacity = 1.0;
+            const fadeInterval = setInterval(() => {
+                opacity -= 0.01;
+                textSprite.material.opacity = opacity;
+                if (opacity <= 0) {
+                    clearInterval(fadeInterval);
+                    scene.remove(textSprite);
+                }
+            }, 50);
+        }
+
+        // Create an image sprite inside the sphere
+        function createImageSprite(imageUrl) {
+            const imgTexture = textureLoader.load(imageUrl);
+            const spriteMaterial = new THREE.SpriteMaterial({ map: imgTexture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.scale.set(3, 3, 1);  // Adjust size of the image sprite
+            // Position it randomly inside the sphere
+            const radius = 8;
+            const phi = Math.random() * Math.PI * 2;
+            const theta = Math.random() * Math.PI;
+            sprite.position.set(
+                radius * Math.sin(theta) * Math.cos(phi),
+                radius * Math.sin(theta) * Math.sin(phi),
+                radius * Math.cos(theta)
+            );
+            scene.add(sprite);
+            return sprite;
+        }
+
+        // Fade out effect for images
+        function fadeOutImage(sprite) {
+            let opacity = 1.0;
+            const fadeInterval = setInterval(() => {
+                opacity -= 0.01;
+                sprite.material.opacity = opacity;
+                if (opacity <= 0) {
+                    clearInterval(fadeInterval);
+                    scene.remove(sprite);
+                }
+            }, 50);
+        }
+
+        // Show random image periodically
+        setInterval(() => {
+            const imageSprite = createImageSprite('images/me.webp');
+            setTimeout(() => fadeOutImage(imageSprite), 3000);  // Fade out after 3 seconds
+        }, 6000);  // Show a new image every 6 seconds
+
+        // Initial fade out of the "Hello World" text
+        setTimeout(() => fadeOutText(helloText), 4000);  // Fade out after 4 seconds
 
         // Handle mouse movement for rotating the camera
         let mouseX = 0, mouseY = 0;
@@ -77,7 +119,7 @@
             mouseY = (event.clientY / window.innerHeight) * 2 - 1;
         });
 
-        // Render loop (without continuous animation, just on demand)
+        // Render loop
         function render() {
             // Rotate camera based on mouse position
             camera.rotation.y = mouseX * Math.PI;
@@ -98,26 +140,6 @@
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
         });
-
-        // Fade-in and fade-out of "Hello World" text
-        const helloWorld = document.getElementById('hello-world');
-        setTimeout(() => {
-            helloWorld.style.transition = 'opacity 2s';
-            helloWorld.style.opacity = 1;
-        }, 2000);
-
-        // Fading image logic
-        const overlayImage = document.getElementById('overlay-image');
-        function fadeInOutImage() {
-            overlayImage.style.transition = 'opacity 2s';
-            overlayImage.style.opacity = 1;  // Fade in
-            setTimeout(() => {
-                overlayImage.style.opacity = 0;  // Fade out
-            }, 4000);  // Visible for 4 seconds before fading out
-        }
-
-        // Set the image to fade in and out every 6 seconds
-        setInterval(fadeInOutImage, 6000);
     </script>
 </body>
 </html>
