@@ -113,6 +113,8 @@
 
             // Position the sprite close to the sphere's inner surface
             positionSprite(sprite, SPHERE_RADIUS - 30); // Adjust position
+            // Scale up the MeSprite size
+            sprite.scale.set(4, 4, 1); // Set MeSprite size (x, y, z)
 
             scene.add(sprite);
             sprites.push(sprite);
@@ -144,6 +146,8 @@
             // Position the sprite closer to the center of the sphere
             positionSprite(sprite, SPHERE_RADIUS - 50); // Adjust position
             sprite.userData.type = 'pixel'; // Set userData for pixel sprite
+            // Scale up the MeSprite size
+            sprite.scale.set(4, 4, 1); // Set MeSprite size (x, y, z)
 
             scene.add(sprite);
             sprites.push(sprite);
@@ -175,6 +179,8 @@
             // Position the sprite close to the sphere's inner surface
             positionSprite(sprite, SPHERE_RADIUS - 40); // Adjust position
             sprite.userData.type = 'me'; // Set userData for MeSprite
+            // Scale up the MeSprite size
+            sprite.scale.set(4, 4, 1); // Set MeSprite size (x, y, z)
 
             scene.add(sprite);
             sprites.push(sprite);
