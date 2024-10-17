@@ -21,7 +21,12 @@
 
         // Texture loader
         const textureLoader = new THREE.TextureLoader();
-        const imageTexture = textureLoader.load('images/me.webp');
+        const imageTexture = textureLoader.load('images/me.webp', (texture) => {
+            // Set the texture's wrap and filter modes
+            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+            texture.minFilter = THREE.LinearMipMapLinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+        });
 
         // Create a sphere geometry (textured inside)
         const geometry = new THREE.SphereGeometry(20, 32, 32);
@@ -32,17 +37,32 @@
         const sphere = new THREE.Mesh(geometry, material);
         scene.add(sphere);
 
+        // Create a basic texture for the text background
+        const createTextBackground = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 100;
+            const context = canvas.getContext('2d');
+            context.fillStyle = '#cccccc'; // Light grey background
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = 'rgba(255, 255, 255, 0.8)'; // White text
+            context.font = 'bold 40px Arial';
+            context.textAlign = 'center';
+            context.fillText('HELLO WORLD', canvas.width / 2, canvas.height / 2);
+            return new THREE.CanvasTexture(canvas);
+        };
+
         // Function to create sprites with randomly sampled pixels from the image
         function createRandomSprites() {
             const spriteMaterial = new THREE.SpriteMaterial({ map: null, transparent: true, opacity: 1 });
 
             // Randomly sample a small portion from the texture
-            const sampleX = Math.random() * (imageTexture.image.width - 100);
-            const sampleY = Math.random() * (imageTexture.image.height - 100);
+            const sampleX = Math.random() * (imageTexture.image.width - 1);
+            const sampleY = Math.random() * (imageTexture.image.height - 1);
 
             const croppedTexture = new THREE.Texture(imageTexture.image);
             croppedTexture.offset.set(sampleX / imageTexture.image.width, sampleY / imageTexture.image.height);
-            croppedTexture.repeat.set(100 / imageTexture.image.width, 100 / imageTexture.image.height);
+            croppedTexture.repeat.set(0.05, 0.05); // Sample small portion
             croppedTexture.needsUpdate = true;
 
             spriteMaterial.map = croppedTexture;
@@ -72,11 +92,42 @@
             }, fadeTime * 1000 / 20); // Fade out over time
         }
 
-        // Create sprites every few seconds
-        setInterval(createRandomSprites, 1000);
+        // Create text sprite at a fixed position inside the sphere
+        function createTextSprite() {
+            const textMaterial = new THREE.SpriteMaterial({ map: createTextBackground(), transparent: true });
+            const textSprite = new THREE.Sprite(textMaterial);
 
-        // Set camera position
-        camera.position.z = 30;
+            // Set a random position for the text sprite within the sphere
+            const radius = 12; // Distance from the center
+            const theta = Math.random() * 2 * Math.PI;
+            const phi = Math.acos(2 * Math.random() - 1);
+            textSprite.position.set(
+                radius * Math.sin(phi) * Math.cos(theta),
+                radius * Math.sin(phi) * Math.sin(theta),
+                radius * Math.cos(phi)
+            );
+
+            scene.add(textSprite);
+
+            // Slowly fade out text sprite
+            const fadeTime = 3; // Seconds to fade
+            let fadeOut = setInterval(() => {
+                textMaterial.opacity -= 0.05;
+                if (textMaterial.opacity <= 0) {
+                    clearInterval(fadeOut);
+                    scene.remove(textSprite); // Remove the sprite when fully transparent
+                }
+            }, fadeTime * 1000 / 20); // Fade out over time
+        }
+
+        // Create sprites and text every second
+        setInterval(() => {
+            createRandomSprites();
+            createTextSprite();
+        }, 1000);
+
+        // Set camera position inside the sphere
+        camera.position.set(0, 0, 0);
 
         // Animation loop
         function animate() {
