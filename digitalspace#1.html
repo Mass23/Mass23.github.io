@@ -47,18 +47,6 @@
             mouseY = (event.clientY / window.innerHeight) * 2 - 1;
         });
 
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Adjust camera rotation based on mouse movement
-            camera.rotation.x = mouseY * 0.5;
-            camera.rotation.y = -mouseX * 0.5;
-
-            // Render the scene
-            renderer.render(scene, camera);
-        }
-
         // Handle window resizing
         window.addEventListener('resize', () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
