@@ -74,14 +74,18 @@
             const glitchCount = 15; // Adjusted number of glitches
             for (let i = 0; i < glitchCount; i++) {
                 // Increase width and height of the glitch patches
-                const width = Math.floor(Math.random() * 100) + 50; // Width of glitch segment (50-150)
-                const height = Math.floor(Math.random() * 100) + 50; // Height of glitch segment (50-150)
+                const width = Math.floor(Math.random() * 200) + 100; // Width of glitch segment (100-300)
+                const height = Math.floor(Math.random() * 200) + 100; // Height of glitch segment (100-300)
 
-                // Ensure x and y coordinates are within bounds but allow them to go outside for edge effect
-                const x = Math.floor(Math.random() * glitchCanvas.width);
-                const y = Math.floor(Math.random() * glitchCanvas.height);
+                // Allow x and y coordinates to go beyond the canvas size for edge effects
+                const x = Math.floor(Math.random() * (glitchCanvas.width + 100)) - 50; // Randomize beyond left and right edges
+                const y = Math.floor(Math.random() * (glitchCanvas.height + 100)) - 50; // Randomize beyond top and bottom edges
 
-                const imageData = glitchContext.getImageData(x, y, Math.min(width, glitchCanvas.width - x), Math.min(height, glitchCanvas.height - y));
+                // Ensure we do not go out of bounds while getting the imageData
+                const adjustedWidth = Math.min(width, glitchCanvas.width - Math.max(0, x));
+                const adjustedHeight = Math.min(height, glitchCanvas.height - Math.max(0, y));
+
+                const imageData = glitchContext.getImageData(Math.max(0, x), Math.max(0, y), adjustedWidth, adjustedHeight);
                 const glitchX = Math.floor(Math.random() * glitchCanvas.width);
                 const glitchY = Math.floor(Math.random() * glitchCanvas.height);
 
@@ -134,7 +138,7 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 200, (Math.random() - 0.5) * 200, -90); // Random position within the sphere
+            sprite.position.set((Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150, -90); // Random position within the sphere
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -161,7 +165,7 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 200, (Math.random() - 0.5) * 200, -90); // Random position within the sphere
+            sprite.position.set((Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150, -90); // Random position within the sphere
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -188,7 +192,7 @@
             spriteTexture.needsUpdate = true;
             const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.position.set((Math.random() - 0.5) * 200, (Math.random() - 0.5) * 200, -90); // Random position within the sphere
+            sprite.position.set((Math.random() - 0.5) * 150, (Math.random() - 0.5) * 150, -90); // Random position within the sphere
             scene.add(sprite);
             sprites.push(sprite);
 
@@ -198,13 +202,6 @@
                 scene.remove(oldestSprite);
             }
         }
-
-        // Generate sprites at intervals
-        setInterval(() => {
-            createHelloWorldSprite();
-            createPixelSprite();
-            createMeSprite();
-        }, spriteInterval);
 
         // Mouse movement handling
         let isMouseDown = false;
