@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Space #1 - Hello World</title>
+    <title>Digital Space #1 - Particles in Sphere</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
@@ -19,176 +19,101 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Sphere geometry
-        const sphereGeometry = new THREE.SphereGeometry(100, 32, 32);
-
-        // Declare spriteInterval before use
-        let spriteInterval; 
-
-        // Function to start creating and adding sprites
-        function startSpriteCreation() {
-            let spriteIndex = 0;
-            spriteInterval = setInterval(() => {
-                if (spriteIndex >= spritePoolSize) {
-                    clearInterval(spriteInterval); // Stop after all sprites are added
-                    return;
-                }
-
-                // Choose a random sprite type
-                const randomSprite = Math.random() < 0.5 ? helloWorldSprites[spriteIndex] : meSprites[spriteIndex];
-                
-                const spriteMaterial = new THREE.SpriteMaterial({ map: randomSprite });
-                const sprite = new THREE.Sprite(spriteMaterial);
-                
-                sprite.position.set(
-                    (Math.random() - 0.5) * 200, 
-                    (Math.random() - 0.5) * 200, 
-                    (Math.random() - 0.5) * 200
-                );
-                
-                sprite.scale.set(5, 5, 1); // Scale of the sprites
-                scene.add(sprite);
-                spriteIndex++;
-            }, 100); // Adjust the interval as needed
-        }
-
-        // Function to shuffle image pixels
-        function shuffleImage(image, callback) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = image.image.width;  
-            canvas.height = image.image.height; 
-
-            context.drawImage(image.image, 0, 0); 
-
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-            const data = imageData.data;
-
-            // Shuffle the pixels
-            for (let i = data.length / 4 - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                // Swap pixels
-                const tmpR = data[i * 4];
-                const tmpG = data[i * 4 + 1];
-                const tmpB = data[i * 4 + 2];
-                const tmpA = data[i * 4 + 3];
-                data[i * 4] = data[j * 4];
-                data[i * 4 + 1] = data[j * 4 + 1];
-                data[i * 4 + 2] = data[j * 4 + 2];
-                data[i * 4 + 3] = data[j * 4 + 3];
-                data[j * 4] = tmpR;
-                data[j * 4 + 1] = tmpG;
-                data[j * 4 + 2] = tmpB;
-                data[j * 4 + 3] = tmpA;
-            }
-
-            context.putImageData(imageData, 0, 0);
-            const shuffledTexture = new THREE.Texture(canvas);
-            shuffledTexture.needsUpdate = true;
-
-            callback(shuffledTexture); // Pass the shuffled texture back
-        }
-
-        // Load the texture for the sphere
-        const textureLoader = new THREE.TextureLoader();
-        textureLoader.load('images/me.webp', (image) => {
-            // Shuffle the image pixels and set it as the texture for the sphere
-            shuffleImage(image, (shuffledTexture) => {
-                const sphereMaterial = new THREE.MeshBasicMaterial({ map: shuffledTexture, side: THREE.BackSide });
-                const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-                scene.add(sphere);
-                
-                startSpriteCreation(); // Start creating sprites after loading the texture
-            });
-        }, undefined, (error) => {
-            console.error('Error loading texture:', error); // Log errors
-        });
-
         // Set camera position to be inside the sphere
         camera.position.set(0, 0, 0);
 
-        // Sprite Pools
-        const helloWorldSprites = [];
-        const meSprites = [];
-        const spritePoolSize = 10; // Number of each sprite type
+        // Sphere radius
+        const SPHERE_RADIUS = 100;
 
-        // Create sprite textures for HelloWorldSprites
-        for (let i = 0; i < spritePoolSize; i++) {
-            helloWorldSprites.push(createHelloWorldSpriteTexture(i));
-        }
-
-        // Declare meImage here, before using it
-        const meImage = new Image();
-        meImage.src = 'images/me.webp';
-        meImage.onload = () => {
-            for (let i = 0; i < spritePoolSize; i++) {
-                meSprites.push(createMeSpriteTexture(i));
-            }
-            startParticleCreation(); // Start particle creation after loading images
-        };
-
-        // Function to create a HelloWorldSprite texture
-        function createHelloWorldSpriteTexture(index) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 512; // Size of the texture
-            canvas.height = 512;
-
-            context.fillStyle = 'rgba(200, 200, 200, 0.5)';
-            context.fillRect(0, 0, canvas.width, canvas.height);
-            context.fillStyle = 'black';
-            context.font = '48px Arial';
-            context.textAlign = 'center';
-            context.textBaseline = 'middle';
-            context.fillText('HELLO WORLD ' + (index + 1), canvas.width / 2, canvas.height / 2);
-
-            const spriteTexture = new THREE.Texture(canvas);
-            spriteTexture.needsUpdate = true;
-            return spriteTexture;
-        }
-
-        // Function to create a MeSprite texture
-        function createMeSpriteTexture(index) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 512; // Size of the texture
-            canvas.height = 512;
-
-            const x = Math.floor(Math.random() * (meImage.width - 256));
-            const y = Math.floor(Math.random() * (meImage.height - 256));
-            context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
-
-            const spriteTexture = new THREE.Texture(canvas);
-            spriteTexture.needsUpdate = true;
-            return spriteTexture;
-        }
-
-        // Particles
-        let particleSystem;
-        const MAX_PARTICLES = 1000; // Limit the number of particles
+        // Create particles using THREE.BufferGeometry
+        const MAX_PARTICLES = 10000;
         const particleGeometry = new THREE.BufferGeometry();
-        const particleMaterial = new THREE.PointsMaterial({ size: 2, color: 0xffffff, transparent: true, opacity: 0.6 });
+        const particlePositions = new Float32Array(MAX_PARTICLES * 3);
+        const particleVelocities = new Float32Array(MAX_PARTICLES * 3);
 
-        function startParticleCreation() {
-            const positions = new Float32Array(MAX_PARTICLES * 3); // 3 vertices per particle
+        // Function to generate a random position inside the sphere
+        function randomPointInSphere(radius) {
+            const theta = Math.random() * 2 * Math.PI; // Random angle
+            const phi = Math.acos(2 * Math.random() - 1); // Random inclination
+            const r = Math.cbrt(Math.random()) * radius; // Random distance within the sphere
+            return [
+                r * Math.sin(phi) * Math.cos(theta), // x-coordinate
+                r * Math.sin(phi) * Math.sin(theta), // y-coordinate
+                r * Math.cos(phi)                    // z-coordinate
+            ];
+        }
+
+        // Initialize particle positions and velocities
+        for (let i = 0; i < MAX_PARTICLES; i++) {
+            const [x, y, z] = randomPointInSphere(SPHERE_RADIUS);
+            particlePositions[i * 3] = x;
+            particlePositions[i * 3 + 1] = y;
+            particlePositions[i * 3 + 2] = z;
+
+            // Assign random velocities
+            particleVelocities[i * 3] = (Math.random() - 0.5) * 0.1;
+            particleVelocities[i * 3 + 1] = (Math.random() - 0.5) * 0.1;
+            particleVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.1;
+        }
+
+        // Set attributes for the particle geometry
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+
+        // Create material for the particles
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 0.5,
+            transparent: true,
+            opacity: 0.8
+        });
+
+        // Create particle system
+        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particleSystem);
+
+        // Function to animate particles
+        function animateParticles() {
+            const positions = particleSystem.geometry.attributes.position.array;
+
             for (let i = 0; i < MAX_PARTICLES; i++) {
-                positions[i * 3] = (Math.random() - 0.5) * 200; // X
-                positions[i * 3 + 1] = (Math.random() - 0.5) * 200; // Y
-                positions[i * 3 + 2] = (Math.random() - 0.5) * 200; // Z
+                // Update positions using velocities
+                positions[i * 3] += particleVelocities[i * 3];
+                positions[i * 3 + 1] += particleVelocities[i * 3 + 1];
+                positions[i * 3 + 2] += particleVelocities[i * 3 + 2];
+
+                // Calculate distance from origin (0, 0, 0)
+                const distance = Math.sqrt(
+                    positions[i * 3] * positions[i * 3] +
+                    positions[i * 3 + 1] * positions[i * 3 + 1] +
+                    positions[i * 3 + 2] * positions[i * 3 + 2]
+                );
+
+                // If particle is outside the sphere, reset it to a random position inside the sphere
+                if (distance > SPHERE_RADIUS) {
+                    const [x, y, z] = randomPointInSphere(SPHERE_RADIUS);
+                    positions[i * 3] = x;
+                    positions[i * 3 + 1] = y;
+                    positions[i * 3 + 2] = z;
+                }
             }
-            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            particleSystem = new THREE.Points(particleGeometry, particleMaterial);
-            scene.add(particleSystem);
+
+            // Update particle system after changing positions
+            particleSystem.geometry.attributes.position.needsUpdate = true;
         }
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
+
+            // Animate the particles
+            animateParticles();
+
+            // Render the scene
             renderer.render(scene, camera);
         }
         animate(); // Start the animation loop
 
-        // Handle mouse movement
+        // Handle mouse movement for camera rotation
         let isMouseDown = false;
         let lastMouseX = 0;
         let lastMouseY = 0;
@@ -208,11 +133,43 @@
                 const deltaX = event.clientX - lastMouseX;
                 const deltaY = event.clientY - lastMouseY;
 
-                camera.rotation.y -= deltaX * 0.005;
+                // Update camera rotation based on mouse movement
+                camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity as needed
                 camera.rotation.x -= deltaY * 0.005;
+
+                // Clamp the camera's x rotation to prevent flipping
+                camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
 
                 lastMouseX = event.clientX;
                 lastMouseY = event.clientY;
+            }
+        });
+
+        // Handle touch events for mobile support
+        window.addEventListener('touchstart', (event) => {
+            isMouseDown = true;
+            lastMouseX = event.touches[0].clientX;
+            lastMouseY = event.touches[0].clientY;
+        });
+
+        window.addEventListener('touchend', () => {
+            isMouseDown = false;
+        });
+
+        window.addEventListener('touchmove', (event) => {
+            if (isMouseDown) {
+                const deltaX = event.touches[0].clientX - lastMouseX;
+                const deltaY = event.touches[0].clientY - lastMouseY;
+
+                // Update camera rotation based on touch movement
+                camera.rotation.y -= deltaX * 0.005; // Adjust sensitivity as needed
+                camera.rotation.x -= deltaY * 0.005;
+
+                // Clamp the camera's x rotation to prevent flipping
+                camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
+
+                lastMouseX = event.touches[0].clientX;
+                lastMouseY = event.touches[0].clientY;
             }
         });
 
