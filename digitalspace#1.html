@@ -196,14 +196,10 @@
         }, spriteInterval); // Generate sprites every 5 seconds
 
         // Create an initial batch of sprites
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 10; i++) {
             createHelloWorldSprite();
-            for (let i = 0; i < 3; i++) {
-                createMeSprite();
-            }
-            for (let i = 0; i < 10; i++) {
-                createPixelSprite();
-            }
+            createPixelSprite();
+            createMeSprite(); // Create the me.webp sprite
         }
 
         // Variables for mouse interaction
@@ -212,3 +208,44 @@
         let previousMouseY = 0;
 
         // Mouse down event to start rotation
+        window.addEventListener('mousedown', (event) => {
+            isMouseDown = true;
+            previousMouseX = event.clientX;
+            previousMouseY = event.clientY;
+        });
+
+        // Mouse up event to stop rotation
+        window.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
+
+        // Mouse move event to change camera angle
+        window.addEventListener('mousemove', (event) => {
+            if (isMouseDown) {
+                const deltaX = event.clientX - previousMouseX;
+                const deltaY = event.clientY - previousMouseY;
+
+                camera.rotation.y -= deltaX * 0.005; // Rotate around y-axis
+                camera.rotation.x -= deltaY * 0.005; // Rotate around x-axis
+            }
+
+            previousMouseX = event.clientX;
+            previousMouseY = event.clientY;
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
