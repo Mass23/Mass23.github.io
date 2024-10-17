@@ -91,131 +91,109 @@
         };
 
         // Function to create "HELLO WORLD" sprite
-        function createHelloWorldSprite() {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 1024; // Increased size
-            canvas.height = 1024;
+        // Function to create "HELLO WORLD" sprite
+function createHelloWorldSprite() {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = 512; // Increased size
+    canvas.height = 512;
 
-            // Draw a noisy square with "HELLO WORLD"
-            context.fillStyle = 'rgba(200, 200, 200, 0.5)';
-            context.fillRect(0, 0, canvas.width, canvas.height);
-            context.fillStyle = 'black';
-            context.font = '48px Arial'; // Increased font size
-            context.textAlign = 'center';
-            context.textBaseline = 'middle';
-            context.fillText('HELLO WORLD', canvas.width / 2, canvas.height / 2);
+    // Draw a noisy square with "HELLO WORLD"
+    context.fillStyle = 'rgba(200, 200, 200, 0.5)';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = 'black';
+    context.font = '48px Arial'; // Increased font size
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillText('HELLO WORLD', canvas.width / 2, canvas.height / 2);
 
-            const spriteTexture = new THREE.Texture(canvas);
-            spriteTexture.needsUpdate = true;
-            const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
-            const sprite = new THREE.Sprite(spriteMaterial);
+    const spriteTexture = new THREE.Texture(canvas);
+    spriteTexture.needsUpdate = true;
+    const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
+    const sprite = new THREE.Sprite(spriteMaterial);
 
-            // Position the sprite randomly around the sphere's inner surface
-            positionSprite(sprite, 'HelloWorldSprite');
-            scene.add(sprite);
-            sprites.push(sprite);
+    // Position the sprite close to the sphere's inner surface
+    positionSprite(sprite, SPHERE_RADIUS - 30); // Adjust position
 
-            // Remove oldest sprite if limit exceeded
-            if (sprites.length > MAX_SPRITES) {
-                const oldestSprite = sprites.shift();
-                scene.remove(oldestSprite);
-            }
-        }
+    scene.add(sprite);
+    sprites.push(sprite);
 
-        // Function to create larger pixel sprites
-        function createPixelSprite() {
-            if (!meImage.complete) {
-                // If the image isn't loaded yet, exit the function
-                return;
-            }
+    // Remove oldest sprite if limit exceeded
+    if (sprites.length > MAX_SPRITES) {
+        const oldestSprite = sprites.shift();
+        scene.remove(oldestSprite);
+    }
+}
 
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 256;  // Increased size
-            canvas.height = 256;
+// Function to create larger pixel sprites
+function createPixelSprite() {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = 128;  // Increased size
+    canvas.height = 128;
 
-            // Draw a random pixel sample from the image
-            const x = Math.floor(Math.random() * (meImage.width - 256));
-            const y = Math.floor(Math.random() * (meImage.height - 256));
-            context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
+    // Draw a random pixel sample from the image
+    const x = Math.floor(Math.random() * (meImage.width - 256));
+    const y = Math.floor(Math.random() * (meImage.height - 256));
+    context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
 
-            const spriteTexture = new THREE.Texture(canvas);
-            spriteTexture.needsUpdate = true;
-            const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
-            const sprite = new THREE.Sprite(spriteMaterial);
+    const spriteTexture = new THREE.Texture(canvas);
+    spriteTexture.needsUpdate = true;
+    const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
+    const sprite = new THREE.Sprite(spriteMaterial);
 
-            // Position the sprite randomly around the sphere's inner surface
-            positionSprite(sprite, 'PixelSprite');
-            scene.add(sprite);
-            sprites.push(sprite);
+    // Position the sprite closer to the center of the sphere
+    positionSprite(sprite, SPHERE_RADIUS - 20); // Adjust position
 
-            // Remove oldest sprite if limit exceeded
-            if (sprites.length > MAX_SPRITES) {
-                const oldestSprite = sprites.shift();
-                scene.remove(oldestSprite);
-            }
-        }
+    scene.add(sprite);
+    sprites.push(sprite);
 
-        // Function to create MeSprites
-        function createMeSprite() {
-            if (!meImage.complete) {
-                // If the image isn't loaded yet, exit the function
-                return;
-            }
+    // Remove oldest sprite if limit exceeded
+    if (sprites.length > MAX_SPRITES) {
+        const oldestSprite = sprites.shift();
+        scene.remove(oldestSprite);
+    }
+}
 
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 1024;  // Size of MeSprites
-            canvas.height = 1024;
+// Function to create MeSprites
+function createMeSprite() {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = 512;  // Size of MeSprites
+    canvas.height = 512;
 
-            // Draw a random part of the me image
-            const x = Math.floor(Math.random() * (meImage.width - 256));
-            const y = Math.floor(Math.random() * (meImage.height - 256));
-            context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
+    // Draw a random part of the me image
+    const x = Math.floor(Math.random() * (meImage.width - 256));
+    const y = Math.floor(Math.random() * (meImage.height - 256));
+    context.drawImage(meImage, x, y, 256, 256, 0, 0, 256, 256);
 
-            const spriteTexture = new THREE.Texture(canvas);
-            spriteTexture.needsUpdate = true;
-            const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
-            const sprite = new THREE.Sprite(spriteMaterial);
+    const spriteTexture = new THREE.Texture(canvas);
+    spriteTexture.needsUpdate = true;
+    const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
+    const sprite = new THREE.Sprite(spriteMaterial);
 
-            // Position the sprite randomly around the sphere's inner surface
-            positionSprite(sprite, 'MeSprite');
-            scene.add(sprite);
-            sprites.push(sprite);
+    // Position the sprite close to the sphere's inner surface
+    positionSprite(sprite, SPHERE_RADIUS - 20); // Adjust position
 
-            // Remove oldest sprite if limit exceeded
-            if (sprites.length > MAX_SPRITES) {
-                const oldestSprite = sprites.shift();
-                scene.remove(oldestSprite);
-            }
-        }
+    scene.add(sprite);
+    sprites.push(sprite);
 
-        // Position sprite randomly around the sphere
-        // Position sprite based on type (MeSprite, HelloWorldSprite, or PixelSprite)
-        function positionSprite(sprite, type) {
-            const phi = Math.random() * 2 * Math.PI;
-            const theta = Math.random() * Math.PI;
-        
-            let radius = SPHERE_RADIUS; // Default radius is at the surface of the sphere
-        
-            // Adjust the position based on sprite type
-            if (type === 'PixelSprite') {
-                // Position PixelSprites closer to the center
-                radius = SPHERE_RADIUS * 0.7; // 70% of the sphere's radius
-            } else if (type === 'MeSprite' || type === 'HelloWorldSprite') {
-                // Position MeSprites and HelloWorldSprites farther from the center
-                radius = SPHERE_RADIUS * 0.9; // 90% of the sphere's radius
-            }
-        
-            // Spherical coordinates to cartesian coordinates
-            const x = radius * Math.sin(theta) * Math.cos(phi);
-            const y = radius * Math.sin(theta) * Math.sin(phi);
-            const z = radius * Math.cos(theta);
-        
-            sprite.position.set(x, y, z);
-            sprite.lookAt(camera.position); // Make sprite face the camera
-        }
+    // Remove oldest sprite if limit exceeded
+    if (sprites.length > MAX_SPRITES) {
+        const oldestSprite = sprites.shift();
+        scene.remove(oldestSprite);
+    }
+}
+
+// Function to position sprites
+function positionSprite(sprite, distanceFromCenter) {
+    sprite.position.set(
+        (Math.random() - 0.5) * distanceFromCenter * 2,
+        (Math.random() - 0.5) * distanceFromCenter * 2,
+        -distanceFromCenter
+    );
+}
+
 
 
         // Function to start creating sprites
