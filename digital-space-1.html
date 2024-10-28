@@ -150,8 +150,7 @@
 
             // Load Images on Front Wall
             const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"]; // Update with correct paths
-            const imageWidth = 1.5; // Width of each image plane
-            const imageHeight = 1; // Height of each image plane
+            const imageSize = 1.5; // Size of each image plane (1.5m x 1.5m)
             const spacing = 0.5; // Space between images
 
             imagePaths.forEach((path, i) => {
@@ -159,9 +158,9 @@
                 imgMaterial.diffuseTexture = new BABYLON.Texture(path, scene);
                 imgMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); // White glow effect for images
 
-                const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageWidth, height: imageHeight }, scene); // Aspect ratio
+                const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageSize, height: imageSize }, scene); // Aspect ratio 1:1
                 imgPlane.material = imgMaterial;
-                imgPlane.position = new BABYLON.Vector3(-imageWidth * 1.5 + i * (imageWidth + spacing), 1.5, -roomDepth / 2 + 0.01); // Slightly off the wall
+                imgPlane.position = new BABYLON.Vector3(-imageSize * 1.5 + i * (imageSize + spacing), 1.5, -roomDepth / 2 + 0.01); // Slightly off the wall
             });
 
             return scene;
