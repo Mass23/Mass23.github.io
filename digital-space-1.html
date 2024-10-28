@@ -88,7 +88,7 @@
                 camera.position.x = Math.max(-roomWidth / 2 + 0.5, Math.min(camera.position.x, roomWidth / 2 - 0.5));
                 camera.position.z = Math.max(-roomDepth / 2 + 0.5, Math.min(camera.position.z, roomDepth / 2 - 0.5));
 
-                // Limit camera pitch (up and down view) within -30 degrees to +30 degrees
+                // Limit camera pitch (up and down view) within -25 degrees to +25 degrees
                 const minPitch = -Math.PI / 6; // -30 degrees
                 const maxPitch = Math.PI / 6;  // +30 degrees
                 if (camera.rotation.x < minPitch) {
@@ -104,11 +104,11 @@
 
             // Create room walls
             const outerWallMaterial = new BABYLON.StandardMaterial("outerWallMaterial", scene);
-            outerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#313538");
+            outerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#262626");
             outerWallMaterial.backFaceCulling = false; // Allow viewing from both sides
 
             const innerWallMaterial = new BABYLON.StandardMaterial("innerWallMaterial", scene);
-            innerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#1A1C1D"); // A slightly different color for the inside
+            innerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#262626"); // Same color for the inner walls
 
             const wallPositions = [
                 { pos: new BABYLON.Vector3(0, roomHeight / 2, -roomDepth / 2), rot: 0 }, // Front wall
@@ -134,7 +134,7 @@
 
             // Create floor and ceiling
             const floorMaterial = new BABYLON.StandardMaterial("floorMaterial", scene);
-            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0B0712"); // Color for floor and ceiling
+            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#1A1A1A"); // Color for floor
             floorMaterial.backFaceCulling = false; // Allow viewing from both sides
 
             const floor = BABYLON.MeshBuilder.CreatePlane("floor", { width: roomWidth, height: roomDepth }, scene);
