@@ -74,7 +74,7 @@
 
             // Camera setup
             const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(-3.33, 1.2, -5), scene); // Start in the middle facing the front wall
-            camera.setTarget(new BABYLON.Vector3(0, 1.2, 0)); // Look at the center of the room
+            camera.setTarget(new BABYLON.Vector3(0, 1.75, 0)); // Look at the center of the room
             camera.attachControl(canvas, true);
             camera.speed = 0.1;
 
@@ -82,8 +82,8 @@
             const roomWidth = 6.66, roomDepth = 10, roomHeight = 3.33;
 
             scene.registerBeforeRender(() => {
-                // Keep camera height fixed at 1.2m
-                camera.position.y = 1.2; // Fixed height
+                // Keep camera height fixed at 1.66m
+                camera.position.y = 1.66; // Fixed height
 
                 // Limit camera movement within the room
                 camera.position.x = Math.max(-roomWidth / 2 + 0.5, Math.min(camera.position.x, roomWidth / 2 - 0.5));
