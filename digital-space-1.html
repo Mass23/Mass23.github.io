@@ -8,16 +8,15 @@
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
     </style>
+    <link rel="shortcut icon" href="images/me.webp" sizes="48x48">
 </head>
 <body>
     <!-- Babylon.js Library -->
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
 
     <canvas id="renderCanvas"></canvas>
 
     <script>
-        // Set up the Babylon.js scene
         const canvas = document.getElementById("renderCanvas");
         const engine = new BABYLON.Engine(canvas, true);
 
@@ -26,7 +25,7 @@
             scene.clearColor = new BABYLON.Color3(0, 0, 0); // Black background
 
             // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, -2), scene);
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, -3), scene);
             camera.attachControl(canvas, true);
             camera.speed = 0.2;
 
@@ -38,14 +37,15 @@
             const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
             wallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#101B29");
 
-            // Create room walls
+            // Room dimensions
             const width = 4, height = 3, depth = 5;
 
+            // Create walls
             const wallPositions = [
-                { pos: new BABYLON.Vector3(0, 1.5, -depth / 2), rot: 0 },    // Front
-                { pos: new BABYLON.Vector3(0, 1.5, depth / 2), rot: Math.PI },  // Back
-                { pos: new BABYLON.Vector3(-width / 2, 1.5, 0), rot: Math.PI / 2 },  // Left
-                { pos: new BABYLON.Vector3(width / 2, 1.5, 0), rot: -Math.PI / 2 }   // Right
+                { pos: new BABYLON.Vector3(0, 1.5, -depth / 2), rot: 0 },    // Front wall
+                { pos: new BABYLON.Vector3(0, 1.5, depth / 2), rot: Math.PI },  // Back wall
+                { pos: new BABYLON.Vector3(-width / 2, 1.5, 0), rot: Math.PI / 2 },  // Left wall
+                { pos: new BABYLON.Vector3(width / 2, 1.5, 0), rot: -Math.PI / 2 }   // Right wall
             ];
 
             wallPositions.forEach(({ pos, rot }) => {
@@ -56,11 +56,11 @@
             });
 
             // Load Images on Front Wall
-            const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"];
+            const imagePaths = ["identity1.webp", "identity2.webp", "identity3.webp"];
             imagePaths.forEach((path, i) => {
                 const imgMaterial = new BABYLON.StandardMaterial(`imgMat${i}`, scene);
                 imgMaterial.diffuseTexture = new BABYLON.Texture(path, scene);
-                imgMaterial.emissiveColor = new BABYLON.Color3(0.4, 0.4, 0.4); // Glow effect for images
+                imgMaterial.emissiveColor = new BABYLON.Color3(0.4, 0.4, 0.4); // Glow effect
 
                 const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: 1, height: 1 }, scene);
                 imgPlane.material = imgMaterial;
@@ -68,35 +68,33 @@
             });
 
             // Text on Back Wall
-            const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-            const textBlock = new BABYLON.GUI.TextBlock();
-            textBlock.text = "How-I-create-\tmy-identity\n\nCopyright Massimo Bourquin, 2024";
-            textBlock.fontFamily = "Andale Mono";
-            textBlock.color = "lightgray";
-            textBlock.fontSize = 24;
-            textBlock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-            textBlock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+            const textTexture = new BABYLON.DynamicTexture("dynamic texture", { width: 512, height: 512 }, scene);
+            textTexture.drawText("How-I-create-\tmy-identity", 10, 200, "bold 24px Andale Mono", "lightgray", "#000000");
+            textTexture.drawText("Copyright Massimo Bourquin, 2024", 10, 300, "italic 20px Andale Mono", "lightgray", null);
 
-            advancedTexture.addControl(textBlock);
+            const textMaterial = new BABYLON.StandardMaterial("textMat", scene);
+            textMaterial.diffuseTexture = textTexture;
 
-            // YouTube Videos as Planes with VideoTexture
+            const textPlane = BABYLON.MeshBuilder.CreatePlane("textPlane", { width: 4, height: 3 }, scene);
+            textPlane.material = textMaterial;
+            textPlane.position = new BABYLON.Vector3(0, 1.5, depth / 2 - 0.01);
+            textPlane.rotation.y = Math.PI;
+
+            // Embed YouTube-like video texture from Google Drive
+            const videoTexture1 = new BABYLON.VideoTexture("video1", "https://drive.google.com/file/d/1WFRrvuB-EzcB2XM1GRQcyHLcw4YqUq6h/preview", scene, true);
             const videoPlane1 = BABYLON.MeshBuilder.CreatePlane("videoPlane1", { width: 1.5, height: 1 }, scene);
-            videoPlane1.position = new BABYLON.Vector3(1.5, 1.5, -depth / 2 + 0.02);
-
-            const videoPlane2 = BABYLON.MeshBuilder.CreatePlane("videoPlane2", { width: 3.5, height: 2 }, scene);
-            videoPlane2.position = new BABYLON.Vector3(-1.5, 1.5, -depth / 2 + 0.02);
-
-            // Video textures (YouTube URL will need a local solution if cross-origin)
-            const videoTexture1 = new BABYLON.VideoTexture("video1", "https://drive.google.com/file/d/1WFRrvuB-EzcB2XM1GRQcyHLcw4YqUq6h/view", scene, true);
-            const videoTexture2 = new BABYLON.VideoTexture("video2", "https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/view", scene, true);
-
             videoPlane1.material = new BABYLON.StandardMaterial("videoMat1", scene);
             videoPlane1.material.diffuseTexture = videoTexture1;
             videoPlane1.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
+            videoPlane1.position = new BABYLON.Vector3(1.5, 1.5, -depth / 2 + 0.02);
 
+            // Second video
+            const videoTexture2 = new BABYLON.VideoTexture("video2", "https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/preview", scene, true);
+            const videoPlane2 = BABYLON.MeshBuilder.CreatePlane("videoPlane2", { width: 3.5, height: 2 }, scene);
             videoPlane2.material = new BABYLON.StandardMaterial("videoMat2", scene);
             videoPlane2.material.diffuseTexture = videoTexture2;
             videoPlane2.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
+            videoPlane2.position = new BABYLON.Vector3(-1.5, 1.5, -depth / 2 + 0.02);
 
             return scene;
         };
