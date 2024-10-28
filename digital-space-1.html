@@ -134,7 +134,7 @@
 
             // Create floor and ceiling
             const floorMaterial = new BABYLON.StandardMaterial("floorMaterial", scene);
-            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#1A1A1A"); // Color for floor
+            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0A0A0A"); // Color for floor and ceiling
             floorMaterial.backFaceCulling = false; // Allow viewing from both sides
 
             const floor = BABYLON.MeshBuilder.CreatePlane("floor", { width: roomWidth, height: roomDepth }, scene);
