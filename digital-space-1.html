@@ -75,8 +75,8 @@
             scene.clearColor = new BABYLON.Color3(0, 0, 0); // Black background
 
             // Camera setup: Start in the center of the room and look towards the back wall
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, 2.5), scene);
-            camera.setTarget(BABYLON.Vector3.Zero()); // Look at the center of the room
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene); // Centered position
+            camera.setTarget(new BABYLON.Vector3(0, 1.5, -2.5)); // Look towards the back wall
             camera.attachControl(canvas, true);
             camera.speed = 0.1; // Adjusted speed for smoother movement
 
