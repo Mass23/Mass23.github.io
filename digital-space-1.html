@@ -15,6 +15,8 @@
             width: 100%;
             height: 100%;
             display: block;
+            opacity: 0; /* Start canvas as invisible */
+            transition: opacity 1.5s ease; /* Smooth fade-in effect for canvas */
         }
         #overlay {
             position: absolute;
@@ -28,7 +30,7 @@
             align-items: center;
             flex-direction: column;
             opacity: 1;
-            transition: opacity 0.5s;
+            transition: opacity 1.5s ease; /* Smooth fade-out effect for overlay */
             z-index: 10;
         }
         #startText {
@@ -73,23 +75,20 @@
             scene.clearColor = wallColor; // Set background color to match the walls
 
             // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(-3.33, 1.2, -5), scene); // Start in the middle facing the front wall
-            camera.setTarget(new BABYLON.Vector3(0, 1.75, 0)); // Look at the center of the room
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(-3.33, 1.2, -5), scene);
+            camera.setTarget(new BABYLON.Vector3(0, 1.75, 0));
             camera.attachControl(canvas, true);
             camera.speed = 0.1;
 
-            // Limit camera movement to the room's dimensions
+            // Room dimensions and boundaries
             const roomWidth = 6.66, roomDepth = 10, roomHeight = 5;
+            const minDistance = 0.1;
 
             scene.registerBeforeRender(() => {
-                // Keep camera height fixed at 1.66m
-                camera.position.y = 1.66; // Fixed height
+                camera.position.y = 1.66;
+                camera.position.x = Math.max(-roomWidth / 2 + minDistance, Math.min(camera.position.x, roomWidth / 2 - minDistance));
+                camera.position.z = Math.max(-roomDepth / 2 + minDistance, Math.min(camera.position.z, roomDepth / 2 - minDistance));
 
-                // Limit camera movement within the room
-                camera.position.x = Math.max(-roomWidth / 2 + 0.5, Math.min(camera.position.x, roomWidth / 2 - 0.5));
-                camera.position.z = Math.max(-roomDepth / 2 + 0.5, Math.min(camera.position.z, roomDepth / 2 - 0.5));
-
-                // Limit camera pitch (up and down view) within -25 degrees to +25 degrees
                 const minPitch = -Math.PI / 6; // -30 degrees
                 const maxPitch = Math.PI / 6;  // +30 degrees
                 if (camera.rotation.x < minPitch) {
@@ -105,17 +104,17 @@
 
             // Create room walls
             const outerWallMaterial = new BABYLON.StandardMaterial("outerWallMaterial", scene);
-            outerWallMaterial.diffuseColor = wallColor; // Set outer wall color
-            outerWallMaterial.backFaceCulling = false; // Allow viewing from both sides
+            outerWallMaterial.diffuseColor = wallColor;
+            outerWallMaterial.backFaceCulling = false;
 
             const innerWallMaterial = new BABYLON.StandardMaterial("innerWallMaterial", scene);
-            innerWallMaterial.diffuseColor = wallColor; // Set inner wall color
+            innerWallMaterial.diffuseColor = wallColor;
 
             const wallPositions = [
-                { pos: new BABYLON.Vector3(0, roomHeight / 2, -roomDepth / 2), rot: 0 }, // Front wall
-                { pos: new BABYLON.Vector3(0, roomHeight / 2, roomDepth / 2), rot: Math.PI }, // Back wall
-                { pos: new BABYLON.Vector3(-roomWidth / 2, roomHeight / 2, 0), rot: Math.PI / 2 }, // Left wall
-                { pos: new BABYLON.Vector3(roomWidth / 2, roomHeight / 2, 0), rot: -Math.PI / 2 } // Right wall
+                { pos: new BABYLON.Vector3(0, roomHeight / 2, -roomDepth / 2), rot: 0 },
+                { pos: new BABYLON.Vector3(0, roomHeight / 2, roomDepth / 2), rot: Math.PI },
+                { pos: new BABYLON.Vector3(-roomWidth / 2, roomHeight / 2, 0), rot: Math.PI / 2 },
+                { pos: new BABYLON.Vector3(roomWidth / 2, roomHeight / 2, 0), rot: -Math.PI / 2 }
             ];
 
             wallPositions.forEach(({ pos, rot }) => {
@@ -123,54 +122,50 @@
                 wall.position = pos;
                 wall.rotation.y = rot;
 
-                // Create inner walls
                 const innerWall = wall.clone("innerWall");
-                innerWall.material = innerWallMaterial; // Set inner wall material
-                innerWall.scaling.x = -1; // Flip the inner wall
-                innerWall.position.z += 0.01; // Slightly offset the inner wall to avoid z-fighting
+                innerWall.material = innerWallMaterial;
+                innerWall.scaling.x = -1;
+                innerWall.position.z += 0.01;
 
-                // Set the outer wall material
                 wall.material = outerWallMaterial;
             });
 
-            // Create floor and ceiling
+            // Floor and ceiling
             const floorMaterial = new BABYLON.StandardMaterial("floorMaterial", scene);
-            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0A0A0A"); // Color for floor and ceiling
-            floorMaterial.backFaceCulling = false; // Allow viewing from both sides
+            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0A0A0A");
+            floorMaterial.backFaceCulling = false;
 
             const floor = BABYLON.MeshBuilder.CreatePlane("floor", { width: roomWidth, height: roomDepth }, scene);
             floor.material = floorMaterial;
-            floor.rotation.x = Math.PI / 2; // Rotate to make it horizontal
-            floor.position.y = 0; // Position at ground level
+            floor.rotation.x = Math.PI / 2;
+            floor.position.y = 0;
 
             const ceiling = BABYLON.MeshBuilder.CreatePlane("ceiling", { width: roomWidth, height: roomDepth }, scene);
             ceiling.material = floorMaterial;
-            ceiling.rotation.x = Math.PI / 2; // Rotate to make it horizontal
-            ceiling.position.y = roomHeight; // Position at the top of the room
+            ceiling.rotation.x = Math.PI / 2;
+            ceiling.position.y = roomHeight;
 
             // Load Images on Front Wall
-            const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"]; // Update with correct paths
-            const imageSize = 1.1; // Size of each image plane (1.1m x 1.1m)
-            const spacing = 1; // Space between images
-            const offset = -0.05; // Negative offset from the wall inside
+            const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"];
+            const imageSize = 1.1;
+            const spacing = 1;
+            const offset = -0.05;
 
             imagePaths.forEach((path, i) => {
                 const imgMaterial = new BABYLON.StandardMaterial(`imgMat${i}`, scene);
                 imgMaterial.diffuseTexture = new BABYLON.Texture(path, scene);
-                imgMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); // White glow effect for images
+                imgMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
 
-                const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageSize, height: imageSize }, scene); // Aspect ratio 1:1
+                const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageSize, height: imageSize }, scene);
                 imgPlane.material = imgMaterial;
 
-                // Position images with new coordinates
                 imgPlane.position = new BABYLON.Vector3(
                     (roomWidth / 2) + offset,
                     1.75, 
-                    ((i-1) * 1.66)
+                    ((i - 1) * 1.66)
                 );
 
-                // Rotate the images to face the interior of the room
-                imgPlane.rotation.y = Math.PI * 0.5; // Rotate 180 degrees to face inside
+                imgPlane.rotation.y = Math.PI * 0.5;
             });
 
             return scene;
@@ -179,9 +174,10 @@
         const startScene = () => {
             // Remove overlay and start the scene
             overlay.style.opacity = '0';
+            canvas.style.opacity = '1'; // Trigger canvas fade-in
             setTimeout(() => {
-                overlay.style.display = 'none'; // Hide the overlay after the fade-out
-            }, 500); // Match the timeout with the opacity transition time
+                overlay.style.display = 'none';
+            }, 1500); // Match this timeout with the transition time for smooth fade-out
 
             // Create the scene
             scene = createScene();
