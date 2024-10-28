@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Room with Videos and Images</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+        .video-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        #video1 {
+            width: 1.5m; height: auto;
+            top: 50%; left: 25%;
+        }
+        #video2 {
+            width: 3.5m; height: auto;
+            top: 50%; right: 25%;
+        }
+    </style>
+</head>
+<body>
+    <!-- YouTube Video Embeds -->
+    <iframe id="video1" class="video-frame" src="https://www.youtube.com/embed/r38w0TawkcM?autoplay=1&loop=1&playlist=r38w0TawkcM" frameborder="0"></iframe>
+    <iframe id="video2" class="video-frame" src="https://www.youtube.com/embed/qlqwRRjAkfQ?autoplay=1&loop=1&playlist=qlqwRRjAkfQ" frameborder="0"></iframe>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 1.5, 2.5); // Mid-height position inside the room
+
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Controls for mouse and keyboard
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enablePan = false;
+        controls.enableDamping = true;
+
+        // Room dimensions and materials
+        const wallMaterial = new THREE.MeshStandardMaterial({ color: "#101B29" });
+        const wallLightColor = new THREE.Color(0x404040);
+        const roomWidth = 4, roomHeight = 3, roomDepth = 5;
+
+        // Room walls
+        const walls = [
+            new THREE.PlaneGeometry(roomWidth, roomHeight),    // Front wall
+            new THREE.PlaneGeometry(roomWidth, roomHeight),    // Back wall
+            new THREE.PlaneGeometry(roomDepth, roomHeight),    // Left wall
+            new THREE.PlaneGeometry(roomDepth, roomHeight)     // Right wall
+        ];
+
+        // Position walls and add them to the scene
+        const wallMeshes = walls.map((geometry, index) => {
+            const wall = new THREE.Mesh(geometry, wallMaterial);
+            if (index === 0) wall.position.z = -roomDepth / 2; // Front wall
+            if (index === 1) wall.position.z = roomDepth / 2;  // Back wall
+            if (index === 2) wall.position.x = -roomWidth / 2; // Left wall
+            if (index === 3) wall.position.x = roomWidth / 2;  // Right wall
+            wall.rotation.y = (index % 2 === 0) ? 0 : Math.PI / 2;
+            scene.add(wall);
+            return wall;
+        });
+
+        // Add images to front wall
+        const textureLoader = new THREE.TextureLoader();
+        const imageTextures = [
+            textureLoader.load("images/me.webp"),
+            textureLoader.load("images/me.webp"),
+            textureLoader.load("images/me.webp")
+        ];
+
+        imageTextures.forEach((texture, i) => {
+            const imageMaterial = new THREE.MeshBasicMaterial({ map: texture, emissive: wallLightColor });
+            const imageMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), imageMaterial);
+            imageMesh.position.set(-1 + i * 1.5, 0, -roomDepth / 2 + 0.01); // Evenly spaced
+            scene.add(imageMesh);
+        });
+
+        // Add text to back wall
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+            const textGeometry = new THREE.TextGeometry("How-I-create-\tmy-identity", {
+                font: font,
+                size: 0.15,
+                height: 0.02,
+            });
+            const subtitleGeometry = new THREE.TextGeometry("copyright Massimo Bourquin, 2024", {
+                font: font,
+                size: 0.1,
+                height: 0.02,
+            });
+
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 0xB0B0B0 });
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            const subtitleMesh = new THREE.Mesh(subtitleGeometry, textMaterial);
+
+            textMesh.position.set(-1.8, 0.6, roomDepth / 2 - 0.01);
+            subtitleMesh.position.set(-1.8, 0.4, roomDepth / 2 - 0.01);
+
+            scene.add(textMesh);
+            scene.add(subtitleMesh);
+        });
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
+        // Emissive light from videos (simulate with point lights near the wall)
+        const rightLight = new THREE.PointLight(0xffffff, 1, 5);
+        rightLight.position.set(1.5, 1.5, 0); // Position near right wall
+        const leftLight = new THREE.PointLight(0xffffff, 1, 5);
+        leftLight.position.set(-1.5, 1.5, 0); // Position near left wall
+        scene.add(rightLight, leftLight);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
