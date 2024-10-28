@@ -46,7 +46,7 @@
             transition: background-color 0.3s;
         }
         #playButton:hover {
-            background-color: #101B29; /* Hover color (green) */
+            background-color: #0e1a24; /* Slightly lighter color for hover */
         }
     </style>
 </head>
@@ -72,11 +72,11 @@
 
         const createScene = () => {
             const scene = new BABYLON.Scene(engine);
-            scene.clearColor = new BABYLON.Color3(0, 0, 0); // Black background
+            scene.clearColor = new BABYLON.Color3(0.8, 0.8, 0.8); // Light gray background
 
             // Camera setup: Start in the center of the room and look towards the back wall
             const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene); // Centered position
-            camera.setTarget(new BABYLON.Vector3(0, 1.5, -2.5)); // Look towards the back wall
+            camera.setTarget(new BABYLON.Vector3(0, 1.5, 2.5)); // Look towards the wall
             camera.attachControl(canvas, true);
             camera.speed = 0.1; // Adjusted speed for smoother movement
 
@@ -110,11 +110,12 @@
                 wall.material = wallMaterial;
                 wall.position = pos;
                 wall.rotation.y = rot;
+                wall.receiveShadows = true; // Allow walls to receive shadows
             });
 
             // Create floor and ceiling
             const floorMaterial = new BABYLON.StandardMaterial("floorMaterial", scene);
-            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#101B29"); // Same color as walls
+            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#101B29"); // Dark color for floor
 
             const floor = BABYLON.MeshBuilder.CreatePlane("floor", { width: roomWidth, height: roomDepth }, scene);
             floor.material = floorMaterial;
@@ -127,7 +128,11 @@
             ceiling.position.y = roomHeight; // Position at the top of the room
 
             // Load Images on Front Wall
-            const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"]; // Update with correct paths
+            const imagePaths = [
+                "images/identity1.webp", 
+                "images/identity2.webp", 
+                "images/identity3.webp"
+            ]; // Update with correct paths
             const imageWidth = 1; // Width of each image plane
             const spacing = 0.5; // Space between images
 
