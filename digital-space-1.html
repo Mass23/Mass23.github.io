@@ -72,14 +72,14 @@
             scene.clearColor = new BABYLON.Color3(0.8, 0.8, 0.8); // Light gray background
 
             // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene);
-            camera.setTarget(new BABYLON.Vector3(0, 1.5, -2.5));
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, 2.5), scene);
+            camera.setTarget(new BABYLON.Vector3(0, 1.5, 0)); // Look at the center of the room
             camera.attachControl(canvas, true);
             camera.speed = 0.1;
 
             // Limit camera movement to the room's dimensions
             scene.registerBeforeRender(() => {
-                camera.position.y = 1.5; // Maintain camera height
+                camera.position.y = 1.2; // Maintain camera height
 
                 const roomWidth = 4, roomDepth = 6; // Room dimensions
                 // Limit camera position
@@ -111,10 +111,11 @@
                 return wall;
             };
 
-            createWall(new BABYLON.Vector3(0, 1.75, -roomDepth / 2), 0); // Front wall
-            createWall(new BABYLON.Vector3(0, 1.75, roomDepth / 2), Math.PI); // Back wall
-            createWall(new BABYLON.Vector3(-roomWidth / 2, 1.75, 0), Math.PI / 2); // Left wall
-            createWall(new BABYLON.Vector3(roomWidth / 2, 1.75, 0), -Math.PI / 2); // Right wall
+            // Create walls with correct positioning
+            createWall(new BABYLON.Vector3(0, roomHeight / 2, -roomDepth / 2), 0); // Front wall
+            createWall(new BABYLON.Vector3(0, roomHeight / 2, roomDepth / 2), Math.PI); // Back wall
+            createWall(new BABYLON.Vector3(-roomWidth / 2, roomHeight / 2, 0), Math.PI / 2); // Left wall
+            createWall(new BABYLON.Vector3(roomWidth / 2, roomHeight / 2, 0), -Math.PI / 2); // Right wall
 
             // Create floor and ceiling
             const createPlane = (name, position, rotation, material) => {
@@ -144,7 +145,7 @@
 
                 const imgPlane = BABYLON.MeshBuilder.CreatePlane(`imagePlane${i}`, { width: imageWidth, height: imageWidth * (3 / 1) }, scene);
                 imgPlane.material = imgMaterial;
-                imgPlane.position = new BABYLON.Vector3(-1 + i * (imageWidth + spacing), 1.75, -roomDepth / 2 + 0.01);
+                imgPlane.position = new BABYLON.Vector3(-1 + i * (imageWidth + spacing), roomHeight / 2, -roomDepth / 2 + 0.01);
             });
 
             return scene;
