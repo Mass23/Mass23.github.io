@@ -3,140 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How-I-create-my-identity</title>
+    <title>Babylon.js 3D Room</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { display: block; }
-        .video-frame {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-        #video1 {
-            width: 1.5m; height: auto;
-            top: 50%; left: 25%;
-        }
-        #video2 {
-            width: 3.5m; height: auto;
-            top: 50%; right: 25%;
-        }
     </style>
 </head>
 <body>
-    <!-- YouTube Video Embeds -->
-    <iframe id="video1" class="video-frame" src="https://www.youtube.com/embed/r38w0TawkcM?autoplay=1&loop=1&playlist=r38w0TawkcM" frameborder="0"></iframe>
-    <iframe id="video2" class="video-frame" src="https://www.youtube.com/embed/qlqwRRjAkfQ?autoplay=1&loop=1&playlist=qlqwRRjAkfQ" frameborder="0"></iframe>
+    <!-- Babylon.js Library -->
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
 
-    <!-- Three.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <canvas id="renderCanvas"></canvas>
 
     <script>
-        // Scene setup
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 1.5, 2.5); // Mid-height position inside the room
+        // Set up the Babylon.js scene
+        const canvas = document.getElementById("renderCanvas");
+        const engine = new BABYLON.Engine(canvas, true);
 
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        const createScene = () => {
+            const scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color3(0, 0, 0); // Black background
 
-        // Controls for mouse and keyboard
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enablePan = false;
-        controls.enableDamping = true;
+            // Camera setup
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, -2), scene);
+            camera.attachControl(canvas, true);
+            camera.speed = 0.2;
 
-        // Room dimensions and materials
-        const wallMaterial = new THREE.MeshStandardMaterial({ color: "#101B29" });
-        const wallLightColor = new THREE.Color(0x404040);
-        const roomWidth = 4, roomHeight = 3, roomDepth = 5;
+            // Lighting
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+            light.intensity = 0.7;
 
-        // Room walls
-        const walls = [
-            new THREE.PlaneGeometry(roomWidth, roomHeight),    // Front wall
-            new THREE.PlaneGeometry(roomWidth, roomHeight),    // Back wall
-            new THREE.PlaneGeometry(roomDepth, roomHeight),    // Left wall
-            new THREE.PlaneGeometry(roomDepth, roomHeight)     // Right wall
-        ];
+            // Materials
+            const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
+            wallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#101B29");
 
-        // Position walls and add them to the scene
-        const wallMeshes = walls.map((geometry, index) => {
-            const wall = new THREE.Mesh(geometry, wallMaterial);
-            if (index === 0) wall.position.z = -roomDepth / 2; // Front wall
-            if (index === 1) wall.position.z = roomDepth / 2;  // Back wall
-            if (index === 2) wall.position.x = -roomWidth / 2; // Left wall
-            if (index === 3) wall.position.x = roomWidth / 2;  // Right wall
-            wall.rotation.y = (index % 2 === 0) ? 0 : Math.PI / 2;
-            scene.add(wall);
-            return wall;
-        });
+            // Create room walls
+            const width = 4, height = 3, depth = 5;
 
-        // Add images to front wall
-        const textureLoader = new THREE.TextureLoader();
-        const imageTextures = [
-            textureLoader.load("images/me.webp"),
-            textureLoader.load("images/me.webp"),
-            textureLoader.load("images/me.webp")
-        ];
+            const wallPositions = [
+                { pos: new BABYLON.Vector3(0, 1.5, -depth / 2), rot: 0 },    // Front
+                { pos: new BABYLON.Vector3(0, 1.5, depth / 2), rot: Math.PI },  // Back
+                { pos: new BABYLON.Vector3(-width / 2, 1.5, 0), rot: Math.PI / 2 },  // Left
+                { pos: new BABYLON.Vector3(width / 2, 1.5, 0), rot: -Math.PI / 2 }   // Right
+            ];
 
-        imageTextures.forEach((texture, i) => {
-            const imageMaterial = new THREE.MeshBasicMaterial({ map: texture, emissive: wallLightColor });
-            const imageMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), imageMaterial);
-            imageMesh.position.set(-1 + i * 1.5, 0, -roomDepth / 2 + 0.01); // Evenly spaced
-            scene.add(imageMesh);
-        });
-
-        // Add text to back wall
-        const loader = new THREE.FontLoader();
-        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
-            const textGeometry = new THREE.TextGeometry("How-I-create-\tmy-identity", {
-                font: font,
-                size: 0.15,
-                height: 0.02,
-            });
-            const subtitleGeometry = new THREE.TextGeometry("copyright Massimo Bourquin, 2024", {
-                font: font,
-                size: 0.1,
-                height: 0.02,
+            wallPositions.forEach(({ pos, rot }) => {
+                const wall = BABYLON.MeshBuilder.CreatePlane("wall", { width: width, height: height }, scene);
+                wall.material = wallMaterial;
+                wall.position = pos;
+                wall.rotation.y = rot;
             });
 
-            const textMaterial = new THREE.MeshBasicMaterial({ color: 0xB0B0B0 });
-            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-            const subtitleMesh = new THREE.Mesh(subtitleGeometry, textMaterial);
+            // Load Images on Front Wall
+            const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"];
+            imagePaths.forEach((path, i) => {
+                const imgMaterial = new BABYLON.StandardMaterial(`imgMat${i}`, scene);
+                imgMaterial.diffuseTexture = new BABYLON.Texture(path, scene);
+                imgMaterial.emissiveColor = new BABYLON.Color3(0.4, 0.4, 0.4); // Glow effect for images
 
-            textMesh.position.set(-1.8, 0.6, roomDepth / 2 - 0.01);
-            subtitleMesh.position.set(-1.8, 0.4, roomDepth / 2 - 0.01);
+                const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: 1, height: 1 }, scene);
+                imgPlane.material = imgMaterial;
+                imgPlane.position = new BABYLON.Vector3(-1 + i * 1.5, 1.5, -depth / 2 + 0.01);
+            });
 
-            scene.add(textMesh);
-            scene.add(subtitleMesh);
+            // Text on Back Wall
+            const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+            const textBlock = new BABYLON.GUI.TextBlock();
+            textBlock.text = "How-I-create-\tmy-identity\n\nCopyright Massimo Bourquin, 2024";
+            textBlock.fontFamily = "Andale Mono";
+            textBlock.color = "lightgray";
+            textBlock.fontSize = 24;
+            textBlock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+            textBlock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+
+            advancedTexture.addControl(textBlock);
+
+            // YouTube Videos as Planes with VideoTexture
+            const videoPlane1 = BABYLON.MeshBuilder.CreatePlane("videoPlane1", { width: 1.5, height: 1 }, scene);
+            videoPlane1.position = new BABYLON.Vector3(1.5, 1.5, -depth / 2 + 0.02);
+
+            const videoPlane2 = BABYLON.MeshBuilder.CreatePlane("videoPlane2", { width: 3.5, height: 2 }, scene);
+            videoPlane2.position = new BABYLON.Vector3(-1.5, 1.5, -depth / 2 + 0.02);
+
+            // Video textures (YouTube URL will need a local solution if cross-origin)
+            const videoTexture1 = new BABYLON.VideoTexture("video1", "https://drive.google.com/file/d/1WFRrvuB-EzcB2XM1GRQcyHLcw4YqUq6h/view?usp=sharing", scene, true);
+            const videoTexture2 = new BABYLON.VideoTexture("video2", "https://drive.google.com/file/d/1UXdbaX35yV51Mh_NbbXMWdDe0psZiLhN/view?usp=sharing", scene, true);
+
+            videoPlane1.material = new BABYLON.StandardMaterial("videoMat1", scene);
+            videoPlane1.material.diffuseTexture = videoTexture1;
+            videoPlane1.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
+
+            videoPlane2.material = new BABYLON.StandardMaterial("videoMat2", scene);
+            videoPlane2.material.diffuseTexture = videoTexture2;
+            videoPlane2.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
+
+            return scene;
+        };
+
+        const scene = createScene();
+
+        engine.runRenderLoop(() => {
+            scene.render();
         });
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0x404040);
-        scene.add(ambientLight);
-
-        // Emissive light from videos (simulate with point lights near the wall)
-        const rightLight = new THREE.PointLight(0xffffff, 1, 5);
-        rightLight.position.set(1.5, 1.5, 0); // Position near right wall
-        const leftLight = new THREE.PointLight(0xffffff, 1, 5);
-        leftLight.position.set(-1.5, 1.5, 0); // Position near left wall
-        scene.add(rightLight, leftLight);
-
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // Resize handler
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        window.addEventListener("resize", () => {
+            engine.resize();
         });
     </script>
 </body>
