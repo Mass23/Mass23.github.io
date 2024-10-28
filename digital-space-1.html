@@ -16,11 +16,11 @@
             display: block; 
         }
     </style>
-    <link rel="shortcut icon" href="images/me.webp" sizes="48x48">
 </head>
 <body>
     <!-- Babylon.js Library -->
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
 
     <canvas id="renderCanvas"></canvas>
 
@@ -64,7 +64,7 @@
             });
 
             // Load Images on Front Wall
-            const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"];
+            const imagePaths = ["identity1.webp", "identity2.webp", "identity3.webp"];
             imagePaths.forEach((path, i) => {
                 const imgMaterial = new BABYLON.StandardMaterial(`imgMat${i}`, scene);
                 imgMaterial.diffuseTexture = new BABYLON.Texture(path, scene);
@@ -89,7 +89,7 @@
             textPlane.rotation.y = Math.PI;
 
             // Embed YouTube-like video texture from Google Drive
-            const videoTexture1 = new BABYLON.VideoTexture("video1", "https://drive.google.com/file/d/1WFRrvuB-EzcB2XM1GRQcyHLcw4YqUq6h/preview", scene, true);
+            const videoTexture1 = new BABYLON.VideoTexture("video1", "https://drive.google.com/uc?id=1WFRrvuB-EzcB2XM1GRQcyHLcw4YqUq6h", scene, true);
             const videoPlane1 = BABYLON.MeshBuilder.CreatePlane("videoPlane1", { width: 1.5, height: 1 }, scene);
             videoPlane1.material = new BABYLON.StandardMaterial("videoMat1", scene);
             videoPlane1.material.diffuseTexture = videoTexture1;
@@ -97,12 +97,30 @@
             videoPlane1.position = new BABYLON.Vector3(1.5, 1.5, -depth / 2 + 0.02);
 
             // Second video
-            const videoTexture2 = new BABYLON.VideoTexture("video2", "https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/preview", scene, true);
+            const videoTexture2 = new BABYLON.VideoTexture("video2", "https://drive.google.com/uc?id=1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ", scene, true);
             const videoPlane2 = BABYLON.MeshBuilder.CreatePlane("videoPlane2", { width: 3.5, height: 2 }, scene);
             videoPlane2.material = new BABYLON.StandardMaterial("videoMat2", scene);
             videoPlane2.material.diffuseTexture = videoTexture2;
             videoPlane2.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
             videoPlane2.position = new BABYLON.Vector3(-1.5, 1.5, -depth / 2 + 0.02);
+
+            // Create Play Button
+            const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+            const playButton = BABYLON.GUI.Button.CreateSimpleButton("playButton", "Play Videos");
+            playButton.width = "150px";
+            playButton.height = "40px";
+            playButton.color = "white";
+            playButton.background = "#FF5722"; // Play button color
+            playButton.fontSize = 18;
+            playButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+            playButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+            playButton.onPointerUpObservable.add(() => {
+                videoTexture1.video.play();  // Play the first video
+                videoTexture2.video.play();  // Play the second video
+                advancedTexture.removeControl(playButton); // Remove the button after play
+            });
+
+            advancedTexture.addControl(playButton);
 
             return scene;
         };
