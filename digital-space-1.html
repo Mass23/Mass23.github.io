@@ -72,33 +72,40 @@
             scene.clearColor = new BABYLON.Color3(0.8, 0.8, 0.8); // Light gray background
 
             // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, 2.5), scene);
-            camera.setTarget(new BABYLON.Vector3(0, 1.5, 0)); // Look at the center of the room
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.2, -5), scene); // Position it 5m from the front wall
+            camera.setTarget(new BABYLON.Vector3(0, 1.2, 0)); // Look at the center of the room
             camera.attachControl(canvas, true);
             camera.speed = 0.1;
 
             // Limit camera movement to the room's dimensions
-            const roomWidth = 4, roomDepth = 6;
+            const roomWidth = 6.66, roomDepth = 10, roomHeight = 3.33;
 
             scene.registerBeforeRender(() => {
-                // Keep camera height limited
-                camera.position.y = Math.max(1.0, Math.min(camera.position.y, 2.0)); // Limit between 1.0m and 2.0m
-                
+                // Keep camera height fixed at 1.2m
+                camera.position.y = 1.2; // Fixed height
+
                 // Limit camera movement within the room
                 camera.position.x = Math.max(-roomWidth / 2 + 0.5, Math.min(camera.position.x, roomWidth / 2 - 0.5));
                 camera.position.z = Math.max(-roomDepth / 2 + 0.5, Math.min(camera.position.z, roomDepth / 2 - 0.5));
+
+                // Limit camera pitch (up and down view) within -30 degrees to +30 degrees
+                const minPitch = -Math.PI / 6; // -30 degrees
+                const maxPitch = Math.PI / 6;  // +30 degrees
+                if (camera.rotation.x < minPitch) {
+                    camera.rotation.x = minPitch;
+                } else if (camera.rotation.x > maxPitch) {
+                    camera.rotation.x = maxPitch;
+                }
             });
 
             // Lighting
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 1.5;
 
-            // Room dimensions
-            const roomHeight = 3.5; // Height of the room
-
             // Create room walls
             const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
             wallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#313538");
+            wallMaterial.backFaceCulling = false; // Allow viewing from both sides
 
             const wallPositions = [
                 { pos: new BABYLON.Vector3(0, roomHeight / 2, -roomDepth / 2), rot: 0 }, // Front wall
@@ -116,7 +123,8 @@
 
             // Create floor and ceiling
             const floorMaterial = new BABYLON.StandardMaterial("floorMaterial", scene);
-            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0B0712"); // Same color as ceiling
+            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0B0712"); // Color for floor and ceiling
+            floorMaterial.backFaceCulling = false; // Allow viewing from both sides
 
             const floor = BABYLON.MeshBuilder.CreatePlane("floor", { width: roomWidth, height: roomDepth }, scene);
             floor.material = floorMaterial;
