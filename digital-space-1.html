@@ -5,19 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How-I-create-my-identity</title>
     <style>
-        body { 
-            margin: 0; 
-            overflow: hidden; 
-            height: 100vh; /* Ensure body takes full height */
+        body {
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
         }
-        canvas { 
-            width: 100%;  /* Canvas takes full width */
-            height: 100%; /* Canvas takes full height */
-            display: block; 
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            flex-direction: column;
+            opacity: 1;
+            transition: opacity 0.5s;
+            z-index: 10; /* On top of the canvas */
+        }
+        #playButton {
+            padding: 10px 20px;
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #playButton:hover {
+            background-color: #45a049; /* Darker green */
         }
     </style>
 </head>
 <body>
+    <!-- Starting overlay -->
+    <div id="overlay">
+        <div>Welcome to the 3D Room</div>
+        <button id="playButton">Start</button>
+    </div>
+
     <!-- Babylon.js Library -->
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
@@ -26,7 +61,10 @@
 
     <script>
         const canvas = document.getElementById("renderCanvas");
+        const overlay = document.getElementById("overlay");
+        const playButton = document.getElementById("playButton");
         const engine = new BABYLON.Engine(canvas, true);
+        let scene;
 
         const createScene = () => {
             const scene = new BABYLON.Scene(engine);
@@ -63,6 +101,20 @@
                 wall.rotation.y = rot;
             });
 
+            // Create floor and ceiling
+            const floorMaterial = new BABYLON.StandardMaterial("floorMaterial", scene);
+            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#101B29"); // Same color as walls
+
+            const floor = BABYLON.MeshBuilder.CreatePlane("floor", { width: roomWidth, height: roomDepth }, scene);
+            floor.material = floorMaterial;
+            floor.rotation.x = Math.PI / 2; // Rotate to make it horizontal
+            floor.position.y = 0; // Position at ground level
+
+            const ceiling = BABYLON.MeshBuilder.CreatePlane("ceiling", { width: roomWidth, height: roomDepth }, scene);
+            ceiling.material = floorMaterial;
+            ceiling.rotation.x = Math.PI / 2; // Rotate to make it horizontal
+            ceiling.position.y = roomHeight; // Position at the top of the room
+
             // Load Images on Front Wall
             const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"]; // Update with correct paths
             const imageWidth = 1; // Width of each image plane
@@ -90,34 +142,30 @@
 
             advancedTexture.addControl(textBlock);
 
-            // first video
-            //const videoTexture1 = new BABYLON.VideoTexture("video1", "https://drive.google.com/file/d/1WFRrvuB-EzcB2XM1GRQcyHLcw4YqUq6h/preview", scene, true);
-            //const videoPlane1 = BABYLON.MeshBuilder.CreatePlane("videoPlane1", { width: 1.5, height: 1 }, scene);
-            //videoPlane1.material = new BABYLON.StandardMaterial("videoMat1", scene);
-            //videoPlane1.material.diffuseTexture = videoTexture1;
-            //videoPlane1.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
-            //videoPlane1.position = new BABYLON.Vector3(1.5, 1.5, -depth / 2 + 0.02);
-
-            // Second video
-            //const videoTexture2 = new BABYLON.VideoTexture("video2", "https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/preview", scene, true);
-            //const videoPlane2 = BABYLON.MeshBuilder.CreatePlane("videoPlane2", { width: 3.5, height: 2 }, scene);
-            //videoPlane2.material = new BABYLON.StandardMaterial("videoMat2", scene);
-            //videoPlane2.material.diffuseTexture = videoTexture2;
-            //videoPlane2.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
-            //videoPlane2.position = new BABYLON.Vector3(-1.5, 1.5, -depth / 2 + 0.02);
-
             return scene;
         };
 
-        const scene = createScene();
+        const startScene = () => {
+            // Remove overlay and start the scene
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none'; // Hide the overlay after the fade-out
+            }, 500); // Match the timeout with the opacity transition time
 
-        engine.runRenderLoop(() => {
-            scene.render();
-        });
+            // Create the scene
+            scene = createScene();
 
-        window.addEventListener("resize", () => {
-            engine.resize();
-        });
+            engine.runRenderLoop(() => {
+                scene.render();
+            });
+
+            window.addEventListener("resize", () => {
+                engine.resize();
+            });
+        };
+
+        // Event listener for the play button
+        playButton.addEventListener("click", startScene);
     </script>
 </body>
 </html>
