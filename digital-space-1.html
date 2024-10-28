@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How-I-create-my-identity</title>
+    <title>3D Room</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
             height: 100vh;
-            font-family: 'Andale Mono', monospace; /* Set font family */
+            font-family: 'Andale Mono', monospace;
         }
         canvas {
             width: 100%;
@@ -22,23 +22,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+            background: rgba(0, 0, 0, 0.5);
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             opacity: 1;
             transition: opacity 0.5s;
-            z-index: 10; /* On top of the canvas */
+            z-index: 10;
         }
         #startText {
-            color: lightgray; /* Match wall color */
-            font-size: 48px; /* Size of the start text */
-            margin-bottom: 20px; /* Space between text and button */
+            color: lightgray;
+            font-size: 48px;
+            margin-bottom: 20px;
         }
         #playButton {
             padding: 10px 20px;
-            background-color: #101B29; /* Match wall color */
+            background-color: #101B29;
             border: none;
             color: white;
             font-size: 20px;
@@ -46,23 +46,20 @@
             transition: background-color 0.3s;
         }
         #playButton:hover {
-            background-color: #0e1a24; /* Slightly lighter color for hover */
+            background-color: #0e1a24;
         }
     </style>
 </head>
 <body>
-    <!-- Starting overlay -->
     <div id="overlay">
-        <div id="startText">//START//</div> <!-- Only the start text -->
+        <div id="startText">//START//</div>
         <button id="playButton">\></button>
     </div>
 
-    <!-- Babylon.js Library -->
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
-
     <canvas id="renderCanvas"></canvas>
 
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
     <script>
         const canvas = document.getElementById("renderCanvas");
         const overlay = document.getElementById("overlay");
@@ -74,125 +71,90 @@
             const scene = new BABYLON.Scene(engine);
             scene.clearColor = new BABYLON.Color3(0.8, 0.8, 0.8); // Light gray background
 
-            // Camera setup: Start in the center of the room and look towards the back wall
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene); // Centered position
-            camera.setTarget(new BABYLON.Vector3(0, 1.5, 2.5)); // Look towards the wall
+            // Camera setup
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene);
+            camera.setTarget(new BABYLON.Vector3(0, 1.5, -2.5));
             camera.attachControl(canvas, true);
-            camera.speed = 0.1; // Adjusted speed for smoother movement
+            camera.speed = 0.1;
 
-            // Constrain camera height and movement
-            camera.inputs.clear(); // Clear default inputs
-            camera.inputs.add(new BABYLON.TouchCameraInput()); // Add touch camera input if needed
-            camera.inputs.add(new BABYLON.ArcRotateCameraInput()); // Add input for rotation
-            camera.inputs.add(new BABYLON.FreeCameraKeyboardInput()); // Add keyboard input
+            // Limit camera movement to the room's dimensions
+            scene.registerBeforeRender(() => {
+                camera.position.y = 1.5; // Maintain camera height
+
+                const roomWidth = 4, roomDepth = 5;
+                // Limit camera position
+                camera.position.x = Math.max(-roomWidth / 2 + 0.5, Math.min(camera.position.x, roomWidth / 2 - 0.5));
+                camera.position.z = Math.max(-roomDepth / 2 + 0.5, Math.min(camera.position.z, roomDepth / 2 - 0.5));
+            });
 
             // Lighting
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-            light.intensity = 0.2; // Increased light intensity
-
-            // Materials
-            const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
-            wallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#313538");
+            light.intensity = 1.5;
 
             // Room dimensions
             const roomWidth = 4, roomHeight = 3, roomDepth = 5;
 
-            // Create room walls
-            const wallPositions = [
-                { pos: new BABYLON.Vector3(0, 1.5, -roomDepth / 2), rot: 0 },    // Front wall
-                { pos: new BABYLON.Vector3(0, 1.5, roomDepth / 2), rot: Math.PI },  // Back wall
-                { pos: new BABYLON.Vector3(-roomWidth / 2, 1.5, 0), rot: Math.PI / 2 },  // Left wall
-                { pos: new BABYLON.Vector3(roomWidth / 2, 1.5, 0), rot: -Math.PI / 2 }   // Right wall
-            ];
+            // Create walls
+            const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
+            wallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#313538");
 
-            wallPositions.forEach(({ pos, rot }) => {
+            const createWall = (position, rotation) => {
                 const wall = BABYLON.MeshBuilder.CreatePlane("wall", { width: roomWidth, height: roomHeight }, scene);
                 wall.material = wallMaterial;
-                wall.position = pos;
-                wall.rotation.y = rot;
-                wall.receiveShadows = true; // Allow walls to receive shadows
-            });
+                wall.position = position;
+                wall.rotation.y = rotation;
+                return wall;
+            };
+
+            createWall(new BABYLON.Vector3(0, 1.5, -roomDepth / 2), 0); // Front wall
+            createWall(new BABYLON.Vector3(0, 1.5, roomDepth / 2), Math.PI); // Back wall
+            createWall(new BABYLON.Vector3(-roomWidth / 2, 1.5, 0), Math.PI / 2); // Left wall
+            createWall(new BABYLON.Vector3(roomWidth / 2, 1.5, 0), -Math.PI / 2); // Right wall
 
             // Create floor and ceiling
             const floorMaterial = new BABYLON.StandardMaterial("floorMaterial", scene);
-            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#101B29"); // Dark color for floor
+            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#101B29");
 
-            const floor = BABYLON.MeshBuilder.CreatePlane("floor", { width: roomWidth, height: roomDepth }, scene);
-            floor.material = floorMaterial;
-            floor.rotation.x = Math.PI / 2; // Rotate to make it horizontal
-            floor.position.y = 0; // Position at ground level
+            const createPlane = (name, position, rotation) => {
+                const plane = BABYLON.MeshBuilder.CreatePlane(name, { width: roomWidth, height: roomDepth }, scene);
+                plane.material = floorMaterial;
+                plane.rotation.x = rotation;
+                plane.position = position;
+                return plane;
+            };
 
-            const ceiling = BABYLON.MeshBuilder.CreatePlane("ceiling", { width: roomWidth, height: roomDepth }, scene);
-            ceiling.material = floorMaterial;
-            ceiling.rotation.x = Math.PI / 2; // Rotate to make it horizontal
-            ceiling.position.y = roomHeight; // Position at the top of the room
+            createPlane("floor", new BABYLON.Vector3(0, 0, 0), Math.PI / 2); // Floor
+            createPlane("ceiling", new BABYLON.Vector3(0, roomHeight, 0), Math.PI / 2); // Ceiling
 
             // Load Images on Front Wall
             const imagePaths = [
-                "images/identity1.webp", 
-                "images/identity2.webp", 
+                "images/identity1.webp",
+                "images/identity2.webp",
                 "images/identity3.webp"
             ]; // Update with correct paths
-            const imageWidth = 1; // Width of each image plane
-            const spacing = 0.5; // Space between images
+
+            const imageWidth = 1;
+            const spacing = 0.5;
 
             imagePaths.forEach((path, i) => {
                 const imgMaterial = new BABYLON.StandardMaterial(`imgMat${i}`, scene);
                 imgMaterial.diffuseTexture = new BABYLON.Texture(path, scene);
-                imgMaterial.emissiveColor = new BABYLON.Color3(0.4, 0.4, 0.4); // Glow effect for images
 
-                const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageWidth, height: imageWidth * (3 / 1) }, scene); // Aspect ratio
+                const imgPlane = BABYLON.MeshBuilder.CreatePlane(`imagePlane${i}`, { width: imageWidth, height: imageWidth * (3 / 1) }, scene);
                 imgPlane.material = imgMaterial;
                 imgPlane.position = new BABYLON.Vector3(-1 + i * (imageWidth + spacing), 1.5, -roomDepth / 2 + 0.01);
             });
 
-            // Text on Back Wall
-            const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-            const textBlock = new BABYLON.GUI.TextBlock();
-            textBlock.text = "How-I-create-\tmy-identity\n\nCopyright Massimo Bourquin, 2024";
-            textBlock.fontFamily = "Andale Mono";
-            textBlock.color = "lightgray";
-            textBlock.fontSize = 24;
-            textBlock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-            textBlock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
-
-            advancedTexture.addControl(textBlock);
-
-            // Restrict camera movement
-            scene.registerBeforeRender(() => {
-                // Constrain camera height
-                camera.position.y = 1.5;
-
-                // Room boundaries
-                const roomWidth = 4;
-                const roomDepth = 5;
-
-                // Limit movement within 0.5m of the walls
-                if (camera.position.x < -((roomWidth / 2) - 0.5)) {
-                    camera.position.x = -((roomWidth / 2) - 0.5);
-                }
-                if (camera.position.x > (roomWidth / 2) - 0.5) {
-                    camera.position.x = (roomWidth / 2) - 0.5;
-                }
-                if (camera.position.z < -((roomDepth / 2) - 0.5)) {
-                    camera.position.z = -((roomDepth / 2) - 0.5);
-                }
-                if (camera.position.z > (roomDepth / 2) - 0.5) {
-                    camera.position.z = (roomDepth / 2) - 0.5;
-                }
-            });
-
+            // Return the scene
             return scene;
         };
 
         const startScene = () => {
-            // Remove overlay and start the scene
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none'; // Hide the overlay after the fade-out
-            }, 500); // Match the timeout with the opacity transition time
+            }, 500);
 
-            // Create the scene
             scene = createScene();
 
             engine.runRenderLoop(() => {
@@ -204,7 +166,6 @@
             });
         };
 
-        // Event listener for the play button
         playButton.addEventListener("click", startScene);
     </script>
 </body>
