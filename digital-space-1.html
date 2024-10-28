@@ -81,7 +81,7 @@
             scene.registerBeforeRender(() => {
                 camera.position.y = 1.5; // Maintain camera height
 
-                const roomWidth = 4, roomDepth = 6; // Updated dimensions
+                const roomWidth = 4, roomDepth = 6; // Room dimensions
                 // Limit camera position
                 camera.position.x = Math.max(-roomWidth / 2 + 0.5, Math.min(camera.position.x, roomWidth / 2 - 0.5));
                 camera.position.z = Math.max(-roomDepth / 2 + 0.5, Math.min(camera.position.z, roomDepth / 2 - 0.5));
@@ -92,12 +92,17 @@
             light.intensity = 1.5;
 
             // Room dimensions
-            const roomWidth = 4, roomHeight = 3.5, roomDepth = 6; // Updated dimensions
+            const roomWidth = 4, roomHeight = 3.5, roomDepth = 6;
 
-            // Create walls
+            // Create wall material
             const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
             wallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#313538");
 
+            // Create floor and ceiling material
+            const floorCeilingMaterial = new BABYLON.StandardMaterial("floorCeilingMaterial", scene);
+            floorCeilingMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0B0712");
+
+            // Create walls
             const createWall = (position, rotation) => {
                 const wall = BABYLON.MeshBuilder.CreatePlane("wall", { width: roomWidth, height: roomHeight }, scene);
                 wall.material = wallMaterial;
@@ -112,19 +117,16 @@
             createWall(new BABYLON.Vector3(roomWidth / 2, 1.75, 0), -Math.PI / 2); // Right wall
 
             // Create floor and ceiling
-            const floorMaterial = new BABYLON.StandardMaterial("floorMaterial", scene);
-            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#101B29");
-
-            const createPlane = (name, position, rotation) => {
+            const createPlane = (name, position, rotation, material) => {
                 const plane = BABYLON.MeshBuilder.CreatePlane(name, { width: roomWidth, height: roomDepth }, scene);
-                plane.material = floorMaterial;
+                plane.material = material;
                 plane.rotation.x = rotation;
                 plane.position = position;
                 return plane;
             };
 
-            createPlane("floor", new BABYLON.Vector3(0, 0, 0), Math.PI / 2); // Floor
-            createPlane("ceiling", new BABYLON.Vector3(0, roomHeight, 0), Math.PI / 2); // Ceiling
+            createPlane("floor", new BABYLON.Vector3(0, 0, 0), Math.PI / 2, floorCeilingMaterial); // Floor
+            createPlane("ceiling", new BABYLON.Vector3(0, roomHeight, 0), Math.PI / 2, floorCeilingMaterial); // Ceiling
 
             // Load Images on Front Wall
             const imagePaths = [
@@ -145,7 +147,6 @@
                 imgPlane.position = new BABYLON.Vector3(-1 + i * (imageWidth + spacing), 1.75, -roomDepth / 2 + 0.01);
             });
 
-            // Return the scene
             return scene;
         };
 
