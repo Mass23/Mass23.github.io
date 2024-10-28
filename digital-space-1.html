@@ -104,11 +104,11 @@
 
             // Create room walls
             const outerWallMaterial = new BABYLON.StandardMaterial("outerWallMaterial", scene);
-            outerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#262626");
+            outerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0F0F0F");
             outerWallMaterial.backFaceCulling = false; // Allow viewing from both sides
 
             const innerWallMaterial = new BABYLON.StandardMaterial("innerWallMaterial", scene);
-            innerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#262626"); // Same color for the inner walls
+            innerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0F0F0F"); // Same color for the inner walls
 
             const wallPositions = [
                 { pos: new BABYLON.Vector3(0, roomHeight / 2, -roomDepth / 2), rot: 0 }, // Front wall
