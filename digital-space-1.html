@@ -69,7 +69,8 @@
 
         const createScene = () => {
             const scene = new BABYLON.Scene(engine);
-            scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
+            const wallColor = new BABYLON.Color3.FromHexString("#0F0F0F"); // Set wall color for background
+            scene.clearColor = wallColor; // Set background color to match the walls
 
             // Camera setup
             const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.2, -5), scene); // Start in the middle facing the front wall
@@ -104,11 +105,11 @@
 
             // Create room walls
             const outerWallMaterial = new BABYLON.StandardMaterial("outerWallMaterial", scene);
-            outerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0F0F0F");
+            outerWallMaterial.diffuseColor = wallColor; // Set outer wall color
             outerWallMaterial.backFaceCulling = false; // Allow viewing from both sides
 
             const innerWallMaterial = new BABYLON.StandardMaterial("innerWallMaterial", scene);
-            innerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0F0F0F"); // Same color for the inner walls
+            innerWallMaterial.diffuseColor = wallColor; // Set inner wall color
 
             const wallPositions = [
                 { pos: new BABYLON.Vector3(0, roomHeight / 2, -roomDepth / 2), rot: 0 }, // Front wall
