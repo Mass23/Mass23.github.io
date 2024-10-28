@@ -103,9 +103,12 @@
             light.intensity = 1.5;
 
             // Create room walls
-            const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
-            wallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#313538");
-            wallMaterial.backFaceCulling = false; // Allow viewing from both sides
+            const outerWallMaterial = new BABYLON.StandardMaterial("outerWallMaterial", scene);
+            outerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#313538");
+            outerWallMaterial.backFaceCulling = false; // Allow viewing from both sides
+
+            const innerWallMaterial = new BABYLON.StandardMaterial("innerWallMaterial", scene);
+            innerWallMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#1A1C1D"); // A slightly different color for the inside
 
             const wallPositions = [
                 { pos: new BABYLON.Vector3(0, roomHeight / 2, -roomDepth / 2), rot: 0 }, // Front wall
@@ -116,9 +119,17 @@
 
             wallPositions.forEach(({ pos, rot }) => {
                 const wall = BABYLON.MeshBuilder.CreatePlane("wall", { width: roomWidth, height: roomHeight }, scene);
-                wall.material = wallMaterial;
                 wall.position = pos;
                 wall.rotation.y = rot;
+
+                // Create inner walls
+                const innerWall = wall.clone("innerWall");
+                innerWall.material = innerWallMaterial; // Set inner wall material
+                innerWall.scaling.x = -1; // Flip the inner wall
+                innerWall.position.z += 0.01; // Slightly offset the inner wall to avoid z-fighting
+
+                // Set the outer wall material
+                wall.material = outerWallMaterial;
             });
 
             // Create floor and ceiling
