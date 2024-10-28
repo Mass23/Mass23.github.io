@@ -72,7 +72,7 @@
             scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
 
             // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.2, -5), scene); // Position it 5m from the front wall
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.2, -5), scene); // Start in the middle facing the front wall
             camera.setTarget(new BABYLON.Vector3(0, 1.2, 0)); // Look at the center of the room
             camera.attachControl(canvas, true);
             camera.speed = 0.1;
@@ -146,6 +146,22 @@
             ceiling.material = floorMaterial;
             ceiling.rotation.x = Math.PI / 2; // Rotate to make it horizontal
             ceiling.position.y = roomHeight; // Position at the top of the room
+
+            // Load Images on Front Wall
+            const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"]; // Update with correct paths
+            const imageWidth = 1.5; // Width of each image plane
+            const imageHeight = 1; // Height of each image plane
+            const spacing = 0.5; // Space between images
+
+            imagePaths.forEach((path, i) => {
+                const imgMaterial = new BABYLON.StandardMaterial(`imgMat${i}`, scene);
+                imgMaterial.diffuseTexture = new BABYLON.Texture(path, scene);
+                imgMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); // White glow effect for images
+
+                const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageWidth, height: imageHeight }, scene); // Aspect ratio
+                imgPlane.material = imgMaterial;
+                imgPlane.position = new BABYLON.Vector3(-imageWidth * 1.5 + i * (imageWidth + spacing), 1.5, -roomDepth / 2 + 0.01); // Slightly off the wall
+            });
 
             return scene;
         };
