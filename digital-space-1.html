@@ -162,12 +162,15 @@
                 const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageSize, height: imageSize }, scene); // Aspect ratio 1:1
                 imgPlane.material = imgMaterial;
 
-                // Position images with spacing and offset
+                // Position images with new coordinates
                 imgPlane.position = new BABYLON.Vector3(
-                    -imageSize * 1.5 + i * (imageSize + spacing), // X position with spacing
-                    1.5, // Y position
-                    -roomDepth / 2 + offset // Z position slightly off the wall
+                    -5 + (i * 2.5), // X position with spacing
+                    1.75, // Y position
+                    roomWidth / 2 + offset // Z position slightly off the wall
                 );
+
+                // Rotate the images to face the interior of the room
+                imgPlane.rotation.y = Math.PI; // Rotate 180 degrees to face inside
             });
 
             return scene;
