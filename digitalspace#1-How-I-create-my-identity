@@ -87,8 +87,8 @@
             videoPlane2.position = new BABYLON.Vector3(-1.5, 1.5, -depth / 2 + 0.02);
 
             // Video textures (YouTube URL will need a local solution if cross-origin)
-            const videoTexture1 = new BABYLON.VideoTexture("video1", "https://drive.google.com/file/d/1WFRrvuB-EzcB2XM1GRQcyHLcw4YqUq6h/view?usp=sharing", scene, true);
-            const videoTexture2 = new BABYLON.VideoTexture("video2", "https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/view?usp=sharing", scene, true);
+            const videoTexture1 = new BABYLON.VideoTexture("video1", "https://drive.google.com/file/d/1WFRrvuB-EzcB2XM1GRQcyHLcw4YqUq6h/view?usp=drive_link", scene, true);
+            const videoTexture2 = new BABYLON.VideoTexture("video2", "https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/view?usp=drive_link", scene, true);
 
             videoPlane1.material = new BABYLON.StandardMaterial("videoMat1", scene);
             videoPlane1.material.diffuseTexture = videoTexture1;
