@@ -81,27 +81,10 @@
             camera.speed = 0.1; // Adjusted speed for smoother movement
 
             // Constrain camera height and movement
-            camera.onBeforeRenderObservable.add(() => {
-                camera.position.y = 1.5; // Keep camera at 1.5m height
-
-                // Room boundaries
-                const roomWidth = 4;
-                const roomDepth = 5;
-
-                // Limit movement within 0.5m of the walls
-                if (camera.position.x < -((roomWidth / 2) - 0.5)) {
-                    camera.position.x = -((roomWidth / 2) - 0.5);
-                }
-                if (camera.position.x > (roomWidth / 2) - 0.5) {
-                    camera.position.x = (roomWidth / 2) - 0.5;
-                }
-                if (camera.position.z < -((roomDepth / 2) - 0.5)) {
-                    camera.position.z = -((roomDepth / 2) - 0.5);
-                }
-                if (camera.position.z > (roomDepth / 2) - 0.5) {
-                    camera.position.z = (roomDepth / 2) - 0.5;
-                }
-            });
+            camera.inputs.clear(); // Clear default inputs
+            camera.inputs.add(new BABYLON.TouchCameraInput()); // Add touch camera input if needed
+            camera.inputs.add(new BABYLON.ArcRotateCameraInput()); // Add input for rotation
+            camera.inputs.add(new BABYLON.FreeCameraKeyboardInput()); // Add keyboard input
 
             // Lighting
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
@@ -169,6 +152,30 @@
             textBlock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
 
             advancedTexture.addControl(textBlock);
+
+            // Restrict camera movement
+            scene.registerBeforeRender(() => {
+                // Constrain camera height
+                camera.position.y = 1.5;
+
+                // Room boundaries
+                const roomWidth = 4;
+                const roomDepth = 5;
+
+                // Limit movement within 0.5m of the walls
+                if (camera.position.x < -((roomWidth / 2) - 0.5)) {
+                    camera.position.x = -((roomWidth / 2) - 0.5);
+                }
+                if (camera.position.x > (roomWidth / 2) - 0.5) {
+                    camera.position.x = (roomWidth / 2) - 0.5;
+                }
+                if (camera.position.z < -((roomDepth / 2) - 0.5)) {
+                    camera.position.z = -((roomDepth / 2) - 0.5);
+                }
+                if (camera.position.z > (roomDepth / 2) - 0.5) {
+                    camera.position.z = (roomDepth / 2) - 0.5;
+                }
+            });
 
             return scene;
         };
