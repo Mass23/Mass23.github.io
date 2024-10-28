@@ -151,7 +151,8 @@
             // Load Images on Front Wall
             const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"]; // Update with correct paths
             const imageSize = 1.5; // Size of each image plane (1.5m x 1.5m)
-            const spacing = 0.5; // Space between images
+            const spacing = 1; // Space between images
+            const offset = 0.05; // Offset from the wall inside
 
             imagePaths.forEach((path, i) => {
                 const imgMaterial = new BABYLON.StandardMaterial(`imgMat${i}`, scene);
@@ -160,7 +161,13 @@
 
                 const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageSize, height: imageSize }, scene); // Aspect ratio 1:1
                 imgPlane.material = imgMaterial;
-                imgPlane.position = new BABYLON.Vector3(-imageSize * 1.5 + i * (imageSize + spacing), 1.5, -roomDepth / 2 + 0.01); // Slightly off the wall
+
+                // Position images with spacing and offset
+                imgPlane.position = new BABYLON.Vector3(
+                    -imageSize * 1.5 + i * (imageSize + spacing), // X position with spacing
+                    1.5, // Y position
+                    -roomDepth / 2 + offset // Z position slightly off the wall
+                );
             });
 
             return scene;
