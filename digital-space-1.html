@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How-I-create-my-identity</title>
     <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            height: 100vh; /* Ensure body takes full height */
+        }
+        canvas { 
+            width: 100%;  /* Canvas takes full width */
+            height: 100%; /* Canvas takes full height */
+            display: block; 
+        }
     </style>
     <link rel="shortcut icon" href="images/me.webp" sizes="48x48">
 </head>
@@ -56,7 +64,7 @@
             });
 
             // Load Images on Front Wall
-            const imagePaths = ["identity1.webp", "identity2.webp", "identity3.webp"];
+            const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"];
             imagePaths.forEach((path, i) => {
                 const imgMaterial = new BABYLON.StandardMaterial(`imgMat${i}`, scene);
                 imgMaterial.diffuseTexture = new BABYLON.Texture(path, scene);
