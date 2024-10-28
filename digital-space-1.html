@@ -69,7 +69,7 @@
 
         const createScene = () => {
             const scene = new BABYLON.Scene(engine);
-            scene.clearColor = new BABYLON.Color3(0.8, 0.8, 0.8); // Light gray background
+            scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
 
             // Camera setup
             const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.2, -5), scene); // Position it 5m from the front wall
