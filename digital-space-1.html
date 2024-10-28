@@ -9,6 +9,7 @@
             margin: 0;
             overflow: hidden;
             height: 100vh;
+            font-family: 'Andale Mono', monospace; /* Set font family */
         }
         canvas {
             width: 100%;
@@ -25,16 +26,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-            font-size: 24px;
             flex-direction: column;
             opacity: 1;
             transition: opacity 0.5s;
             z-index: 10; /* On top of the canvas */
         }
+        #startText {
+            color: lightgray; /* Match wall color */
+            font-size: 48px; /* Size of the start text */
+            margin-bottom: 20px; /* Space between text and button */
+        }
         #playButton {
             padding: 10px 20px;
-            background-color: #4CAF50; /* Green */
+            background-color: #101B29; /* Match wall color */
             border: none;
             color: white;
             font-size: 20px;
@@ -42,15 +46,15 @@
             transition: background-color 0.3s;
         }
         #playButton:hover {
-            background-color: #45a049; /* Darker green */
+            background-color: #4CAF50; /* Hover color (green) */
         }
     </style>
 </head>
 <body>
     <!-- Starting overlay -->
     <div id="overlay">
-        <div>Welcome to the 3D Room</div>
-        <button id="playButton">Start</button>
+        <div id="startText">START</div> <!-- Only the start text -->
+        <button id="playButton">Play</button>
     </div>
 
     <!-- Babylon.js Library -->
@@ -70,8 +74,9 @@
             const scene = new BABYLON.Scene(engine);
             scene.clearColor = new BABYLON.Color3(0, 0, 0); // Black background
 
-            // Camera setup: Start in the center of the room (x: 0, y: 1.5, z: 2.5)
+            // Camera setup: Start in the center of the room and look towards the back wall
             const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, 2.5), scene);
+            camera.setTarget(BABYLON.Vector3.Zero()); // Look at the center of the room
             camera.attachControl(canvas, true);
             camera.speed = 0.1; // Adjusted speed for smoother movement
 
