@@ -63,6 +63,7 @@
             border: none; /* Remove border */
         }
     </style>
+    <script type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@<version>/examples/jsm/" } } </script>
 </head>
 <body>
     <div id="overlay">
@@ -75,7 +76,6 @@
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js"></script>
-    <script type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@<version>/examples/jsm/" } } </script>
     <script>
         const canvas = document.getElementById("renderCanvas");
         const overlay = document.getElementById("overlay");
