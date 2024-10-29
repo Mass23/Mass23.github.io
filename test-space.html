@@ -3,87 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Video Cube</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-        .iframe-container {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
+    <title>3D Cube with Videos</title>
+    <link rel="stylesheet" href="digital-space-1/styles.css"> <!-- Link to CSS file -->
 </head>
 <body>
-    <!-- Load Three.js and related scripts -->
-    <script src="//cdn.rawgit.com/mrdoob/three.js/master/build/three.js"></script>
-    <script src="//cdn.rawgit.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
-    <script src="//cdn.rawgit.com/mrdoob/three.js/master/examples/js/renderers/CSS3DRenderer.js"></script>
+    <div id="container"></div>
     
-    <script>
-        // Create scene, camera, and renderer
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        // Create CSS3DRenderer
-        const cssRenderer = new THREE.CSS3DRenderer();
-        cssRenderer.setSize(window.innerWidth, window.innerHeight);
-        cssRenderer.domElement.style.position = 'absolute';
-        cssRenderer.domElement.style.top = '0';
-        document.body.appendChild(cssRenderer.domElement);
-
-        // Create a cube
-        const geometry = new THREE.BoxGeometry(2, 2, 2);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
-
-        // Create video iframes for each side of the cube
-        const video1 = document.createElement('iframe');
-        video1.src = "https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1&mute=1"; // Autoplay and mute for demo
-        video1.className = "iframe-container";
-        
-        const video2 = document.createElement('iframe');
-        video2.src = "https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1&mute=1"; // Autoplay and mute for demo
-        video2.className = "iframe-container";
-
-        // Create CSS3DObject for video iframes
-        const video1Object = new THREE.CSS3DObject(video1);
-        const video2Object = new THREE.CSS3DObject(video2);
-        
-        // Position videos on cube sides
-        video1Object.position.set(1, 0, 0); // Right side
-        video2Object.position.set(-1, 0, 0); // Left side
-
-        // Add video objects to the scene
-        scene.add(video1Object);
-        scene.add(video2Object);
-
-        // Set camera position
-        camera.position.z = 5;
-
-        // Orbit controls
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-            cssRenderer.render(scene, camera); // Render the CSS3D elements
-            renderer.render(scene, camera); // Render the 3D scene
-        }
-
-        animate();
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            cssRenderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.151.3/build/three.module.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.151.3/examples/jsm/renderers/CSS3DRenderer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.151.3/examples/jsm/controls/OrbitControls.js"></script>
+    <script src="digital-space-1/script.js"></script> <!-- Link to JavaScript file -->
 </body>
 </html>
