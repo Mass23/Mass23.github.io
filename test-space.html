@@ -14,45 +14,78 @@
             height: 100%;
             touch-action: none;
         }
-        .iframe-container {
+        #videoContainer {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            border: none;
-            pointer-events: none; /* Prevent iframe interactions */
+            pointer-events: none; /* Prevent interaction with the container */
         }
     </style>
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>
-    <div id="videoContainer"></div>
+    <div id="videoContainer"></div> <!-- Container for video iframes -->
+    
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script>
         const canvas = document.getElementById("renderCanvas");
         const engine = new BABYLON.Engine(canvas, true);
-        
-        function attachHtml(id, width, height, left, top, perspective) {
+
+        function attachHtml(id, W, H, L, T, p, ts) {
             let el = document.createElement('div');
+            let exist = false;
+            if (document.getElementById('spDiv' + id)) {
+                exist = true;
+                el = document.getElementById('spDiv' + id);
+            }
+
+            let zone = document.getElementById('videoContainer');
+            let w = zone.offsetWidth.valueOf() * 1;
+            let h = zone.offsetHeight.valueOf() * 1;
+
+            el.setAttribute('style', 'transform: scale(1.0) scaleZ(1.0) rotateX(' + ts.rx + 'deg) rotateY(' + ts.ry + 'deg) rotateZ(' + ts.rz + 'deg);transform-origin: 50% 50%;perspective: ' + p + ';position:absolute;top:' + (h / 2 - H / 2 + T) + 'px;left:' + (w / 2 - W / 2 + L) + 'px;z-index:100;background-color:#ffffff;width:' + W + 'px;height:' + H + 'px;opacity:1;');
+
             el.id = "spDiv" + id;
+            zone.setAttribute('style', 'position:relative');
 
-            el.setAttribute('style', `
-                position: absolute;
-                top: ${top}px;
-                left: ${left}px;
-                width: ${width}px;
-                height: ${height}px;
-                transform: perspective(${perspective}px) translateZ(-1px);
-                pointer-events: none; /* Disable interaction with the iframe */
-            `);
-
-            el.innerHTML = `
-                <iframe width="${width}" height="${height}" 
-                        src="https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1&mute=1" 
-                        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            `;
-            
-            document.getElementById('videoContainer').appendChild(el);
+            if (!exist) {
+                el.innerHTML = '<iframe width="1280" height="720" src="https://www.youtube.com/embed/YKqXcrWliww?autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+                zone.appendChild(el);
+            }
         }
+
+        function createPage(scene, camera) {
+            scene.registerBeforeRender(function () {
+                let cp = camera.position;
+                let dx = Math.atan(Math.sqrt(cp.x * cp.x + cp.z * cp.z) / cp.y) * 180 / Math.PI;
+                let dy = 0;
+                let sign = 1;
+                let baseSize = 180;
+                if (dx > 0) { sign = -1; }
+                let dz = sign * Math.atan(cp.x / cp.z) * 180. / Math.PI;
+                let size = baseSize * camera.fov / Math.sqrt(Math.pow(cp.x, 2.0) + Math.pow(cp.y, 2.0) + Math.pow(cp.z, 2.0));
+                attachHtml('PageWeb', baseSize * size, baseSize * size, 0, 0, '800px', { rx: dx, ry: dy, rz: dz });
+            });
+        }
+
+        var createScene = function () {
+            var scene = new BABYLON.Scene(engine);
+            var camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene);
+            camera.setTarget(BABYLON.Vector3.Zero());
+            camera.attachControl(canvas, true);
+
+            // Add light to the scene
+            var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+            light.intensity = 0.5;
+
+            // Create the rectangular room
+            createRoom(scene);
+            createPage(scene, camera);
+
+            return scene;
+        };
 
         function createRoom(scene) {
             const roomWidth = 8;
@@ -67,30 +100,7 @@
             // Create back wall
             const backWall = BABYLON.MeshBuilder.CreatePlane("backWall", { width: roomWidth, height: roomHeight }, scene);
             backWall.position.z = roomLength / 2; // Position at back
-
-            // Create the floor
-            const floor = BABYLON.MeshBuilder.CreateGround("floor", { width: roomWidth, height: roomLength }, scene);
-            
-            return { frontWall, backWall };
         }
-
-        var createScene = function () {
-            var scene = new BABYLON.Scene(engine);
-            var camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene);
-            camera.setTarget(BABYLON.Vector3.Zero());
-            camera.attachControl(canvas, true);
-            
-            // Add light to the scene
-            var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-            light.intensity = 0.5;
-
-            // Create room and attach videos to walls
-            const { frontWall, backWall } = createRoom(scene);
-            attachHtml('frontVideo', 1280, 720, -640, -360, 800);
-            attachHtml('backVideo', 1280, 720, -640, -360, 800);
-
-            return scene;
-        };
 
         const scene = createScene();
 
