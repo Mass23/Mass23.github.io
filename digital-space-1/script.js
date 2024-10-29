@@ -1,4 +1,4 @@
-import * as THREE from 'https://cdn.jsdelivr.net/gh/Mass23/Mass23.github.io/javascript/three.module.js';
+import \* as THREE from 'https://cdn.jsdelivr.net/gh/Mass23/Mass23.github.io/javascript/three.module.js';
 import { CSS3DRenderer, CSS3DObject } from 'https://cdn.jsdelivr.net/gh/Mass23/Mass23.github.io/javascript/CSS3Drenderer.js';
 
 // Scene setup
