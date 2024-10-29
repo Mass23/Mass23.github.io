@@ -14,17 +14,28 @@
             height: 100%;
             touch-action: none;
         }
+        .iframe-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: none;
+            pointer-events: none; /* Prevent iframe interactions */
+        }
     </style>
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>
+    <div id="videoContainer">
+        <iframe class="iframe-container" id="frontVideo" src="https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe class="iframe-container" id="backVideo" src="https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/babylonjs.loaders.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Mass23/Mass23.github.io@master/javascript/CSS3Drenderer.js"></script>
     <script>
-        // Get the canvas element
         const canvas = document.getElementById("renderCanvas");
         const engine = new BABYLON.Engine(canvas, true);
-
+        
         // Create the scene
         const createScene = function () {
             const scene = new BABYLON.Scene(engine);
@@ -36,34 +47,21 @@
 
             // Create light
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
+            light.intensity = 0.5; // Set light intensity
 
-            // Create the room
+            // Create the room dimensions
             const roomWidth = 8;
             const roomHeight = 5;
             const roomLength = 10;
 
-            // Create the front and back walls
-            const backWall = BABYLON.MeshBuilder.CreatePlane("backWall", { width: roomWidth, height: roomHeight }, scene);
-            backWall.rotation.y = Math.PI; // Rotate to face inward
-            backWall.position.z = roomLength / 2; // Position at the back of the room
-
+            // Create the front wall
             const frontWall = BABYLON.MeshBuilder.CreatePlane("frontWall", { width: roomWidth, height: roomHeight }, scene);
+            frontWall.rotation.y = Math.PI; // Rotate to face inward
             frontWall.position.z = -roomLength / 2; // Position at the front of the room
 
-            // Create video textures for the front and back walls
-            const createVideoTexture = function (url) {
-                const videoTexture = new BABYLON.VideoTexture("video", [url], scene, true, true);
-                return videoTexture;
-            };
-
-            // Apply video textures to the walls
-            const backWallMaterial = new BABYLON.StandardMaterial("backWallMaterial", scene);
-            backWallMaterial.diffuseTexture = createVideoTexture("https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1");
-            backWall.material = backWallMaterial;
-
-            const frontWallMaterial = new BABYLON.StandardMaterial("frontWallMaterial", scene);
-            frontWallMaterial.diffuseTexture = createVideoTexture("https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1");
-            frontWall.material = frontWallMaterial;
+            // Create the back wall
+            const backWall = BABYLON.MeshBuilder.CreatePlane("backWall", { width: roomWidth, height: roomHeight }, scene);
+            backWall.position.z = roomLength / 2; // Position at the back of the room
 
             // Create the floor
             const floor = BABYLON.MeshBuilder.CreateGround("floor", { width: roomWidth, height: roomLength }, scene);
@@ -86,6 +84,12 @@
 
                 // Keep the camera at fixed height
                 camera.position.y = 1.5;
+
+                // Update iframe positions
+                const frontVideo = document.getElementById("frontVideo");
+                const backVideo = document.getElementById("backVideo");
+                frontVideo.style.transform = `translate(-50%, -50%) rotateY(180deg) translateZ(${-roomLength / 2}px)`;
+                backVideo.style.transform = `translate(-50%, -50%) translateZ(${roomLength / 2}px)`;
             });
 
             return scene;
