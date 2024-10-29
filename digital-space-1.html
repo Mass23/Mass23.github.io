@@ -29,7 +29,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            opacity: 1;
+            opacity: 1; /* Overlay starts visible */
             transition: opacity 1.5s ease; /* Smooth fade-out effect for overlay */
             z-index: 10;
         }
@@ -73,27 +73,25 @@
     <canvas id="renderCanvas"></canvas>
     <div id="cssContainer"></div>
 
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/jsm/renderers/CSS3DRenderer.js"></script>
-    
-    <script>
+    <script type="module">
+        import { Engine, Scene, Vector3, Color3, HemisphericLight, StandardMaterial, Texture, DynamicTexture, MeshBuilder, UniversalCamera } from 'https://cdn.babylonjs.com/babylon.js';
+        import { CSS3DRenderer, CSS3DObject } from 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/jsm/renderers/CSS3DRenderer.js';
+
         const canvas = document.getElementById("renderCanvas");
         const overlay = document.getElementById("overlay");
         const playButton = document.getElementById("playButton");
         const cssContainer = document.getElementById("cssContainer");
-        const engine = new BABYLON.Engine(canvas, true);
+        const engine = new Engine(canvas, true);
         let scene;
 
         const createScene = () => {
-            const scene = new BABYLON.Scene(engine);
-            const wallColor = new BABYLON.Color3.FromHexString("#000000");
+            const scene = new Scene(engine);
+            const wallColor = new Color3.FromHexString("#000000");
             scene.clearColor = wallColor;
 
             // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(-4, 1.2, -5), scene);
-            camera.setTarget(new BABYLON.Vector3(0, 1.75, 0));
+            const camera = new UniversalCamera("camera", new Vector3(-4, 1.2, -5), scene);
+            camera.setTarget(new Vector3(0, 1.75, 0));
             camera.attachControl(canvas, true);
             camera.speed = 0.1;
 
@@ -108,23 +106,23 @@
             });
 
             // Lighting
-            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+            const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
             light.intensity = 1.5;
 
             // Wall and Floor Materials
-            const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
+            const wallMaterial = new StandardMaterial("wallMaterial", scene);
             wallMaterial.diffuseColor = wallColor;
             wallMaterial.backFaceCulling = false;
 
-            const floorMaterial = new BABYLON.StandardMaterial("floorMaterial", scene);
-            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0A0A0A");
+            const floorMaterial = new StandardMaterial("floorMaterial", scene);
+            floorMaterial.diffuseColor = new Color3.FromHexString("#0A0A0A");
 
-            const floor = BABYLON.MeshBuilder.CreatePlane("floor", { width: roomWidth, height: roomDepth }, scene);
+            const floor = MeshBuilder.CreatePlane("floor", { width: roomWidth, height: roomDepth }, scene);
             floor.material = floorMaterial;
             floor.rotation.x = Math.PI / 2;
             floor.position.y = 0;
 
-            const ceiling = BABYLON.MeshBuilder.CreatePlane("ceiling", { width: roomWidth, height: roomDepth }, scene);
+            const ceiling = MeshBuilder.CreatePlane("ceiling", { width: roomWidth, height: roomDepth }, scene);
             ceiling.material = floorMaterial;
             ceiling.rotation.x = Math.PI / 2;
             ceiling.position.y = roomHeight;
@@ -135,13 +133,13 @@
             const offset = -0.05;
 
             imagePaths.forEach((path, i) => {
-                const imgMaterial = new BABYLON.StandardMaterial(`imgMat${i}`, scene);
-                imgMaterial.diffuseTexture = new BABYLON.Texture(path, scene);
-                imgMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
+                const imgMaterial = new StandardMaterial(`imgMat${i}`, scene);
+                imgMaterial.diffuseTexture = new Texture(path, scene);
+                imgMaterial.emissiveColor = new Color3(1, 1, 1);
 
-                const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageSize, height: imageSize }, scene);
+                const imgPlane = MeshBuilder.CreatePlane("imagePlane" + i, { width: imageSize, height: imageSize }, scene);
                 imgPlane.material = imgMaterial;
-                imgPlane.position = new BABYLON.Vector3(
+                imgPlane.position = new Vector3(
                     roomWidth / 2 - 0.01,
                     2,
                     (i - 1) * 1.8
@@ -150,23 +148,23 @@
             });
 
             // Left wall with text facing inward
-            const textPlane = BABYLON.MeshBuilder.CreatePlane("textPlane", { width: 6, height: 2 }, scene);
-            textPlane.position = new BABYLON.Vector3(-roomWidth / 2 + 0.01, 2, 0);
+            const textPlane = MeshBuilder.CreatePlane("textPlane", { width: 6, height: 2 }, scene);
+            textPlane.position = new Vector3(-roomWidth / 2 + 0.01, 2, 0);
             textPlane.rotation.y = -Math.PI / 2;  // Face inward
 
-            const textTexture = new BABYLON.DynamicTexture("textTexture", { width: 1024, height: 512 }, scene);
+            const textTexture = new DynamicTexture("textTexture", { width: 1024, height: 512 }, scene);
             textTexture.hasAlpha = true;
             textTexture.drawText("How-I-create-\tmy-identity", 50, 200, "bold 60px 'Andale Mono'", "lightgrey", "transparent");
             textTexture.drawText("copyright Massimo Bourquin, 2024", 50, 300, "bold 30px 'Andale Mono'", "lightgrey", "transparent");
 
-            const textMaterial = new BABYLON.StandardMaterial("textMaterial", scene);
+            const textMaterial = new StandardMaterial("textMaterial", scene);
             textMaterial.diffuseTexture = textTexture;
-            textMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
+            textMaterial.emissiveColor = new Color3(1, 1, 1);
             textMaterial.backFaceCulling = false;
             textPlane.material = textMaterial;
 
             // CSS3DRenderer for videos
-            const renderer = new THREE.CSS3DRenderer();
+            const renderer = new CSS3DRenderer();
             renderer.setSize(window.innerWidth, window.innerHeight);
             cssContainer.appendChild(renderer.domElement);
 
@@ -184,15 +182,15 @@
                 iframe.allow = "autoplay";
                 iframe.className = "video-iframe"; // Add class for styling
 
-                const cssObject = new THREE.CSS3DObject(iframe);
+                const cssObject = new CSS3DObject(iframe);
                 cssObject.position.set(0, roomHeight / 2, index === 0 ? roomDepth / 2 - 0.01 : -roomDepth / 2 + 0.01);
                 cssObject.rotation.y = Math.PI; // Face inward
 
                 renderer.setSize(window.innerWidth, window.innerHeight); // Set the renderer size
-                renderer.domElement.style.pointerEvents = "auto"; // Ensure interactions on CSS objects are enabled
                 cssContainer.appendChild(renderer.domElement); // Append the renderer to the CSS container
 
-                cssContainer.appendChild(iframe);
+                // Adding the CSS3DObject to the renderer
+                renderer.add(cssObject);
                 cssContainer.style.pointerEvents = "none"; // Allow clicks to pass through CSS container
             });
 
@@ -204,9 +202,7 @@
         // Animation loop
         engine.runRenderLoop(() => {
             scene.render();
-            if (typeof renderer !== "undefined") {
-                renderer.render(scene, scene.activeCamera); // Render CSS3DObjects
-            }
+            renderer.render(scene, scene.activeCamera); // Render CSS3DObjects
         });
 
         // Handle window resize
