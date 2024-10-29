@@ -160,10 +160,12 @@
 
             // Create the front wall video as an iframe
             const video1 = document.createElement('iframe');
-            video1.src = "ttps://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/preview";  // Replace with your actual video URL
-            video1.width = 500;
-            video1.height = 300;
-            video1.style.border = 'none';
+            video1.src = "https://drive.google.com/uc?export=download&id=1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ";  // Replace with your actual video URL
+            video2.width = 600;
+            video2.height = 400;
+            video2.type = 'video/mp4';
+            video2.allow = "autoplay";
+            video2.style.border = 'none';
 
             const video1Object = new THREE.CSS3DObject(video1);
             video1Object.position.set(0, roomHeight / 2, roomDepth / 2 - 0.01);
@@ -171,9 +173,11 @@
 
             // Create the back wall video as an iframe
             const video2 = document.createElement('iframe');
-            video2.src = "https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/preview";  // Replace with your actual video URL
-            video2.width = 500;
-            video2.height = 300;
+            video2.src = "https://drive.google.com/uc?export=download&id=1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ";  // Replace with your actual video URL
+            video2.width = 300;
+            video2.height = 200;
+            video2.type = 'video/mp4';
+            video2.allow = "autoplay";
             video2.style.border = 'none';
 
             const video2Object = new THREE.CSS3DObject(video2);
