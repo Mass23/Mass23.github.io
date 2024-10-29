@@ -31,7 +31,6 @@
     </div>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/babylonjs.loaders.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/Mass23/Mass23.github.io@master/javascript/CSS3Drenderer.js"></script>
     <script>
         const canvas = document.getElementById("renderCanvas");
         const engine = new BABYLON.Engine(canvas, true);
@@ -88,7 +87,7 @@
                 // Update iframe positions
                 const frontVideo = document.getElementById("frontVideo");
                 const backVideo = document.getElementById("backVideo");
-                frontVideo.style.transform = `translate(-50%, -50%) rotateY(180deg) translateZ(${-roomLength / 2}px)`;
+                frontVideo.style.transform = `translate(-50%, -50%) translateZ(${-roomLength / 2}px)`;
                 backVideo.style.transform = `translate(-50%, -50%) translateZ(${roomLength / 2}px)`;
             });
 
