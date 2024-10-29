@@ -1,74 +1,78 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.151.3/build/three.module.js';
-import { CSS3DRenderer, CSS3DObject } from 'https://cdn.jsdelivr.net/npm/three@0.151.3/examples/jsm/renderers/CSS3DRenderer.js';
-import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.151.3/examples/jsm/controls/OrbitControls.js';
+import * as THREE from 'https://cdn.jsdelivr.net/gh/Mass23/Mass23.github.io/javascript/three.module.js';
+import { CSS3DRenderer, CSS3DObject } from 'https://cdn.jsdelivr.net/gh/Mass23/Mass23.github.io/javascript/CSS3Drenderer.js';
 
-// Create the scene
+// Scene setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 5;
-
-// Create the renderer
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById('container').appendChild(renderer.domElement);
 
-// Create CSS3D renderer
+// CSS3D Renderer
 const cssRenderer = new CSS3DRenderer();
 cssRenderer.setSize(window.innerWidth, window.innerHeight);
 cssRenderer.domElement.style.position = 'absolute';
 cssRenderer.domElement.style.top = '0';
 document.getElementById('container').appendChild(cssRenderer.domElement);
 
-// Create the cube
-const geometry = new THREE.BoxGeometry(3, 3, 3);
-const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+// Cube geometry
+const cubeSize = 2;
+const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+const material = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: true });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-// Create CSS3D objects for videos
-const video1 = document.createElement('iframe');
-video1.className = 'iframe-container';
-video1.src = "https://www.youtube.com/embed/NwCyP3h2nyA?si=iYkdzzq5n_8WBhER";
-video1.width = "560";
-video1.height = "315";
-video1.frameBorder = "0";
-video1.allowFullscreen = true;
+// Add videos to cube sides
+const videoUrls = [
+    'https://www.youtube.com/embed/NwCyP3h2nyA?rel=0&autoplay=1', // Front
+    'https://www.youtube.com/embed/NwCyP3h2nyA?rel=0&autoplay=1', // Back
+    'https://www.youtube.com/embed/NwCyP3h2nyA?rel=0&autoplay=1', // Left
+    'https://www.youtube.com/embed/NwCyP3h2nyA?rel=0&autoplay=1', // Right
+    'https://www.youtube.com/embed/NwCyP3h2nyA?rel=0&autoplay=1', // Top
+    'https://www.youtube.com/embed/NwCyP3h2nyA?rel=0&autoplay=1'  // Bottom
+];
 
-const video2 = document.createElement('iframe');
-video2.className = 'iframe-container second';
-video2.src = "https://www.youtube.com/embed/NwCyP3h2nyA?si=iYkdzzq5n_8WBhER";
-video2.width = "560";
-video2.height = "315";
-video2.frameBorder = "0";
-video2.allowFullscreen = true;
+// Create iframes for each video and place them on the cube sides
+videoUrls.forEach((url, index) => {
+    const element = document.createElement('iframe');
+    element.src = url;
+    element.style.width = '100%';
+    element.style.height = '100%';
+    element.style.border = 'none';
+    element.allowFullscreen = true;
 
-// Create CSS3DObjects
-const video1Object = new CSS3DObject(video1);
-video1Object.position.set(2, 0, 0); // Position on the right side of the cube
-scene.add(video1Object);
+    const cssObject = new CSS3DObject(element);
+    cssObject.position.set(0, 0, 0);
+    cssObject.rotation.set(0, Math.PI * (index % 4) / 2, 0);
+    cssObject.scale.set(cubeSize, cubeSize, cubeSize);
 
-const video2Object = new CSS3DObject(video2);
-video2Object.position.set(-2, 0, 0); // Position on the left side of the cube
-scene.add(video2Object);
+    cube.add(cssObject);
+});
 
-// Orbit controls
-const controls = new OrbitControls(camera, renderer.domElement);
+// Set camera position
+camera.position.z = 5;
 
 // Animation loop
-function animate() {
+const animate = function () {
     requestAnimationFrame(animate);
-    cube.rotation.x += 0.01; // Rotate the cube for demonstration
+
+    // Rotate the cube
+    cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
-    
-    cssRenderer.render(scene, camera); // Render CSS3D elements
-    renderer.render(scene, camera); // Render the 3D scene
-}
+
+    renderer.render(scene, camera);
+    cssRenderer.render(scene, camera);
+};
+
 animate();
 
 // Handle window resize
 window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    renderer.setSize(width, height);
+    cssRenderer.setSize(width, height);
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    cssRenderer.setSize(window.innerWidth, window.innerHeight);
 });
