@@ -3,99 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Cube with Videos</title>
+    <title>Three.js Video Cube</title>
     <style>
         body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+        .iframe-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
     </style>
 </head>
 <body>
-    <script type="module">
-        // Importing Three.js and CSS3DRenderer from local files
-        import * as THREE from 'https://raw.githubusercontent.com/Mass23/Mass23.github.io/main/javascript/three.module.js';
-        import { CSS3DRenderer, CSS3DObject } from 'https://raw.githubusercontent.com/Mass23/Mass23.github.io/main/javascript/CSS3Drenderer.js'; // Adjusted path for local file
+    <div id="container"></div>
 
-        // Scene setup
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r151/three.module.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r151/examples/jsm/renderers/CSS3DRenderer.js"></script>
+    <script>
+        // Basic setup
         const scene = new THREE.Scene();
-
-        // Perspective camera
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 5;
-
-        // WebGL Renderer
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // CSS3D Renderer for iframe objects
-        const cssRenderer = new CSS3DRenderer();
-        cssRenderer.setSize(window.innerWidth, window.innerHeight);
-        cssRenderer.domElement.style.position = 'absolute';
-        cssRenderer.domElement.style.top = 0;
-        document.body.appendChild(cssRenderer.domElement);
+        // CSS3DRenderer
+        const css3DRenderer = new THREE.CSS3DRenderer();
+        css3DRenderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('container').appendChild(css3DRenderer.domElement);
 
-        // Add a static cube
-        const geometry = new THREE.BoxGeometry();
-        const cube = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }));
+        // Create a cube
+        const geometry = new THREE.BoxGeometry(3, 3, 3);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+        const cube = new THREE.Mesh(geometry, material);
         scene.add(cube);
 
-        // Adding iframe as CSS3DObjects on each face of the cube
-        const createIframeObject = (src, position, rotation) => {
-            const iframeElement = document.createElement('iframe');
-            iframeElement.src = src;
-            iframeElement.style.width = '560px';
-            iframeElement.style.height = '315px';
-            iframeElement.setAttribute("allowfullscreen", "");
+        // Videos as iframes
+        const videos = [
+            "https://www.youtube.com/embed/NwCyP3h2nyA?si=iYkdzzq5n_8WBhER",
+            "https://www.youtube.com/embed/NwCyP3h2nyA?si=iYkdzzq5n_8WBhER"
+        ];
 
-            const cssObject = new CSS3DObject(iframeElement);
-            cssObject.position.set(...position);  // Set position
-            cssObject.rotation.set(...rotation);  // Set rotation
-            return cssObject;
-        };
+        // Add videos to cube surfaces
+        const videoMaterials = videos.map((video, index) => {
+            const iframe = document.createElement('iframe');
+            iframe.className = 'iframe-container';
+            iframe.src = video;
+            iframe.allowFullscreen = true;
 
-        // Adding iframes to the cube's faces
-        const videoUrl = "https://www.youtube.com/embed/NwCyP3h2nyA?si=iYkdzzq5n_8WBhER";
+            const object = new THREE.CSS3DObject(iframe);
+            // Position videos on the sides of the cube
+            if (index === 0) {
+                object.position.set(1.5, 0, 0); // Right side
+                object.rotation.y = Math.PI / 2;
+            } else {
+                object.position.set(-1.5, 0, 0); // Left side
+                object.rotation.y = -Math.PI / 2;
+            }
+            return object;
+        });
 
-        // Front face
-        const frontFace = createIframeObject(videoUrl, [0, 0, 0.5], [0, 0, 0]); // +Z face
-        scene.add(frontFace);
+        videoMaterials.forEach(video => {
+            css3DRenderer.addObject(video);
+        });
 
-        // Back face
-        const backFace = createIframeObject(videoUrl, [0, 0, -0.5], [0, Math.PI, 0]); // -Z face
-        scene.add(backFace);
-
-        // Left face
-        const leftFace = createIframeObject(videoUrl, [-0.5, 0, 0], [0, Math.PI / 2, 0]); // -X face
-        scene.add(leftFace);
-
-        // Right face
-        const rightFace = createIframeObject(videoUrl, [0.5, 0, 0], [0, -Math.PI / 2, 0]); // +X face
-        scene.add(rightFace);
-
-        // Top face
-        const topFace = createIframeObject(videoUrl, [0, 0.5, 0], [-Math.PI / 2, 0, 0]); // +Y face
-        scene.add(topFace);
-
-        // Bottom face
-        const bottomFace = createIframeObject(videoUrl, [0, -0.5, 0], [Math.PI / 2, 0, 0]); // -Y face
-        scene.add(bottomFace);
+        camera.position.z = 5;
 
         // Animation loop
-        function animate() {
+        const animate = () => {
             requestAnimationFrame(animate);
+            // Optionally rotate the cube or other animations can be added here
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
 
-            // Render the scene
             renderer.render(scene, camera);
-            cssRenderer.render(scene, camera);
-        }
+            css3DRenderer.render(scene, camera);
+        };
 
         animate();
 
-        // Handle window resizing
+        // Handle window resize
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            renderer.setSize(width, height);
+            css3DRenderer.setSize(width, height);
+            camera.aspect = width / height;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            cssRenderer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
 </body>
