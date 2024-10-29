@@ -57,13 +57,6 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
 });
 
-// Movement controls
-const controls = new THREE.PointerLockControls(camera, document.body);
-document.body.appendChild(controls.getElement());
-document.addEventListener('click', () => {
-    controls.lock();
-});
-
 // Create a ground for reference
 const groundGeometry = new THREE.PlaneGeometry(roomWidth, roomLength);
 const groundMaterial = new THREE.MeshBasicMaterial({ color: 0xaaaaaa, side: THREE.DoubleSide });
