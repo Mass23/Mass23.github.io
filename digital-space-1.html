@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Room</title>
+    <title>3D Room with CSS3DRenderer</title>
     <style>
         body {
             margin: 0;
@@ -50,7 +50,18 @@
         #playButton:hover {
             background-color: #0e1a24;
         }
-        #cssContainer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        #cssContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+        .video-iframe {
+            pointer-events: auto; /* Allow iframe interactions */
+            border: none; /* Remove border */
+        }
     </style>
 </head>
 <body>
@@ -66,12 +77,13 @@
     <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/jsm/renderers/CSS3DRenderer.js"></script>
+    
     <script>
         const canvas = document.getElementById("renderCanvas");
         const overlay = document.getElementById("overlay");
         const playButton = document.getElementById("playButton");
-        const engine = new BABYLON.Engine(canvas, true);
         const cssContainer = document.getElementById("cssContainer");
+        const engine = new BABYLON.Engine(canvas, true);
         let scene;
 
         const createScene = () => {
@@ -153,65 +165,60 @@
             textMaterial.backFaceCulling = false;
             textPlane.material = textMaterial;
 
-            // CSS3DRenderer setup for videos
-            const cssRenderer = new THREE.CSS3DRenderer();
-            cssRenderer.setSize(window.innerWidth, window.innerHeight);
-            cssRenderer.domElement.style.position = 'absolute';
-            cssContainer.appendChild(cssRenderer.domElement);
+            // CSS3DRenderer for videos
+            const renderer = new THREE.CSS3DRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            cssContainer.appendChild(renderer.domElement);
 
-            // Create the front wall video as an iframe
-            const video1 = document.createElement('iframe');
-            video1.src = "https://drive.google.com/uc?export=download&id=1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ";  // Replace with your actual video URL
-            video2.width = 600;
-            video2.height = 400;
-            video2.type = 'video/mp4';
-            video2.allow = "autoplay";
-            video2.style.border = 'none';
+            // Videos on front and back walls facing inward
+            const videoURLs = [
+                "https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/preview",  // Replace with your first video
+                "https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/preview"   // Replace with your second video
+            ];
 
-            const video1Object = new THREE.CSS3DObject(video1);
-            video1Object.position.set(0, roomHeight / 2, roomDepth / 2 - 0.01);
-            video1Object.rotation.y = Math.PI;
+            videoURLs.forEach((url, index) => {
+                const iframe = document.createElement('iframe');
+                iframe.src = url;
+                iframe.width = 640;  // Set iframe width
+                iframe.height = 480; // Set iframe height
+                iframe.allow = "autoplay";
+                iframe.className = "video-iframe"; // Add class for styling
 
-            // Create the back wall video as an iframe
-            const video2 = document.createElement('iframe');
-            video2.src = "https://drive.google.com/uc?export=download&id=1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ";  // Replace with your actual video URL
-            video2.width = 300;
-            video2.height = 200;
-            video2.type = 'video/mp4';
-            video2.allow = "autoplay";
-            video2.style.border = 'none';
+                const cssObject = new THREE.CSS3DObject(iframe);
+                cssObject.position.set(0, roomHeight / 2, index === 0 ? roomDepth / 2 - 0.01 : -roomDepth / 2 + 0.01);
+                cssObject.rotation.y = Math.PI; // Face inward
 
-            const video2Object = new THREE.CSS3DObject(video2);
-            video2Object.position.set(0, roomHeight / 2, -roomDepth / 2 + 0.01);
+                renderer.setSize(window.innerWidth, window.innerHeight); // Set the renderer size
+                renderer.domElement.style.pointerEvents = "auto"; // Ensure interactions on CSS objects are enabled
+                cssContainer.appendChild(renderer.domElement); // Append the renderer to the CSS container
 
-            cssRenderer.domElement.appendChild(video1);
-            cssRenderer.domElement.appendChild(video2);
-
-            engine.runRenderLoop(() => {
-                cssRenderer.render(scene, camera);
-                scene.render();
+                cssContainer.appendChild(iframe);
+                cssContainer.style.pointerEvents = "none"; // Allow clicks to pass through CSS container
             });
 
             return scene;
         };
 
-        const startScene = () => {
-            overlay.style.opacity = '0';
-            canvas.style.opacity = '1'; // Trigger canvas fade-in
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 1500);
+        scene = createScene();
 
-            scene = createScene();
-        };
+        // Animation loop
+        engine.runRenderLoop(() => {
+            scene.render();
+            if (typeof renderer !== "undefined") {
+                renderer.render(scene, scene.activeCamera); // Render CSS3DObjects
+            }
+        });
 
-        // Event listener for the play button
-        playButton.addEventListener("click", startScene);
-
-        // Adjust CSS3DRenderer on window resize
+        // Handle window resize
         window.addEventListener("resize", () => {
-            cssRenderer.setSize(window.innerWidth, window.innerHeight);
             engine.resize();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Handle play button click
+        playButton.addEventListener('click', () => {
+            overlay.style.opacity = '0'; // Fade out overlay
+            canvas.style.opacity = '1'; // Fade in canvas
         });
     </script>
 </body>
