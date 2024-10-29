@@ -26,8 +26,8 @@ const material = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.Back
 const room = new THREE.Mesh(geometry, material);
 scene.add(room);
 
-// Position the camera inside the room
-camera.position.set(0, 2, 0); // Start slightly above the center
+// Position the camera in the middle of the room
+camera.position.set(0, 2.5, 0); // Start in the middle of the room, 2.5 units above the floor
 
 // Function to create a video on a wall
 function createVideoWall(videoUrl, position) {
