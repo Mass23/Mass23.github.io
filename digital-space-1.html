@@ -75,6 +75,7 @@
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js"></script>
+    <script type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@<version>/examples/jsm/" } } </script>
     <script>
         const canvas = document.getElementById("renderCanvas");
         const overlay = document.getElementById("overlay");
@@ -163,7 +164,7 @@
             textPlane.material = textMaterial;
 
             // Create CSS3DRenderer
-            const renderer = new CSS3DRenderer();
+            const renderer = new THREE.CSS3DRenderer();
             renderer.setSize(window.innerWidth, window.innerHeight);
             cssContainer.appendChild(renderer.domElement);
 
@@ -181,7 +182,7 @@
                 iframe.allow = "autoplay";
                 iframe.className = "video-iframe"; // Add class for styling
 
-                const cssObject = new CSS3DObject(iframe);
+                const cssObject = new THREE.CSS3DObject(iframe);
                 cssObject.position.set(0, roomHeight / 2, index === 0 ? roomDepth / 2 - 0.01 : -roomDepth / 2 + 0.01);
                 cssObject.rotation.y = Math.PI; // Face inward
 
