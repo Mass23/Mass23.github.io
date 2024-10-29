@@ -71,45 +71,28 @@
 
         const createScene = () => {
             const scene = new BABYLON.Scene(engine);
-            const wallColor = new BABYLON.Color3.FromHexString("#000000"); // Set wall color for background
-            scene.clearColor = wallColor; // Set background color to match the walls
+            const wallColor = new BABYLON.Color3.FromHexString("#000000");
+            scene.clearColor = wallColor;
 
             // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(-3.33, 1.2, -5), scene);
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(-4, 1.2, -5), scene);
             camera.setTarget(new BABYLON.Vector3(0, 1.75, 0));
             camera.attachControl(canvas, true);
             camera.speed = 0.1;
 
-            // Room dimensions and boundaries
-            const roomWidth = 6.66, roomDepth = 10, roomHeight = 5;
-            const minDistance = 0.1;
-
-            scene.registerBeforeRender(() => {
-                camera.position.y = 1.66;
-                camera.position.x = Math.max(-roomWidth / 2 + minDistance, Math.min(camera.position.x, roomWidth / 2 - minDistance));
-                camera.position.z = Math.max(-roomDepth / 2 + minDistance, Math.min(camera.position.z, roomDepth / 2 - minDistance));
-
-                const minPitch = -Math.PI / 6; // -30 degrees
-                const maxPitch = Math.PI / 6;  // +30 degrees
-                if (camera.rotation.x < minPitch) {
-                    camera.rotation.x = minPitch;
-                } else if (camera.rotation.x > maxPitch) {
-                    camera.rotation.x = maxPitch;
-                }
-            });
+            // Room dimensions
+            const roomWidth = 8, roomDepth = 10, roomHeight = 5;
 
             // Lighting
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 1.5;
 
             // Create room walls
-            const outerWallMaterial = new BABYLON.StandardMaterial("outerWallMaterial", scene);
-            outerWallMaterial.diffuseColor = wallColor;
-            outerWallMaterial.backFaceCulling = false;
+            const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
+            wallMaterial.diffuseColor = wallColor;
+            wallMaterial.backFaceCulling = false;
 
-            const innerWallMaterial = new BABYLON.StandardMaterial("innerWallMaterial", scene);
-            innerWallMaterial.diffuseColor = wallColor;
-
+            // Room layout
             const wallPositions = [
                 { pos: new BABYLON.Vector3(0, roomHeight / 2, -roomDepth / 2), rot: 0 },
                 { pos: new BABYLON.Vector3(0, roomHeight / 2, roomDepth / 2), rot: Math.PI },
@@ -121,19 +104,12 @@
                 const wall = BABYLON.MeshBuilder.CreatePlane("wall", { width: roomWidth, height: roomHeight }, scene);
                 wall.position = pos;
                 wall.rotation.y = rot;
-
-                const innerWall = wall.clone("innerWall");
-                innerWall.material = innerWallMaterial;
-                innerWall.scaling.x = -1;
-                innerWall.position.z += 0.01;
-
-                wall.material = outerWallMaterial;
+                wall.material = wallMaterial;
             });
 
             // Floor and ceiling
             const floorMaterial = new BABYLON.StandardMaterial("floorMaterial", scene);
             floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0A0A0A");
-            floorMaterial.backFaceCulling = false;
 
             const floor = BABYLON.MeshBuilder.CreatePlane("floor", { width: roomWidth, height: roomDepth }, scene);
             floor.material = floorMaterial;
@@ -145,53 +121,50 @@
             ceiling.rotation.x = Math.PI / 2;
             ceiling.position.y = roomHeight;
 
-            // Load Images on Front Wall
-            const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"];
-            const imageSize = 1.33;
-            const spacing = 1;
-            const offset = -0.05;
+            // Video on left wall
+            const leftVideoMaterial = new BABYLON.StandardMaterial("leftVideoMat", scene);
+            const leftVideoTexture = new BABYLON.VideoTexture("leftVideo", "https://drive.google.com/uc?id=1WFRrvuB-EzcB2XM1GRQcyHLcw4YqUq6h&export=download", scene, true);
+            leftVideoMaterial.diffuseTexture = leftVideoTexture;
 
-            imagePaths.forEach((path, i) => {
-                const imgMaterial = new BABYLON.StandardMaterial(`imgMat${i}`, scene);
-                imgMaterial.diffuseTexture = new BABYLON.Texture(path, scene);
-                imgMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
+            const leftVideoPlane = BABYLON.MeshBuilder.CreatePlane("leftVideo", { width: 7, height: 3.94 }, scene);
+            leftVideoPlane.position = new BABYLON.Vector3(-roomWidth / 2 + 0.05, 2, 0);
+            leftVideoPlane.rotation.y = Math.PI / 2;
+            leftVideoPlane.material = leftVideoMaterial;
 
-                const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageSize, height: imageSize }, scene);
-                imgPlane.material = imgMaterial;
+            // Video on right wall
+            const rightVideoMaterial = new BABYLON.StandardMaterial("rightVideoMat", scene);
+            const rightVideoTexture = new BABYLON.VideoTexture("rightVideo", "https://drive.google.com/uc?id=1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ&export=download", scene, true);
+            rightVideoMaterial.diffuseTexture = rightVideoTexture;
 
-                imgPlane.position = new BABYLON.Vector3(
-                    (roomWidth / 2) + offset,
-                    2, 
-                    ((i - 1) * 1.8)
-                );
+            const rightVideoPlane = BABYLON.MeshBuilder.CreatePlane("rightVideo", { width: 3, height: 1.69 }, scene);
+            rightVideoPlane.position = new BABYLON.Vector3(roomWidth / 2 - 0.05, 2, 0);
+            rightVideoPlane.rotation.y = -Math.PI / 2;
+            rightVideoPlane.material = rightVideoMaterial;
 
-                imgPlane.rotation.y = Math.PI * 0.5;
-            });
+            // Text on the back wall
+            const manager = new BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+            const textBlock = new BABYLON.GUI.TextBlock();
+            textBlock.text = "How-I-create-\tmy-identity\ncopyright Massimo Bourquin, 2024";
+            textBlock.color = "lightgrey";
+            textBlock.fontSize = "36px";
+            textBlock.fontFamily = "Andale Mono";
+            textBlock.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+            textBlock.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+            manager.addControl(textBlock);
 
             return scene;
         };
 
         const startScene = () => {
-            // Remove overlay and start the scene
             overlay.style.opacity = '0';
-            canvas.style.opacity = '1'; // Trigger canvas fade-in
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 1500); // Match this timeout with the transition time for smooth fade-out
+            canvas.style.opacity = '1';
+            setTimeout(() => overlay.style.display = 'none', 1500);
 
-            // Create the scene
             scene = createScene();
-
-            engine.runRenderLoop(() => {
-                scene.render();
-            });
-
-            window.addEventListener("resize", () => {
-                engine.resize();
-            });
+            engine.runRenderLoop(() => scene.render());
+            window.addEventListener("resize", () => engine.resize());
         };
 
-        // Event listener for the play button
         playButton.addEventListener("click", startScene);
     </script>
 </body>
