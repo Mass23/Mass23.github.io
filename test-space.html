@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Room with Videos</title>
+    <title>3D Room with YouTube Videos</title>
     <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
         #renderCanvas {
             width: 100%;
             height: 100%;
@@ -13,7 +17,7 @@
     </style>
 </head>
 <body>
-    <canvas id="renderCanvas"></canvas> <!-- Canvas for Babylon.js -->
+    <canvas id="renderCanvas"></canvas>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/babylonjs.loaders.js"></script>
     <script>
@@ -24,9 +28,10 @@
         // Create the scene
         const createScene = function () {
             const scene = new BABYLON.Scene(engine);
-            
-            // Create a camera
-            const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 10, new BABYLON.Vector3(0, 2.5, 0), scene);
+
+            // Create a camera and position it inside the room
+            const camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene);
+            camera.setTarget(BABYLON.Vector3.Zero()); // Look at the center of the room
             camera.attachControl(canvas, true);
 
             // Create light
@@ -36,25 +41,52 @@
             const roomWidth = 8;
             const roomHeight = 5;
             const roomLength = 10;
-            const roomMaterial = new BABYLON.StandardMaterial("roomMaterial", scene);
-            roomMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
-            const room = BABYLON.MeshBuilder.CreateBox("room", { width: roomWidth, height: roomHeight, depth: roomLength }, scene);
-            room.material = roomMaterial;
-            room.position.y = roomHeight / 2; // Center the room on the Y-axis
 
-            // Create video walls on two shorter sides
-            const createVideoWall = function (url, position) {
+            // Create the front and back walls
+            const backWall = BABYLON.MeshBuilder.CreatePlane("backWall", { width: roomWidth, height: roomHeight }, scene);
+            backWall.rotation.y = Math.PI; // Rotate to face inward
+            backWall.position.z = roomLength / 2; // Position at the back of the room
+
+            const frontWall = BABYLON.MeshBuilder.CreatePlane("frontWall", { width: roomWidth, height: roomHeight }, scene);
+            frontWall.position.z = -roomLength / 2; // Position at the front of the room
+
+            // Create video textures for the front and back walls
+            const createVideoTexture = function (url) {
                 const videoTexture = new BABYLON.VideoTexture("video", [url], scene, true, true);
-                const videoPlane = BABYLON.MeshBuilder.CreatePlane("videoPlane", { width: roomWidth, height: roomHeight }, scene);
-                videoPlane.material = new BABYLON.StandardMaterial("videoMaterial", scene);
-                videoPlane.material.diffuseTexture = videoTexture;
-                videoPlane.position = position;
-                videoPlane.rotation.y = Math.PI; // Face inwards
+                return videoTexture;
             };
 
-            // Create video walls at the shorter sides of the room
-            createVideoWall("https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1", new BABYLON.Vector3(-roomWidth / 2, roomHeight / 2, -roomLength / 2)); // Left wall
-            createVideoWall("https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1", new BABYLON.Vector3(roomWidth / 2, roomHeight / 2, -roomLength / 2)); // Right wall
+            // Apply video textures to the walls
+            const backWallMaterial = new BABYLON.StandardMaterial("backWallMaterial", scene);
+            backWallMaterial.diffuseTexture = createVideoTexture("https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1");
+            backWall.material = backWallMaterial;
+
+            const frontWallMaterial = new BABYLON.StandardMaterial("frontWallMaterial", scene);
+            frontWallMaterial.diffuseTexture = createVideoTexture("https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1");
+            frontWall.material = frontWallMaterial;
+
+            // Create the floor
+            const floor = BABYLON.MeshBuilder.CreateGround("floor", { width: roomWidth, height: roomLength }, scene);
+
+            // Prevent the camera from going out of bounds
+            scene.onBeforeRenderObservable.add(() => {
+                const cameraPosition = camera.position;
+
+                // Ensure the camera doesn't go beyond the walls
+                if (cameraPosition.x < -roomWidth / 2 + 0.1) {
+                    camera.position.x = -roomWidth / 2 + 0.1;
+                } else if (cameraPosition.x > roomWidth / 2 - 0.1) {
+                    camera.position.x = roomWidth / 2 - 0.1;
+                }
+                if (cameraPosition.z < -roomLength / 2 + 0.1) {
+                    camera.position.z = -roomLength / 2 + 0.1;
+                } else if (cameraPosition.z > roomLength / 2 - 0.1) {
+                    camera.position.z = roomLength / 2 - 0.1;
+                }
+
+                // Keep the camera at fixed height
+                camera.position.y = 1.5;
+            });
 
             return scene;
         };
