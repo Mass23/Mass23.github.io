@@ -1,73 +1,75 @@
-import * as THREE from 'https://cdn.jsdelivr.net/gh/Mass23/Mass23.github.io/javascript/three.module.js';
-import { CSS3DRenderer, CSS3DObject } from 'https://cdn.jsdelivr.net/gh/Mass23/Mass23.github.io/javascript/CSS3Drenderer.js';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Room with Videos</title>
+    <style>
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="renderCanvas"></canvas> <!-- Canvas for Babylon.js -->
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/babylonjs.loaders.js"></script>
+    <script>
+        // Get the canvas element
+        const canvas = document.getElementById("renderCanvas");
+        const engine = new BABYLON.Engine(canvas, true);
 
-// Set up the scene, camera, and renderer
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.getElementById('container').appendChild(renderer.domElement);
+        // Create the scene
+        const createScene = function () {
+            const scene = new BABYLON.Scene(engine);
+            
+            // Create a camera
+            const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 10, new BABYLON.Vector3(0, 2.5, 0), scene);
+            camera.attachControl(canvas, true);
 
-// CSS3D Renderer for videos
-const cssRenderer = new CSS3DRenderer();
-cssRenderer.setSize(window.innerWidth, window.innerHeight);
-cssRenderer.domElement.style.position = 'absolute';
-cssRenderer.domElement.style.top = '0';
-document.getElementById('container').appendChild(cssRenderer.domElement);
+            // Create light
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
 
-// Create a rectangular room
-const roomWidth = 8;
-const roomHeight = 5;
-const roomLength = 10;
+            // Create the room
+            const roomWidth = 8;
+            const roomHeight = 5;
+            const roomLength = 10;
+            const roomMaterial = new BABYLON.StandardMaterial("roomMaterial", scene);
+            roomMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
+            const room = BABYLON.MeshBuilder.CreateBox("room", { width: roomWidth, height: roomHeight, depth: roomLength }, scene);
+            room.material = roomMaterial;
+            room.position.y = roomHeight / 2; // Center the room on the Y-axis
 
-// Create the room's geometry and material
-const geometry = new THREE.BoxGeometry(roomWidth, roomHeight, roomLength);
-const material = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide });
-const room = new THREE.Mesh(geometry, material);
-scene.add(room);
+            // Create video walls on two shorter sides
+            const createVideoWall = function (url, position) {
+                const videoTexture = new BABYLON.VideoTexture("video", [url], scene, true, true);
+                const videoPlane = BABYLON.MeshBuilder.CreatePlane("videoPlane", { width: roomWidth, height: roomHeight }, scene);
+                videoPlane.material = new BABYLON.StandardMaterial("videoMaterial", scene);
+                videoPlane.material.diffuseTexture = videoTexture;
+                videoPlane.position = position;
+                videoPlane.rotation.y = Math.PI; // Face inwards
+            };
 
-// Position the camera in the middle of the room
-camera.position.set(0, 2.5, 0); // Start in the middle of the room, 2.5 units above the floor
+            // Create video walls at the shorter sides of the room
+            createVideoWall("https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1", new BABYLON.Vector3(-roomWidth / 2, roomHeight / 2, -roomLength / 2)); // Left wall
+            createVideoWall("https://www.youtube.com/embed/NwCyP3h2nyA?autoplay=1", new BABYLON.Vector3(roomWidth / 2, roomHeight / 2, -roomLength / 2)); // Right wall
 
-// Function to create a video on a wall
-function createVideoWall(videoUrl, position) {
-    const videoElement = document.createElement('iframe');
-    videoElement.src = videoUrl;
-    videoElement.style.width = '100%';
-    videoElement.style.height = '100%';
-    videoElement.style.border = 'none';
+            return scene;
+        };
 
-    const videoObject = new CSS3DObject(videoElement);
-    videoObject.position.copy(position);
-    videoObject.rotation.y = Math.PI; // Face inwards
-    scene.add(videoObject);
-}
+        const scene = createScene();
 
-// Create video walls on the two shorter sides of the room
-createVideoWall('https://www.youtube.com/embed/NwCyP3h2nyA?si=iYkdzzq5n_8WBhER', new THREE.Vector3(-roomWidth / 2, 0, -roomLength / 2)); // Left wall
-createVideoWall('https://www.youtube.com/embed/NwCyP3h2nyA?si=iYkdzzq5n_8WBhER', new THREE.Vector3(roomWidth / 2, 0, -roomLength / 2)); // Right wall
+        // Render loop
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
 
-// Handle window resize
-window.addEventListener('resize', () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    renderer.setSize(width, height);
-    cssRenderer.setSize(width, height);
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-});
-
-// Create a ground for reference
-const groundGeometry = new THREE.PlaneGeometry(roomWidth, roomLength);
-const groundMaterial = new THREE.MeshBasicMaterial({ color: 0xaaaaaa, side: THREE.DoubleSide });
-const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-ground.rotation.x = -Math.PI / 2;
-scene.add(ground);
-
-// Animation loop
-function animate() {
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-    cssRenderer.render(scene, camera);
-}
-animate();
+        // Resize event
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>
