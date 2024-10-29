@@ -112,7 +112,7 @@
             ceiling.rotation.x = Math.PI / 2;
             ceiling.position.y = roomHeight;
 
-            // Right wall with images
+            // Right wall with images facing inward
             const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"];
             const imageSize = 1.33;
             const offset = -0.05;
@@ -125,17 +125,17 @@
                 const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageSize, height: imageSize }, scene);
                 imgPlane.material = imgMaterial;
                 imgPlane.position = new BABYLON.Vector3(
-                    roomWidth / 2 + offset,
+                    roomWidth / 2 - 0.01,
                     2,
                     (i - 1) * 1.8
                 );
-                imgPlane.rotation.y = -Math.PI / 2;
+                imgPlane.rotation.y = Math.PI / 2;  // Face inward
             });
 
-            // Left wall with text
+            // Left wall with text facing inward
             const textPlane = BABYLON.MeshBuilder.CreatePlane("textPlane", { width: 6, height: 2 }, scene);
             textPlane.position = new BABYLON.Vector3(-roomWidth / 2 + 0.01, 2, 0);
-            textPlane.rotation.y = Math.PI / 2;
+            textPlane.rotation.y = -Math.PI / 2;  // Face inward
 
             const textTexture = new BABYLON.DynamicTexture("textTexture", { width: 1024, height: 512 }, scene);
             textTexture.hasAlpha = true;
@@ -148,13 +148,17 @@
             textMaterial.backFaceCulling = false;
             textPlane.material = textMaterial;
 
-            // Videos on front and back walls
-            const videoTexture1 = new BABYLON.VideoTexture("video1", "videos/video1.mp4", scene, true, true);
+            // Videos on front and back walls facing inward
+            // Replace these links with your actual Google Drive video links
+            const videoLink1 = "https://drive.google.com/uc?id=1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ";  // Replace with your first video ID
+            const videoLink2 = "https://drive.google.com/uc?id=1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ";  // Replace with your second video ID
+
+            const videoTexture1 = new BABYLON.VideoTexture("video1", videoLink1, scene, true, true);
             const videoMaterial1 = new BABYLON.StandardMaterial("videoMaterial1", scene);
             videoMaterial1.diffuseTexture = videoTexture1;
             videoMaterial1.emissiveColor = new BABYLON.Color3(0.8, 0.8, 1);
 
-            const videoTexture2 = new BABYLON.VideoTexture("video2", "videos/video2.mp4", scene, true, true);
+            const videoTexture2 = new BABYLON.VideoTexture("video2", videoLink2, scene, true, true);
             const videoMaterial2 = new BABYLON.StandardMaterial("videoMaterial2", scene);
             videoMaterial2.diffuseTexture = videoTexture2;
             videoMaterial2.emissiveColor = new BABYLON.Color3(0.6, 0.6, 0.8);
@@ -162,25 +166,35 @@
             const frontWallVideo = BABYLON.MeshBuilder.CreatePlane("frontWallVideo", { width: roomWidth - 1, height: roomHeight - 1 }, scene);
             frontWallVideo.material = videoMaterial1;
             frontWallVideo.position = new BABYLON.Vector3(0, roomHeight / 2, roomDepth / 2 - 0.01);
-            frontWallVideo.rotation.y = Math.PI;
+            frontWallVideo.rotation.y = Math.PI;  // Face inward
 
             const backWallVideo = BABYLON.MeshBuilder.CreatePlane("backWallVideo", { width: roomWidth - 1, height: roomHeight - 1 }, scene);
             backWallVideo.material = videoMaterial2;
             backWallVideo.position = new BABYLON.Vector3(0, roomHeight / 2, -roomDepth / 2 + 0.01);
+            backWallVideo.rotation.y = 0;  // Face inward
 
             return scene;
         };
 
         const startScene = () => {
             overlay.style.opacity = '0';
-            canvas.style.opacity = '1';
-            setTimeout(() => overlay.style.display = 'none', 1500);
+            canvas.style.opacity = '1'; // Trigger canvas fade-in
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 1500);
 
             scene = createScene();
-            engine.runRenderLoop(() => scene.render());
-            window.addEventListener("resize", () => engine.resize());
+
+            engine.runRenderLoop(() => {
+                scene.render();
+            });
+
+            window.addEventListener("resize", () => {
+                engine.resize();
+            });
         };
 
+        // Event listener for the play button
         playButton.addEventListener("click", startScene);
     </script>
 </body>
