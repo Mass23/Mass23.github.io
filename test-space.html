@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js with Local CSS3DRenderer</title>
+    <title>Three.js Cube with Videos</title>
     <style>
         body { margin: 0; overflow: hidden; }
     </style>
@@ -12,7 +12,7 @@
     <script type="module">
         // Importing Three.js and CSS3DRenderer from local files
         import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.151.3/build/three.module.js';
-        import { CSS3DRenderer, CSS3DObject } from './javascript/CSS3DRenderer.js'; // Adjusted path for local file
+        import { CSS3DRenderer, CSS3DObject } from './javascript/CSS3Drenderer.js'; // Adjusted path for local file
 
         // Scene setup
         const scene = new THREE.Scene();
@@ -33,40 +33,57 @@
         cssRenderer.domElement.style.top = 0;
         document.body.appendChild(cssRenderer.domElement);
 
-        // Add a rotating cube
+        // Add a static cube
         const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-        const cube = new THREE.Mesh(geometry, material);
+        const cube = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }));
         scene.add(cube);
 
-        // Adding iframe to the scene
-        const iframeElement1 = document.createElement('iframe');
-        iframeElement1.src = "https://www.youtube.com/embed/NwCyP3h2nyA?si=iYkdzzq5n_8WBhER";
-        iframeElement1.style.width = '560px';
-        iframeElement1.style.height = '315px';
-        iframeElement1.setAttribute("allowfullscreen", "");
+        // Adding iframe as CSS3DObjects on each face of the cube
+        const createIframeObject = (src, position, rotation) => {
+            const iframeElement = document.createElement('iframe');
+            iframeElement.src = src;
+            iframeElement.style.width = '560px';
+            iframeElement.style.height = '315px';
+            iframeElement.setAttribute("allowfullscreen", "");
 
-        const cssObject1 = new CSS3DObject(iframeElement1);
-        cssObject1.position.set(-1.5, 0, 0);  // Position left side of cube
-        scene.add(cssObject1);
+            const cssObject = new CSS3DObject(iframeElement);
+            cssObject.position.set(...position);  // Set position
+            cssObject.rotation.set(...rotation);  // Set rotation
+            return cssObject;
+        };
 
-        // Add a second iframe
-        const iframeElement2 = document.createElement('iframe');
-        iframeElement2.src = "https://www.youtube.com/embed/NwCyP3h2nyA?si=iYkdzzq5n_8WBhER";
-        iframeElement2.style.width = '560px';
-        iframeElement2.style.height = '315px';
-        iframeElement2.setAttribute("allowfullscreen", "");
+        // Adding iframes to the cube's faces
+        const videoUrl = "https://www.youtube.com/embed/NwCyP3h2nyA?si=iYkdzzq5n_8WBhER";
 
-        const cssObject2 = new CSS3DObject(iframeElement2);
-        cssObject2.position.set(1.5, 0, 0);  // Position right side of cube
-        scene.add(cssObject2);
+        // Front face
+        const frontFace = createIframeObject(videoUrl, [0, 0, 0.5], [0, 0, 0]); // +Z face
+        scene.add(frontFace);
+
+        // Back face
+        const backFace = createIframeObject(videoUrl, [0, 0, -0.5], [0, Math.PI, 0]); // -Z face
+        scene.add(backFace);
+
+        // Left face
+        const leftFace = createIframeObject(videoUrl, [-0.5, 0, 0], [0, Math.PI / 2, 0]); // -X face
+        scene.add(leftFace);
+
+        // Right face
+        const rightFace = createIframeObject(videoUrl, [0.5, 0, 0], [0, -Math.PI / 2, 0]); // +X face
+        scene.add(rightFace);
+
+        // Top face
+        const topFace = createIframeObject(videoUrl, [0, 0.5, 0], [-Math.PI / 2, 0, 0]); // +Y face
+        scene.add(topFace);
+
+        // Bottom face
+        const bottomFace = createIframeObject(videoUrl, [0, -0.5, 0], [Math.PI / 2, 0, 0]); // -Y face
+        scene.add(bottomFace);
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
 
+            // Render the scene
             renderer.render(scene, camera);
             cssRenderer.render(scene, camera);
         }
