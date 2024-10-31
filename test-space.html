@@ -50,8 +50,8 @@
             scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
 
             // Create camera
-            const camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 1.5, 5), scene);
-            camera.setTarget(BABYLON.Vector3.Zero()); // Look at the center of the room
+            const camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene);
+            camera.setTarget(BABYLON.Vector3.(-3.8, 1.5, -4.8)); // Look at the center of the room
             camera.attachControl(canvas, true);
 
             // Constrain camera movement
