@@ -107,22 +107,21 @@
             frontWall.material = wallMaterial;
 
             // Rotate walls to face inward
-            leftWall.rotation.y = Math.PI; // Left wall faces inward
-            rightWall.rotation.y = 0;       // Right wall faces inward
-            frontWall.rotation.y = -Math.PI / 2; // Front wall faces inward
-            backWall.rotation.y = Math.PI / 2;   // Back wall faces inward
-
+            leftWall.rotation.x = -Math.PI / 2; // Left wall faces inward
+            rightWall.rotation.x = Math.PI / 2; // Right wall faces inward
+            frontWall.rotation.x = 0; // Front wall faces inward
+            backWall.rotation.x = -Math.PI;   // Back wall faces inward
 
             // Create floor
             const floor = BABYLON.MeshBuilder.CreateGround("floor", { width: 8, height: 10 }, scene);
             floor.position.y = 0; // Set position to ground level
-            floor.rotation.x = Math.PI / 2; // Rotate to face upward
+            floor.rotation.z = Math.PI / 2; // Rotate to face upward
             floor.material = wallMaterial;
 
             // Create ceiling
             const ceiling = BABYLON.MeshBuilder.CreateGround("ceiling", { width: 8, height: 10 }, scene);
             ceiling.position.y = wallHeight; // Set position to height of room
-            ceiling.rotation.x = -Math.PI / 2; // Rotate to face downward
+            ceiling.rotation.z = -Math.PI / 2; // Rotate to face downward
             ceiling.material = wallMaterial;
 
             // Create a material for the image
