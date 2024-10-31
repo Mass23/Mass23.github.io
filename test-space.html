@@ -74,8 +74,8 @@
             
                 // Maintain fixed height
                 camera.position.y = 1.5;
+                camera.beta = Math.max(camera.lowerBetaLimit, Math.min(camera.beta, camera.upperBetaLimit));
             });
-
 
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 0.7; // Adjust the intensity as needed
