@@ -52,13 +52,13 @@
             scene.clearColor = new BABYLON.Color3(0, 0, 0);
 
             // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, -3), scene);
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(4, 1.5, -5), scene);
             camera.attachControl(canvas, true);
             camera.ellipsoid = new BABYLON.Vector3(0.5, 1.5, 0.5);
-            camera.keysUp.push(87); // W key
-            camera.keysDown.push(83); // S key
-            camera.keysLeft.push(65); // A key
-            camera.keysRight.push(68); // D key
+
+            // Set camera movement limits
+            camera.upperBetaLimit = Math.PI / 6;  // Limit upward movement to 30 degrees
+            camera.lowerBetaLimit = -Math.PI / 6; // Limit downward movement to -30 degrees
 
             // Create room
             const room = BABYLON.MeshBuilder.CreateBox("room", { height: 4, width: 8, depth: 10 }, scene);
@@ -98,7 +98,22 @@
             const ambientLight = new BABYLON.HemisphericLight("ambientLight", new BABYLON.Vector3(0, 1, 0), scene);
             ambientLight.intensity = 0.3; // Soft light to see the space
 
+            const cameraLimit = 0.1; // Distance from the walls
+
             engine.runRenderLoop(() => {
+                // Constrain camera position to stay 0.1m away from the walls
+                if (camera.position.x < -4.9 + cameraLimit) {
+                    camera.position.x = -4.9 + cameraLimit;
+                } else if (camera.position.x > 4.9 - cameraLimit) {
+                    camera.position.x = 4.9 - cameraLimit;
+                }
+
+                if (camera.position.z < -5 + cameraLimit) {
+                    camera.position.z = -5 + cameraLimit;
+                } else if (camera.position.z > 5 - cameraLimit) {
+                    camera.position.z = 5 - cameraLimit;
+                }
+
                 scene.render();
             });
 
