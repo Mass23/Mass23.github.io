@@ -90,7 +90,7 @@
             // Right wall
             const rightWall = BABYLON.MeshBuilder.CreateBox("rightWall", { height: wallHeight, width: wallThickness, depth: 10 }, scene);
             rightWall.position = new BABYLON.Vector3(4, wallHeight / 2, 0);
-            rightWall.rotation.y = Math.PI; // Rotate to face inward
+            rightWall.rotation.y = -Math.PI; // Rotate to face inward
 
             // Back wall
             const backWall = BABYLON.MeshBuilder.CreateBox("backWall", { height: wallHeight, width: 8, depth: wallThickness }, scene);
@@ -117,8 +117,23 @@
             // Create ceiling
             const ceiling = BABYLON.MeshBuilder.CreateGround("ceiling", { width: 8, height: 10 }, scene);
             ceiling.position.y = wallHeight; // Set position to height of room
-            ceiling.rotation.x = Math.PI; // Rotate to face downward
+            ceiling.rotation.x = -Math.PI; // Rotate to face downward
             ceiling.material = wallMaterial;
+
+            // Create a material for the image
+            const imageMaterial = new BABYLON.StandardMaterial("imageMat", scene);
+            imageMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); // White emissive glow
+            
+            // Create a plane for the image
+            const imagePlane = BABYLON.MeshBuilder.CreatePlane("imagePlane", { size: 1.2 }, scene);
+            imagePlane.position = new BABYLON.Vector3(4, 2, 5); // Position on the right wall
+            imagePlane.rotation.y = -Math.PI; // Rotate to face inward
+            imagePlane.material = imageMaterial;
+            
+            // Create a texture from the image
+            const texture = new BABYLON.Texture("images/identity2.webp", scene);
+            imageMaterial.diffuseTexture = texture;
+
 
             engine.runRenderLoop(() => {
                 scene.render();
