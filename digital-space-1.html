@@ -7,37 +7,51 @@
     <link rel="shortcut icon" href="images/me.webp" sizes="48x48">
     <style>
         body, html {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             margin: 0;
             padding: 0;
-            overflow: hidden;
             height: 100%;
+            background-color: #1F0C12;
+            font-family: 'Andale Mono', monospace;
+            color: #E85458;
         }
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
+
+        h1 {
+            font-size: 3em;
+            color: #E85458;
+            text-align: center;
+            margin: 0;
         }
+
+        h2 {
+            font-size: 1.5em;
+            color: #1C7FE8;
+            margin-top: 10px;
+        }
+
         #startButton {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px 40px;
-            font-size: 20px;
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            color: #F0EED4;
             background-color: #703050;
-            color: white;
             border: none;
             cursor: pointer;
-            z-index: 1; /* Ensure button is on top */
+            transition: transform 0.2s;
         }
-        h1 {
-            color: #1C7FE8;
+
+        #startButton:hover {
+            transform: scale(1.1);
         }
         #startButton.hidden { display: none; }
     </style>
 </head>
 <body>
-    <h1>How-I-create-my-identity</h1>
+    <h1>How-I-create-<br>my-identity</h1>
+    <h2>Massimo Bourquin, 2024</h2>
     <button id="startButton">Start</button>
     <canvas id="renderCanvas"></canvas>
 
