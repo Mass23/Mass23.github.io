@@ -75,6 +75,9 @@
             camera.upperBetaLimit = Math.PI / 6;  // Limit upward movement to 30 degrees
             camera.lowerBetaLimit = -Math.PI / 6; // Limit downward movement to -30 degrees
 
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+            light.intensity = 0.7; // Adjust the intensity as needed
+
             // Create a material 
             const wallMaterial = new BABYLON.StandardMaterial("imageMat", scene);
             wallMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); // White emissive glow
