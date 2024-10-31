@@ -24,11 +24,11 @@
 </head>
 <body>
     <button id="startButton">Start</button>
+    <script type="importmap"> { "imports": { "THREE": 'https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js', 
+        "renderers/CSS3DRenderer": 'https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/renderers/CSS3DRenderer.js',
+        "controls/OrbitControls": 'https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/controls/OrbitControls.js'} } 
+    </script>
     <script type="module">
-        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js';
-        import { CSS3DRenderer, CSS3DObject } from 'https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/renderers/CSS3DRenderer.js';
-        import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/controls/OrbitControls.js';
-
         let scene, camera, renderer, cssRenderer, controls;
 
         document.getElementById('startButton').addEventListener('click', () => {
