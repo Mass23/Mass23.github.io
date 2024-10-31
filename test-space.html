@@ -52,10 +52,13 @@
             scene.clearColor = new BABYLON.Color3(0, 0, 0);
 
             // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(4, 1.5, -5), scene);
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(-4, 1.5, -5), scene);
             camera.attachControl(canvas, true);
-            camera.ellipsoid = new BABYLON.Vector3(0.5, 1.5, 0.5);
+            camera.ellipsoid = new BABYLON.Vector3(4, 1.5, 5);
 
+            // Set camera height fixed at 1.5m
+            camera.position.y = 1.5;
+            
             // Set camera movement limits
             camera.upperBetaLimit = Math.PI / 6;  // Limit upward movement to 30 degrees
             camera.lowerBetaLimit = -Math.PI / 6; // Limit downward movement to -30 degrees
@@ -72,12 +75,12 @@
 
             const leftWall = BABYLON.MeshBuilder.CreatePlane("leftWall", { width: 10, height: 4 }, scene);
             leftWall.material = longWallMaterial;
-            leftWall.position.x = -4.9; // Move left wall
+            leftWall.position.x = -4; // Move left wall
             leftWall.rotation.y = Math.PI; // Face inward
 
             const rightWall = BABYLON.MeshBuilder.CreatePlane("rightWall", { width: 10, height: 4 }, scene);
             rightWall.material = longWallMaterial;
-            rightWall.position.x = 4.9; // Move right wall
+            rightWall.position.x = 4; // Move right wall
             rightWall.rotation.y = Math.PI; // Face inward
 
             // Create short walls (front and back)
