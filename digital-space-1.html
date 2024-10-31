@@ -102,17 +102,11 @@
                 camera.position.y = 1.5;
 
                 // Constrain camera position
-                if (camera.position.x < -3.8) {
-                    camera.position.x = -3.8;
-                } else if (camera.position.x > 3.8) {
-                    camera.position.x = 3.8;
-                }
+                if (camera.position.x < -3.5) {camera.position.x = -3.5;
+                } else if (camera.position.x > 3.5) {camera.position.x = 3.5;}
             
-                if (camera.position.z < -4.8) {
-                    camera.position.z = -4.8;
-                } else if (camera.position.z > 4.8) {
-                    camera.position.z = 4.8;
-                }
+                if (camera.position.z < -4.5) {camera.position.z = -4.5;
+                } else if (camera.position.z > 4.5) {camera.position.z = 4.5;}
             });
 
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(5, 2, 0), scene);
