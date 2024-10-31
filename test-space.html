@@ -50,8 +50,8 @@
             scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
 
             //Add viewCamera that gives first person shooter view
-            var viewCamera = new BABYLON.UniversalCamera("viewCamera", new BABYLON.Vector3(-3.5, 1.5, -4.5), scene);
-            viewCamera.setTarget(new BABYLON.Vector3(4, 2, 5));
+            var camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(-3.5, 1.5, -4.5), scene);
+            camera.setTarget(new BABYLON.Vector3(4, 2, 5));
 
             // Constrain camera movement
             scene.registerBeforeRender(() => {
