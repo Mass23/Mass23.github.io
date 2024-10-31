@@ -90,15 +90,15 @@
             // Apply a material with an emissive color and texture
             const imageMaterial1 = new BABYLON.StandardMaterial("imageMaterial1", scene);
             imageMaterial1.diffuseTexture = new BABYLON.Texture("images/identity1.webp", scene); // Path to image
-            imageMaterial1.emissiveColor = new BABYLON.Color3.FromHexString("#DEEDFA"); // Set your emissive color
+            imageMaterial1.emissiveColor = new BABYLON.Color3.FromHexString("#5887F5"); // Set your emissive color#DEEDFA
 
             const imageMaterial2 = new BABYLON.StandardMaterial("imageMaterial2", scene);
             imageMaterial2.diffuseTexture = new BABYLON.Texture("images/identity2.webp", scene); // Path to image
-            imageMaterial2.emissiveColor = new BABYLON.Color3.FromHexString("#FFF2F6"); // Set your emissive color
+            imageMaterial2.emissiveColor = new BABYLON.Color3.FromHexString("#C14973"); // Set your emissive color#FFF2F6
 
             const imageMaterial3 = new BABYLON.StandardMaterial("imageMaterial3", scene);
             imageMaterial3.diffuseTexture = new BABYLON.Texture("images/identity3.webp", scene); // Path to image
-            imageMaterial3.emissiveColor = new BABYLON.Color3.FromHexString("#EFFFF6"); // Set your emissive color
+            imageMaterial3.emissiveColor = new BABYLON.Color3.FromHexString("#A7DAF6"); // Set your emissive color#EFFFF6
             
             // Create a plane for the image
             const emissiveImage1 = BABYLON.MeshBuilder.CreatePlane("emissiveImage1", { width: 1.2, height: 1.2 }, scene);
