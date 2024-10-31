@@ -55,10 +55,13 @@
             camera.setTarget(new BABYLON.Vector3(4, 2, 5)); // Point to the front wall
 
             // Set angle limits after attaching control
-            camera.lowerBetaLimit = -Math.PI / 4; // Limit downward view to -45 degrees
-            camera.upperBetaLimit = Math.PI / 4;  // Limit upward view to 45 degrees
+            camera.lowerBetaLimit = -Math.PI / 6; // Limit downward view to -45 degrees
+            camera.upperBetaLimit = Math.PI / 6;  // Limit upward view to 45 degrees
             
             scene.registerBeforeRender(() => {
+                // Maintain fixed height
+                camera.position.y = 1.5;
+                
                 // Constrain camera position
                 if (camera.position.x < -3.8) {
                     camera.position.x = -3.8;
@@ -71,10 +74,12 @@
                 } else if (camera.position.z > 4.8) {
                     camera.position.z = 4.8;
                 }
-            
-                // Maintain fixed height
-                camera.position.y = 1.5;
-                camera.beta = Math.max(camera.lowerBetaLimit, Math.min(camera.beta, camera.upperBetaLimit));
+
+                if (camera.beta > camera.upperBetaLimit) {
+                    camera.beta = camera.upperBetaLimit;
+                } else if (camera.beta < camera.lowerBetaLimit) {
+                    camera.beta = camera.lowerBetaLimit;
+                }
             });
 
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
