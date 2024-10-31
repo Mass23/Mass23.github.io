@@ -88,12 +88,12 @@
             const room = BABYLON.MeshBuilder.CreateBox("room", { height: 4, width: 8, depth: 10 }, scene);
             room.position = new BABYLON.Vector3(4, 2, 5); // Set to desired position
             room.material = new BABYLON.StandardMaterial("roomMat", scene);
-            room.material.diffuseColor = new BABYLON.Color3(0.05, 0.05, 0.05);
+            //room.material.diffuseColor = new BABYLON.Color3(0.05, 0.05, 0.05);
             room.invertU = true;
 
             // Create ambient light
-            const ambientLight = new BABYLON.HemisphericLight("ambientLight", new BABYLON.Vector3(0, 1, 0), scene);
-            ambientLight.intensity = 0.5; // Adjust intensity to make the room visible
+            const ambientLight = new BABYLON.HemisphericLight("ambientLight", new BABYLON.Vector3(4, 1, 5), scene);
+            ambientLight.intensity = 0.1; // Adjust intensity to make the room visible
             
             // Create wall materials
             const longWallMaterial = new BABYLON.StandardMaterial("longWallMat", scene);
