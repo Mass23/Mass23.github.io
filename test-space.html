@@ -62,9 +62,7 @@
             scene.registerBeforeRender(() => {
                 // Maintain fixed height
                 camera.position.y = 1.5;
-
-                if (camera.rotation.x > 180){camera.rotation = 180}
-                if (camera.rotation.x < 90){camera.rotation = 90}
+                camera.rotation.x = Math.max(-60, Math.min(camera.rotation.x, 60))
                 
                 // Constrain camera position
                 if (camera.position.x < -3.8) {
