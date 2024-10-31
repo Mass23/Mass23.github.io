@@ -86,17 +86,31 @@
             ceiling.rotation.z = Math.PI; // Rotate to face downward
 
 
-            // PLANNSSSS
-            // Create a plane for the image
-            const emissiveImage = BABYLON.MeshBuilder.CreatePlane("emissiveImage", { width: 1.2, height: 1.2 }, scene);
-            emissiveImage.position = new BABYLON.Vector3(4, 2, 0); // Position at desired location
-            
+            // IMAGES ///////////////////////////////////////////////////////////////
             // Apply a material with an emissive color and texture
-            const imageMaterial = new BABYLON.StandardMaterial("imageMaterial", scene);
-            imageMaterial.diffuseTexture = new BABYLON.Texture("images/identity2.webp", scene); // Path to image
-            imageMaterial.emissiveColor = new BABYLON.Color3.FromHexString("#F0EED4"); // Set your emissive color
+            const imageMaterial1 = new BABYLON.StandardMaterial("imageMaterial1", scene);
+            imageMaterial1.diffuseTexture = new BABYLON.Texture("images/identity1.webp", scene); // Path to image
+            imageMaterial1.emissiveColor = new BABYLON.Color3.FromHexString("#F0EED4"); // Set your emissive color
+
+            const imageMaterial2 = new BABYLON.StandardMaterial("imageMaterial2", scene);
+            imageMaterial2.diffuseTexture = new BABYLON.Texture("images/identity2.webp", scene); // Path to image
+            imageMaterial2.emissiveColor = new BABYLON.Color3.FromHexString("#F0EED4"); // Set your emissive color
+
+            const imageMaterial3 = new BABYLON.StandardMaterial("imageMaterial3", scene);
+            imageMaterial3.diffuseTexture = new BABYLON.Texture("images/identity3.webp", scene); // Path to image
+            imageMaterial3.emissiveColor = new BABYLON.Color3.FromHexString("#703050"); // Set your emissive color
             
-            emissiveImage.material = imageMaterial;
+            // Create a plane for the image
+            const emissiveImage1 = BABYLON.MeshBuilder.CreatePlane("emissiveImage1", { width: 1.2, height: 1.2 }, scene);
+            emissiveImage1.position = new BABYLON.Vector3(4, 2, -2); // Position at desired location
+            const emissiveImage2 = BABYLON.MeshBuilder.CreatePlane("emissiveImage2", { width: 1.2, height: 1.2 }, scene);
+            emissiveImage2.position = new BABYLON.Vector3(4, 2, 0); // Position at desired location
+            const emissiveImage3 = BABYLON.MeshBuilder.CreatePlane("emissiveImage3", { width: 1.2, height: 1.2 }, scene);
+            emissiveImage1.position = new BABYLON.Vector3(4, 2, 2); // Position at desired location
+            
+            emissiveImage1.material = imageMaterial1;
+            emissiveImage2.material = imageMaterial2;
+            emissiveImage3.material = imageMaterial3;
 
 
             engine.runRenderLoop(() => {
