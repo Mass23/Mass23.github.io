@@ -20,12 +20,17 @@
             display: block;
         }
         #startButton.hidden { display: none; }
+        .video-frame {
+            position: absolute;
+            pointer-events: none; /* makes the iframe non-clickable */
+            border: none;
+        }
     </style>
 </head>
 <body>
     <button id="startButton">Start</button>
     <canvas id="renderCanvas"></canvas>
-
+    
     <!-- Babylon.js CDN -->
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
@@ -39,62 +44,61 @@
         function createScene() {
             const canvas = document.getElementById("renderCanvas");
             const engine = new BABYLON.Engine(canvas, true);
-
             const scene = new BABYLON.Scene(engine);
             scene.clearColor = new BABYLON.Color3(0, 0, 0);
 
-            // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.66, -3), scene);
+            // Camera setup with boundaries
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, -3), scene);
             camera.attachControl(canvas, true);
             camera.speed = 0.1;
+            camera.minZ = 0.1; // near clipping plane
+            camera.lowerBetaLimit = BABYLON.Tools.ToRadians(45);
+            camera.upperBetaLimit = BABYLON.Tools.ToRadians(135);
+            camera.lowerRadiusLimit = 0.1;
+            camera.upperRadiusLimit = 10;
 
-            // Lights
-            const videoLight = new BABYLON.PointLight("videoLight", new BABYLON.Vector3(0, 2, -4.95), scene);
-            videoLight.intensity = 0.7;
-
-            // Room walls
-            const room = BABYLON.MeshBuilder.CreateBox("room", { height: 4, width: 10, depth: 8 }, scene);
+            // Room walls, ceiling, and floor
+            const room = BABYLON.MeshBuilder.CreateBox("room", {width: 8, depth: 10, height: 4}, scene);
             room.material = new BABYLON.StandardMaterial("roomMat", scene);
             room.material.diffuseColor = new BABYLON.Color3(0.05, 0.05, 0.05);
             room.invertU = true;
 
+            // Front and back "screens" (HTML overlay for YouTube videos)
+            createVideoElement("frontVideo", "https://www.youtube.com/embed/Y6I8SPj4gZ0", 4, 4.95, 0);
+            createVideoElement("backVideo", "https://www.youtube.com/embed/Y6I8SPj4gZ0", 4, -4.95, 0);
+
+            function createVideoElement(id, src, x, y, rotationY) {
+                const iframe = document.createElement('iframe');
+                iframe.src = src + "?autoplay=1&mute=1";
+                iframe.width = width;
+                iframe.height = height;
+                iframe.classList.add("video-frame");
+                document.body.appendChild(iframe);
+
+                // Position iframe over scene canvas at the correct 3D position
+                iframe.style.left = `${canvas.getBoundingClientRect().left + x}px`;
+                iframe.style.top = `${canvas.getBoundingClientRect().top + y}px`;
+                iframe.style.transform = `rotateY(${rotationY}deg)`;
+            }
+
             // Adding images to right wall
             const images = ['identity1.webp', 'identity2.webp', 'identity3.webp'];
             images.forEach((img, i) => {
-                const imagePlane = BABYLON.MeshBuilder.CreatePlane(`image${i}`, { width: 1, height: 1 }, scene);
-                imagePlane.position.set(4.9, 2 - i, -3.95);
-                imagePlane.rotation.y = -Math.PI / 2;
-                
                 const imgTexture = new BABYLON.Texture(`images/${img}`, scene);
+                const imagePlane = BABYLON.MeshBuilder.CreatePlane(`image${i}`, { width: 1.5, height: 1.5 }, scene);
                 imagePlane.material = new BABYLON.StandardMaterial(`imageMat${i}`, scene);
                 imagePlane.material.diffuseTexture = imgTexture;
+                imagePlane.position.set(3.95, 7 - (i*2), 1.75);
+                imagePlane.rotation.y = -Math.PI / 2;
             });
 
-            // Adding YouTube videos
-            function addVideo(url, width, height, position) {
-                const videoTexture = BABYLON.VideoTexture.CreateFromWebCam(scene, video => {
-                    video.src = url;
-                    video.autoplay = true;
-                    video.muted = true;
-                }, { autoPlay: true, loop: true });
+            // Lights
+            const videoLight1 = new BABYLON.PointLight("videoLight1", new BABYLON.Vector3(4, 5, 1.75), scene);
+            const videoLight2 = new BABYLON.PointLight("videoLight2", new BABYLON.Vector3(4, -5, 1.75), scene);
+            const imageLight = new BABYLON.PointLight("imageLight", new BABYLON.Vector3(8, 5, 1.75), scene);
 
-                const videoPlane = BABYLON.MeshBuilder.CreatePlane("videoPlane", { width, height }, scene);
-                videoPlane.material = new BABYLON.StandardMaterial("videoMat", scene);
-                videoPlane.material.emissiveTexture = videoTexture;
-                videoPlane.position = position;
-            }
-
-            // Front and back video walls
-            addVideo("https://www.youtube.com/embed/Y6I8SPj4gZ0?si=SUuGEwe9bvsCK0ZY", 2, 1.5, new BABYLON.Vector3(0, 2, -4.95));
-            addVideo("https://www.youtube.com/embed/Y6I8SPj4gZ0?si=SUuGEwe9bvsCK0ZY", 7, 4, new BABYLON.Vector3(0, 2, 4.95));
-
-            engine.runRenderLoop(() => {
-                scene.render();
-            });
-
-            window.addEventListener("resize", () => {
-                engine.resize();
-            });
+            engine.runRenderLoop(() => scene.render());
+            window.addEventListener("resize", () => engine.resize());
         }
     </script>
 </body>
