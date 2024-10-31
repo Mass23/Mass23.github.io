@@ -164,8 +164,9 @@
             
             // VIDEOS ///////////////////////////////////////////////////////////////
             // Create a plane for the video screen
-            const videoScreen = BABYLON.MeshBuilder.CreatePlane("videoScreen", { width: 4, height: 2.25 }, scene);
-            videoScreen.position.z = 0; // Adjust position as needed
+            const videoScreen = BABYLON.MeshBuilder.CreatePlane("videoScreen", { width: 7, height: 4}, scene);
+            videoScreen.position.x = 0; // Adjust position as needed
+            videoScreen.position.z = 5; // Adjust position as needed
             videoScreen.position.y = 2; // Height position
         
             // Create dynamic texture for video
