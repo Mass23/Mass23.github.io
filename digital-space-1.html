@@ -187,9 +187,8 @@
             videoScreen.material.diffuseTexture = texture;
         
             // Add lighting
-            const videoLight = const light = new BABYLON.SpotLight("spotLight", 
-                                                                   new BABYLON.Vector3(0, 3, -5), 
-                                                                   new BABYLON.Vector3(0, 2, 5), Math.PI / 3, 2, scene);
+            const videoLight = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(0, 3, -5), 
+                                                                  new BABYLON.Vector3(0, 2, 5), Math.PI / 3, 2, scene);
             videoLight.diffuse = new BABYLON.Color3(1, 1, 1); // Set the color of the light
 
 
