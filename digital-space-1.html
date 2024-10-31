@@ -59,25 +59,28 @@
     </style>
 </head>
 <body>
-    <h1>How-I-create-<br>my-identity</h1>
-    <h2>Massimo Bourquin, 2024</h2>
-    <button id="startButton">Start</button>
+    <div class="content">
+        <h1>How-I-create-<br>my-identity</h1>
+        <h2>Massimo Bourquin, 2024</h2>
+        <button id="startButton">Start</button>
+    </div>
     <canvas id="renderCanvas"></canvas>
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script>
-        const startButton = document.getElementById('startButton');
-        const content = document.querySelector('.content');
-        const canvas = document.getElementById("renderCanvas");
-
-        startButton.addEventListener('click', () => {
-            // Hide UI
-            content.classList.add('hidden');
-            canvas.style.display = 'block'; // Show canvas
-            
-            // Start the scene
-            createScene();
+        document.addEventListener("DOMContentLoaded", () => {
+            const startButton = document.getElementById('startButton');
+            const content = document.querySelector('.content');
+            const canvas = document.getElementById("renderCanvas");
+        
+            startButton.addEventListener('click', () => {
+                content.classList.add('hidden'); // Hide the content div
+                canvas.style.display = 'block';  // Show canvas
+        
+                createScene(); // Initialize and start the scene
+            });
         });
+
 
         function createScene() {
             const canvas = document.getElementById("renderCanvas");
