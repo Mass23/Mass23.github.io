@@ -87,28 +87,31 @@
             // Left wall
             const leftWall = BABYLON.MeshBuilder.CreateBox("leftWall", { height: wallHeight, width: wallThickness, depth: 10 }, scene);
             leftWall.position = new BABYLON.Vector3(-4, wallHeight / 2, 0);
-            leftWall.rotation.y = Math.PI; // Rotate to face inward
 
             // Right wall
             const rightWall = BABYLON.MeshBuilder.CreateBox("rightWall", { height: wallHeight, width: wallThickness, depth: 10 }, scene);
             rightWall.position = new BABYLON.Vector3(4, wallHeight / 2, 0);
-            rightWall.rotation.y = 0; // Rotate to face inward
 
             // Back wall
             const backWall = BABYLON.MeshBuilder.CreateBox("backWall", { height: wallHeight, width: 8, depth: wallThickness }, scene);
             backWall.position = new BABYLON.Vector3(0, wallHeight / 2, -5);
-            backWall.rotation.y = -Math.PI / 2; // Rotate to face inward
 
             // Front wall
             const frontWall = BABYLON.MeshBuilder.CreateBox("frontWall", { height: wallHeight, width: 8, depth: wallThickness }, scene);
             frontWall.position = new BABYLON.Vector3(0, wallHeight / 2, 5);
-            frontWall.rotation.y = Math.PI / 2; // Rotate to face inward
 
             // Set wall materials
             leftWall.material = wallMaterial;
             rightWall.material = wallMaterial;
             backWall.material = wallMaterial;
             frontWall.material = wallMaterial;
+
+            // Rotate walls to face inward
+            leftWall.rotation.y = Math.PI; // Left wall faces inward
+            rightWall.rotation.y = 0;       // Right wall faces inward
+            frontWall.rotation.y = -Math.PI / 2; // Front wall faces inward
+            backWall.rotation.y = Math.PI / 2;   // Back wall faces inward
+
 
             // Create floor
             const floor = BABYLON.MeshBuilder.CreateGround("floor", { width: 8, height: 10 }, scene);
