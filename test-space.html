@@ -76,8 +76,8 @@
             camera.lowerBetaLimit = -Math.PI / 6; // Limit downward movement to -30 degrees
 
             // Create a material 
-            const imageMaterial = new BABYLON.StandardMaterial("imageMat", scene);
-            imageMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); // White emissive glow
+            const wallMaterial = new BABYLON.StandardMaterial("imageMat", scene);
+            wallMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); // White emissive glow
             
             // Create floor
             const floor = BABYLON.MeshBuilder.CreateGround("floor", { width: 8, length: 10 }, scene);
