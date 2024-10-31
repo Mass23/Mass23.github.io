@@ -86,12 +86,12 @@
             // Left wall
             const leftWall = BABYLON.MeshBuilder.CreateBox("leftWall", { height: wallHeight, width: wallThickness, depth: 10 }, scene);
             leftWall.position = new BABYLON.Vector3(-4, wallHeight / 2, 0);
-            leftWall.rotation.y = -Math.PI; // Rotate to face inward
+            leftWall.rotation.y = Math.PI; // Rotate to face inward
 
             // Right wall
             const rightWall = BABYLON.MeshBuilder.CreateBox("rightWall", { height: wallHeight, width: wallThickness, depth: 10 }, scene);
             rightWall.position = new BABYLON.Vector3(4, wallHeight / 2, 0);
-            rightWall.rotation.y = Math.PI; // Rotate to face inward
+            rightWall.rotation.y = 0; // Rotate to face inward
 
             // Back wall
             const backWall = BABYLON.MeshBuilder.CreateBox("backWall", { height: wallHeight, width: 8, depth: wallThickness }, scene);
@@ -128,7 +128,7 @@
             // Create a plane for the image
             const imagePlane = BABYLON.MeshBuilder.CreatePlane("imagePlane", { size: 1.2 }, scene);
             imagePlane.position = new BABYLON.Vector3(4, 2, 5); // Position on the right wall
-            imagePlane.rotation.y = Math.PI; // Rotate to face inward
+            imagePlane.rotation.y = 0; // Rotate to face inward
             imagePlane.material = imageMaterial;
             
             // Create a texture from the image
