@@ -50,14 +50,10 @@
             scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
 
             // Create the Universal Camera
-            const camera = new BABYLON.ArcRotateCamera("camera", 0, 0, 0.2, new BABYLON.Vector3(-3.5, 1.5, -4.5), scene);
+            const camera = new BABYLON.UniversalCamera('camera', new BABYLON.Vector3(-3.5, 1.5, -4.5), scene);
             camera.attachControl(canvas, true);
             camera.setTarget(new BABYLON.Vector3(4, 2, 5)); // Point to the front wall
             camera.speed = 0.2
-
-            // Set angle limits after attaching control
-            camera.lowerBetaLimit = -Math.PI / 6; // Limit downward view to -45 degrees
-            camera.upperBetaLimit = Math.PI / 6;  // Limit upward view to 45 degrees
             
             scene.registerBeforeRender(() => {
                 // Maintain fixed height
