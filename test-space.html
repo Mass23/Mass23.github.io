@@ -69,37 +69,39 @@
             room.material.diffuseColor = new BABYLON.Color3(0.05, 0.05, 0.05);
             room.invertU = true;
 
+            // Create ambient light
+            const ambientLight = new BABYLON.HemisphericLight("ambientLight", new BABYLON.Vector3(0, 1, 0), scene);
+            ambientLight.intensity = 0.5; // Adjust intensity to make the room visible
+            
             // Create long walls (left and right)
             const longWallMaterial = new BABYLON.StandardMaterial("longWallMat", scene);
             longWallMaterial.diffuseColor = new BABYLON.Color3(0.1, 0.1, 0.8); // Blue
-
+            longWallMaterial.emissiveColor = new BABYLON.Color3(0.1, 0.1, 0.8); // Emissive color to glow
+            
             const leftWall = BABYLON.MeshBuilder.CreatePlane("leftWall", { width: 10, height: 4 }, scene);
             leftWall.material = longWallMaterial;
-            leftWall.position.x = -4; // Move left wall
+            leftWall.position.x = -4; // Correct position
             leftWall.rotation.y = Math.PI; // Face inward
-
+            
             const rightWall = BABYLON.MeshBuilder.CreatePlane("rightWall", { width: 10, height: 4 }, scene);
             rightWall.material = longWallMaterial;
-            rightWall.position.x = 4; // Move right wall
-            rightWall.rotation.y = Math.PI; // Face inward
-
+            rightWall.position.x = 4; // Correct position
+            rightWall.rotation.y = 0; // Face inward
+            
             // Create short walls (front and back)
             const shortWallMaterial = new BABYLON.StandardMaterial("shortWallMat", scene);
             shortWallMaterial.diffuseColor = new BABYLON.Color3(0.8, 0.1, 0.1); // Red
-
+            shortWallMaterial.emissiveColor = new BABYLON.Color3(0.8, 0.1, 0.1); // Emissive color to glow
+            
             const frontWall = BABYLON.MeshBuilder.CreatePlane("frontWall", { width: 8, height: 4 }, scene);
             frontWall.material = shortWallMaterial;
             frontWall.position.z = -5; // Move front wall
             frontWall.rotation.y = 0; // Face inward
-
+            
             const backWall = BABYLON.MeshBuilder.CreatePlane("backWall", { width: 8, height: 4 }, scene);
             backWall.material = shortWallMaterial;
             backWall.position.z = 5; // Move back wall
             backWall.rotation.y = Math.PI; // Face inward
-
-            // Add ambient light
-            const ambientLight = new BABYLON.HemisphericLight("ambientLight", new BABYLON.Vector3(0, 1, 0), scene);
-            ambientLight.intensity = 0.3; // Soft light to see the space
 
             const cameraLimit = 0.1; // Distance from the walls
 
