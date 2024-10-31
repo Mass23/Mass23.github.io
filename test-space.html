@@ -85,18 +85,22 @@
             // Left wall
             const leftWall = BABYLON.MeshBuilder.CreateBox("leftWall", { height: wallHeight, width: wallThickness, depth: 10 }, scene);
             leftWall.position = new BABYLON.Vector3(-4, wallHeight / 2, 0);
+            leftWall.rotation.y = Math.PI; // Rotate to face inward
 
             // Right wall
             const rightWall = BABYLON.MeshBuilder.CreateBox("rightWall", { height: wallHeight, width: wallThickness, depth: 10 }, scene);
             rightWall.position = new BABYLON.Vector3(4, wallHeight / 2, 0);
+            rightWall.rotation.y = Math.PI; // Rotate to face inward
 
             // Back wall
             const backWall = BABYLON.MeshBuilder.CreateBox("backWall", { height: wallHeight, width: 8, depth: wallThickness }, scene);
             backWall.position = new BABYLON.Vector3(0, wallHeight / 2, -5);
+            backWall.rotation.y = Math.PI / 2; // Rotate to face inward
 
             // Front wall
             const frontWall = BABYLON.MeshBuilder.CreateBox("frontWall", { height: wallHeight, width: 8, depth: wallThickness }, scene);
             frontWall.position = new BABYLON.Vector3(0, wallHeight / 2, 5);
+            frontWall.rotation.y = -Math.PI / 2; // Rotate to face inward
 
             // Set wall materials
             leftWall.material = wallMaterial;
@@ -107,11 +111,13 @@
             // Create floor
             const floor = BABYLON.MeshBuilder.CreateGround("floor", { width: 8, height: 10 }, scene);
             floor.position.y = 0; // Set position to ground level
+            floor.rotation.x = Math.PI; // Rotate to face upward
             floor.material = wallMaterial;
 
             // Create ceiling
             const ceiling = BABYLON.MeshBuilder.CreateGround("ceiling", { width: 8, height: 10 }, scene);
             ceiling.position.y = wallHeight; // Set position to height of room
+            ceiling.rotation.x = Math.PI; // Rotate to face downward
             ceiling.material = wallMaterial;
 
             engine.runRenderLoop(() => {
