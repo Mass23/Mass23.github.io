@@ -84,12 +84,8 @@
                 createScene(); // Initialize and start the scene
             });
         });
-	    
-	var youtubeFocused = false
-	var CSSobject = null
-	var plane = null
 
-        var createScene = function () {
+        function createScene () {
             const canvas = document.getElementById("renderCanvas");
             const engine = new BABYLON.Engine(canvas, true);
             const scene = new BABYLON.Scene(engine);
