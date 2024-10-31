@@ -16,90 +16,112 @@
             width: 100%;
             height: 100%;
         }
+        #startButton {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 20px;
+            background-color: #444;
+            color: white;
+            border: none;
+            cursor: pointer;
+            z-index: 1; /* Ensure button is on top */
+        }
+        #startButton.hidden { display: none; }
     </style>
 </head>
 <body>
+    <button id="startButton">Start</button>
     <canvas id="renderCanvas"></canvas>
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script>
-        const canvas = document.getElementById("renderCanvas");
-        const engine = new BABYLON.Engine(canvas, true);
-        const scene = new BABYLON.Scene(engine);
-        scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
-
-        // Create camera
-        const camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 1.5, 5), scene);
-        camera.setTarget(BABYLON.Vector3.Zero()); // Look at the center of the room
-        camera.attachControl(canvas, true);
-
-        // Constrain camera movement
-        scene.registerBeforeRender(() => {
-            const camPosition = camera.position;
-
-            // Constrain x position
-            if (camPosition.x < -3.8) camPosition.x = -3.8;
-            if (camPosition.x > 3.8) camPosition.x = 3.8;
-
-            // Constrain z position
-            if (camPosition.z < -4.8) camPosition.z = -4.8;
-            if (camPosition.z > 4.8) camPosition.z = 4.8;
-
-            // Update camera position
-            camera.position = camPosition;
+        document.getElementById('startButton').addEventListener('click', () => {
+            document.getElementById('startButton').classList.add('hidden');
+            createScene();
         });
 
-        // Set camera movement limits for pitch (up and down view)
-        camera.upperBetaLimit = Math.PI / 6;  // Limit upward movement to 30 degrees
-        camera.lowerBetaLimit = -Math.PI / 6; // Limit downward movement to -30 degrees
+        function createScene() {
+            const canvas = document.getElementById("renderCanvas");
+            const engine = new BABYLON.Engine(canvas, true);
+            const scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
 
-        // Create room walls
-        const wallMaterial = new BABYLON.StandardMaterial("wallMat", scene);
-        wallMaterial.diffuseColor = new BABYLON.Color3(0.2, 0.2, 0.2); // Dark gray for walls
+            // Create camera
+            const camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 1.5, 5), scene);
+            camera.setTarget(BABYLON.Vector3.Zero()); // Look at the center of the room
+            camera.attachControl(canvas, true);
 
-        // Create walls
-        const wallHeight = 4;
-        const wallThickness = 0.1; // Thin walls
+            // Constrain camera movement
+            scene.registerBeforeRender(() => {
+                const camPosition = camera.position;
 
-        // Left wall
-        const leftWall = BABYLON.MeshBuilder.CreateBox("leftWall", { height: wallHeight, width: wallThickness, depth: 10 }, scene);
-        leftWall.position = new BABYLON.Vector3(-4, wallHeight / 2, 0);
+                // Constrain x position
+                if (camPosition.x < -3.8) camPosition.x = -3.8;
+                if (camPosition.x > 3.8) camPosition.x = 3.8;
 
-        // Right wall
-        const rightWall = BABYLON.MeshBuilder.CreateBox("rightWall", { height: wallHeight, width: wallThickness, depth: 10 }, scene);
-        rightWall.position = new BABYLON.Vector3(4, wallHeight / 2, 0);
+                // Constrain z position
+                if (camPosition.z < -4.8) camPosition.z = -4.8;
+                if (camPosition.z > 4.8) camPosition.z = 4.8;
 
-        // Back wall
-        const backWall = BABYLON.MeshBuilder.CreateBox("backWall", { height: wallHeight, width: 8, depth: wallThickness }, scene);
-        backWall.position = new BABYLON.Vector3(0, wallHeight / 2, -5);
+                // Update camera position
+                camera.position = camPosition;
+            });
 
-        // Front wall
-        const frontWall = BABYLON.MeshBuilder.CreateBox("frontWall", { height: wallHeight, width: 8, depth: wallThickness }, scene);
-        frontWall.position = new BABYLON.Vector3(0, wallHeight / 2, 5);
+            // Set camera movement limits for pitch (up and down view)
+            camera.upperBetaLimit = Math.PI / 6;  // Limit upward movement to 30 degrees
+            camera.lowerBetaLimit = -Math.PI / 6; // Limit downward movement to -30 degrees
 
-        // Set wall materials
-        leftWall.material = wallMaterial;
-        rightWall.material = wallMaterial;
-        backWall.material = wallMaterial;
-        frontWall.material = wallMaterial;
+            // Create room walls
+            const wallMaterial = new BABYLON.StandardMaterial("wallMat", scene);
+            wallMaterial.diffuseColor = new BABYLON.Color3(0.2, 0.2, 0.2); // Dark gray for walls
 
-        // Create floor
-        const floor = BABYLON.MeshBuilder.CreateGround("floor", { width: 8, height: 10 }, scene);
-        floor.position.y = 0; // Set position to ground level
-        floor.material = wallMaterial;
+            // Create walls
+            const wallHeight = 4;
+            const wallThickness = 0.1; // Thin walls
 
-        // Create ceiling
-        const ceiling = BABYLON.MeshBuilder.CreateGround("ceiling", { width: 8, height: 10 }, scene);
-        ceiling.position.y = wallHeight; // Set position to height of room
-        ceiling.material = wallMaterial;
+            // Left wall
+            const leftWall = BABYLON.MeshBuilder.CreateBox("leftWall", { height: wallHeight, width: wallThickness, depth: 10 }, scene);
+            leftWall.position = new BABYLON.Vector3(-4, wallHeight / 2, 0);
 
-        engine.runRenderLoop(() => {
-            scene.render();
-        });
+            // Right wall
+            const rightWall = BABYLON.MeshBuilder.CreateBox("rightWall", { height: wallHeight, width: wallThickness, depth: 10 }, scene);
+            rightWall.position = new BABYLON.Vector3(4, wallHeight / 2, 0);
 
-        window.addEventListener("resize", () => {
-            engine.resize();
-        });
+            // Back wall
+            const backWall = BABYLON.MeshBuilder.CreateBox("backWall", { height: wallHeight, width: 8, depth: wallThickness }, scene);
+            backWall.position = new BABYLON.Vector3(0, wallHeight / 2, -5);
+
+            // Front wall
+            const frontWall = BABYLON.MeshBuilder.CreateBox("frontWall", { height: wallHeight, width: 8, depth: wallThickness }, scene);
+            frontWall.position = new BABYLON.Vector3(0, wallHeight / 2, 5);
+
+            // Set wall materials
+            leftWall.material = wallMaterial;
+            rightWall.material = wallMaterial;
+            backWall.material = wallMaterial;
+            frontWall.material = wallMaterial;
+
+            // Create floor
+            const floor = BABYLON.MeshBuilder.CreateGround("floor", { width: 8, height: 10 }, scene);
+            floor.position.y = 0; // Set position to ground level
+            floor.material = wallMaterial;
+
+            // Create ceiling
+            const ceiling = BABYLON.MeshBuilder.CreateGround("ceiling", { width: 8, height: 10 }, scene);
+            ceiling.position.y = wallHeight; // Set position to height of room
+            ceiling.material = wallMaterial;
+
+            engine.runRenderLoop(() => {
+                scene.render();
+            });
+
+            window.addEventListener("resize", () => {
+                engine.resize();
+            });
+        }
     </script>
 </body>
 </html>
