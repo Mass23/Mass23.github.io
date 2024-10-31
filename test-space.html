@@ -51,13 +51,13 @@
 
             // Create the camera
             const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 4, 5, new BABYLON.Vector3(0, 1.5, 0), scene);
-            camera.setTarget(new BABYLON.Vector3(4, 5, 1.75)); // Point to the front wall
+            camera.setTarget(new BABYLON.Vector3(4, 2, 5)); // Point to the front wall
             camera.attachControl(canvas, true);
 
             // Constrain camera movement
             scene.registerBeforeRender(() => {
                 const camPosition = camera.position;
-                camPosition.z = 1.5;
+                camPosition.y = 1.5;
 
                 // Constrain x position
                 if (camPosition.x < -3.8) camPosition.x = -3.8;
