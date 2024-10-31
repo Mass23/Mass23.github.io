@@ -95,13 +95,13 @@
             
             const frontWall = BABYLON.MeshBuilder.CreatePlane("frontWall", { width: 8, height: 4 }, scene);
             frontWall.material = shortWallMaterial;
-            frontWall.position.z = -5; // Move front wall
-            frontWall.rotation.y = 0; // Face inward
+            frontWall.position.z = -4; // Adjusted position for front wall
+            frontWall.rotation.y = Math.PI / 2; // Face inward
             
             const backWall = BABYLON.MeshBuilder.CreatePlane("backWall", { width: 8, height: 4 }, scene);
             backWall.material = shortWallMaterial;
-            backWall.position.z = 5; // Move back wall
-            backWall.rotation.y = Math.PI; // Face inward
+            backWall.position.z = 4; // Adjusted position for back wall
+            backWall.rotation.y = -Math.PI / 2; // Face inward
 
             const cameraLimit = 0.1; // Distance from the walls
 
