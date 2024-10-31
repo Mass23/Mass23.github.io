@@ -49,30 +49,32 @@
             const scene = new BABYLON.Scene(engine);
             scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
 
-            //Add viewCamera that gives first person shooter view
-            var camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(-3.5, 1.5, -4.5), scene);
-            camera.setTarget(new BABYLON.Vector3(4, 2, 5));
-
-            // Constrain camera movement
+            // Create the Universal Camera
+            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene);
+            camera.attachControl(canvas, true);
+            
+            // Set camera movement constraints
+            camera.lowerBetaLimit = -Math.PI / 6; // Limit downward view
+            camera.upperBetaLimit = Math.PI / 6;  // Limit upward view
+            
             scene.registerBeforeRender(() => {
-                const camPosition = camera.position;
-                camPosition.y = 1.5;
-
-                // Constrain x position
-                if (camPosition.x < -3.8) camPosition.x = -3.8;
-                if (camPosition.x > 3.8) camPosition.x = 3.8;
-
-                // Constrain z position
-                if (camPosition.y < -4.8) camPosition.y = -4.8;
-                if (camPosition.y > 4.8) camPosition.y = 4.8;
-
-                // Update camera position
-                camera.position = camPosition;
+                // Constrain camera position
+                if (camera.position.x < -3.8) {
+                    camera.position.x = -3.8;
+                } else if (camera.position.x > 3.8) {
+                    camera.position.x = 3.8;
+                }
+            
+                if (camera.position.z < -4.8) {
+                    camera.position.z = -4.8;
+                } else if (camera.position.z > 4.8) {
+                    camera.position.z = 4.8;
+                }
+            
+                // Maintain fixed height
+                camera.position.y = 1.5;
             });
 
-            // Set camera movement limits for pitch (up and down view)
-            camera.upperBetaLimit = Math.PI / 6;  // Limit upward movement to 30 degrees
-            camera.lowerBetaLimit = -Math.PI / 6; // Limit downward movement to -30 degrees
 
             wallHeight = 4
 
