@@ -159,6 +159,10 @@
 
 		
             // VIDEOS ///////////////////////////////////////////////////////////////
+
+	    // RENDER & SIZE ////////////////////////////////////////////////////////
+	    engine.runRenderLoop(() => scene.render());
+            window.addEventListener("resize", () => engine.resize());
 	};
     </script>
 </body>
