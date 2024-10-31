@@ -69,25 +69,25 @@
             shortWallMaterial.diffuseColor = new BABYLON.Color3(0.8, 0.1, 0.1); // Red for short walls
 
             // Left wall
-            const leftWall = BABYLON.MeshBuilder.CreatePlane("leftWall", { width: 4, height: 4 }, scene);
+            const leftWall = BABYLON.MeshBuilder.CreatePlane("leftWall", { width: 10, height: 4 }, scene);
             leftWall.material = longWallMaterial;
             leftWall.position.x = -4; // Move left wall
             leftWall.rotation.y = Math.PI; // Face inward
 
             // Right wall
-            const rightWall = BABYLON.MeshBuilder.CreatePlane("rightWall", { width: 4, height: 4 }, scene);
+            const rightWall = BABYLON.MeshBuilder.CreatePlane("rightWall", { width: 10, height: 4 }, scene);
             rightWall.material = longWallMaterial;
             rightWall.position.x = 4; // Move right wall
             rightWall.rotation.y = Math.PI; // Face inward
 
             // Front wall
-            const frontWall = BABYLON.MeshBuilder.CreatePlane("frontWall", { width: 10, height: 4 }, scene);
+            const frontWall = BABYLON.MeshBuilder.CreatePlane("frontWall", { width: 8, height: 4 }, scene);
             frontWall.material = shortWallMaterial;
             frontWall.position.z = -5; // Move front wall
             frontWall.rotation.y = 0; // Face inward
 
             // Back wall
-            const backWall = BABYLON.MeshBuilder.CreatePlane("backWall", { width: 10, height: 4 }, scene);
+            const backWall = BABYLON.MeshBuilder.CreatePlane("backWall", { width: 8, height: 4 }, scene);
             backWall.material = shortWallMaterial;
             backWall.position.z = 5; // Move back wall
             backWall.rotation.y = Math.PI; // Face inward
