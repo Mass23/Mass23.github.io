@@ -71,14 +71,14 @@
             // Left wall
             const leftWall = BABYLON.MeshBuilder.CreatePlane("leftWall", { width: 10, height: 4 }, scene);
             leftWall.material = longWallMaterial;
-            leftWall.position.x = -4; // Move left wall
-            leftWall.rotation.y = Math.PI; // Face inward
+            leftWall.position.x = -0; // Move left wall
+            leftWall.rotation.y = Math.PI / 2; // Face inward
 
             // Right wall
             const rightWall = BABYLON.MeshBuilder.CreatePlane("rightWall", { width: 10, height: 4 }, scene);
             rightWall.material = longWallMaterial;
-            rightWall.position.x = 4; // Move right wall
-            rightWall.rotation.y = Math.PI; // Face inward
+            rightWall.position.x = 0; // Move right wall
+            rightWall.rotation.y = -Math.PI / 2; // Face inward
 
             // Front wall
             const frontWall = BABYLON.MeshBuilder.CreatePlane("frontWall", { width: 8, height: 4 }, scene);
@@ -90,7 +90,7 @@
             const backWall = BABYLON.MeshBuilder.CreatePlane("backWall", { width: 8, height: 4 }, scene);
             backWall.material = shortWallMaterial;
             backWall.position.z = 5; // Move back wall
-            backWall.rotation.y = Math.PI; // Face inward
+            backWall.rotation.y = -Math.PI; // Face inward
 
             engine.runRenderLoop(() => {
                 scene.render();
