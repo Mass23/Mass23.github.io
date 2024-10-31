@@ -160,6 +160,41 @@
             emissiveImage3.material = imageMaterial3;
 
 
+
+            
+            // VIDEOS ///////////////////////////////////////////////////////////////
+            // Create a plane for the video screen
+            const videoScreen = BABYLON.MeshBuilder.CreatePlane("videoScreen", { width: 4, height: 2.25 }, scene);
+            videoScreen.position.z = 0; // Adjust position as needed
+            videoScreen.position.y = 2; // Height position
+        
+            // Create dynamic texture for video
+            const videoTexture = new BABYLON.DynamicTexture("videoTexture", { width: 640, height: 360 }, scene);
+            videoScreen.material = new BABYLON.StandardMaterial("videoMat", scene);
+            videoScreen.material.diffuseTexture = videoTexture;
+        
+            // Load YouTube video
+            const videoId = "Y6I8SPj4gZ0"; // Your YouTube video ID
+            const iframe = document.createElement("iframe");
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
+            iframe.width = "640";
+            iframe.height = "360";
+            iframe.style.border = "none";
+            
+            // Set the iframe as a texture
+            const texture = new BABYLON.Texture(`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`, scene);
+            videoScreen.material.diffuseTexture = texture;
+        
+            // Add lighting
+            const videoLight = const light = new BABYLON.SpotLight("spotLight", 
+                                                                   new BABYLON.Vector3(0, 3, -5), 
+                                                                   new BABYLON.Vector3(0, 2, 5), Math.PI / 3, 2, scene);
+            videoLight.diffuse = new BABYLON.Color3(1, 1, 1); // Set the color of the light
+
+
+
+            
+
             engine.runRenderLoop(() => {
                 scene.render();
             });
