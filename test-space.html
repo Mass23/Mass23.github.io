@@ -41,7 +41,6 @@
     <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
 
     <script>
-        const YOUTUBE_API_KEY = 'AIzaSyAOWg07nwy3yLyRqDkO_SLDo9MIAWE52KE'; // Replace with your API key
         const videoIds = ['Y6I8SPj4gZ0', 'Y6I8SPj4gZ0']; // Add your YouTube video IDs
 
         document.getElementById('startButton').addEventListener('click', () => {
@@ -71,7 +70,7 @@
 
             function createVideoScreen(videoId, width, height, position, scene) {
                 const plane = BABYLON.MeshBuilder.CreatePlane("videoPlane", { width, height }, scene);
-                const videoTexture = new BABYLON.VideoTexture("video", `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`, scene, true, true);
+                const videoTexture = new BABYLON.VideoTexture("video", `https://www.youtube.com/embed/${videoId}`, scene, true, true);
                 const material = new BABYLON.StandardMaterial("videoMat", scene);
                 material.emissiveTexture = videoTexture; // Use emissive texture for light effect
                 material.emissiveColor = new BABYLON.Color3(240/255, 238/255, 212/255); // Set emissive color to #F0EED4
