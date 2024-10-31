@@ -86,6 +86,7 @@
 
             // Create room
             const room = BABYLON.MeshBuilder.CreateBox("room", { height: 4, width: 8, depth: 10 }, scene);
+            room.position = new BABYLON.Vector3(4, 2, 5); // Set to desired position
             room.material = new BABYLON.StandardMaterial("roomMat", scene);
             room.material.diffuseColor = new BABYLON.Color3(0.05, 0.05, 0.05);
             room.invertU = true;
