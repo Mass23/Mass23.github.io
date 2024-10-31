@@ -3,217 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Room with CSS3DRenderer</title>
+    <title>How-I-create-my-identity</title>
+    <link rel="shortcut icon" href="images/me.webp" sizes="48x48">
     <style>
-        body {
+        body, html {
             margin: 0;
+            padding: 0;
             overflow: hidden;
-            height: 100vh;
-            font-family: 'Andale Mono', monospace;
+            height: 100%;
         }
         canvas {
-            width: 100%;
-            height: 100%;
             display: block;
-            opacity: 0; /* Start canvas as invisible */
-            transition: opacity 1.5s ease; /* Smooth fade-in effect for canvas */
-        }
-        #overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            opacity: 1; /* Overlay starts visible */
-            transition: opacity 1.5s ease; /* Smooth fade-out effect for overlay */
-            z-index: 10;
         }
-        #startText {
-            color: lightgray;
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        #playButton {
-            padding: 10px 20px;
-            background-color: #101B29;
-            border: none;
-            color: white;
+        #startButton {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
             font-size: 20px;
+            background-color: #703050;
+            color: white;
+            border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
+            z-index: 1; /* Ensure button is on top */
         }
-        #playButton:hover {
-            background-color: #0e1a24;
+        h1 {
+            color: #1C7FE8;
         }
-        #cssContainer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Allow clicks to pass through */
-        }
-        .video-iframe {
-            pointer-events: auto; /* Allow iframe interactions */
-            border: none; /* Remove border */
-        }
+        #startButton.hidden { display: none; }
     </style>
 </head>
 <body>
-    <div id="overlay">
-        <div id="startText">//START//</div>
-        <button id="playButton">\></button>
-    </div>
-
+    <h1>How-I-create-my-identity</h1>
+    <button id="startButton">Start</button>
     <canvas id="renderCanvas"></canvas>
-    <div id="cssContainer"></div>
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://unpkg.com/three@0.147.0/examples/jsm/renderers/CSS3DRenderer.js"></script>
     <script>
-        const canvas = document.getElementById("renderCanvas");
-        const overlay = document.getElementById("overlay");
-        const playButton = document.getElementById("playButton");
-        const cssContainer = document.getElementById("cssContainer");
-        const engine = new BABYLON.Engine(canvas, true);
-        let scene;
+        document.getElementById('startButton').addEventListener('click', () => {
+            document.getElementById('startButton').classList.add('hidden');
+            createScene();
+        });
 
-        const createScene = () => {
+        function createScene() {
+            const canvas = document.getElementById("renderCanvas");
+            const engine = new BABYLON.Engine(canvas, true);
             const scene = new BABYLON.Scene(engine);
-            const wallColor = new BABYLON.Color3.FromHexString("#000000");
-            scene.clearColor = wallColor;
+            scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
 
-            // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(-4, 1.2, -5), scene);
-            camera.setTarget(new BABYLON.Vector3(0, 1.75, 0));
+            // Create the Universal Camera
+            const camera = new BABYLON.UniversalCamera('camera', new BABYLON.Vector3(-3.5, 1.5, -4.5), scene);
             camera.attachControl(canvas, true);
-            camera.speed = 0.1;
-
-            // Room dimensions and boundaries
-            const roomWidth = 8, roomDepth = 10, roomHeight = 5;
-            const minDistance = 0.1;
-
+            camera.setTarget(new BABYLON.Vector3(4, 2, 5)); // Point to the front wall
+            camera.speed = 0.2
+            
             scene.registerBeforeRender(() => {
-                camera.position.y = 1.66;
-                camera.position.x = Math.max(-roomWidth / 2 + minDistance, Math.min(camera.position.x, roomWidth / 2 - minDistance));
-                camera.position.z = Math.max(-roomDepth / 2 + minDistance, Math.min(camera.position.z, roomDepth / 2 - minDistance));
+                // Maintain fixed height
+                camera.position.y = 1.5;
+
+                // Constrain camera position
+                if (camera.position.x < -3.8) {
+                    camera.position.x = -3.8;
+                } else if (camera.position.x > 3.8) {
+                    camera.position.x = 3.8;
+                }
+            
+                if (camera.position.z < -4.8) {
+                    camera.position.z = -4.8;
+                } else if (camera.position.z > 4.8) {
+                    camera.position.z = 4.8;
+                }
             });
 
-            // Lighting
-            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-            light.intensity = 1.5;
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(5, 2, 0), scene);
+            light.intensity = 0.2; // Adjust the intensity as needed
 
-            // Wall and Floor Materials
-            const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
-            wallMaterial.diffuseColor = wallColor;
-            wallMaterial.backFaceCulling = false;
+            scene.clearColor = new BABYLON.Color3.FromHexString("#0D070B");
 
-            const floorMaterial = new BABYLON.StandardMaterial("floorMaterial", scene);
-            floorMaterial.diffuseColor = new BABYLON.Color3.FromHexString("#0A0A0A");
-
-            const floor = BABYLON.MeshBuilder.CreatePlane("floor", { width: roomWidth, height: roomDepth }, scene);
-            floor.material = floorMaterial;
-            floor.rotation.x = Math.PI / 2;
-            floor.position.y = 0;
-
-            const ceiling = BABYLON.MeshBuilder.CreatePlane("ceiling", { width: roomWidth, height: roomDepth }, scene);
+            const floorMaterial = new BABYLON.StandardMaterial("floorMat", scene);
+            floorMaterial.diffuseColor = BABYLON.Color3.FromHexString("#1F0C12");
+            
+            // Create ground facing up
+            const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 8, height: 10 }, scene);
+            ground.position.y = 0; // Position at Y=0 for the ground
+            ground.material = floorMaterial;
+            
+            // Create ceiling facing down
+            const ceiling = BABYLON.MeshBuilder.CreateGround("ceiling", { width: 8, height: 10 }, scene);
+            ceiling.position.y = 4; // Position at Y=4 for the ceiling
+            ceiling.rotation.z = Math.PI; // Rotate to face downward
             ceiling.material = floorMaterial;
-            ceiling.rotation.x = Math.PI / 2;
-            ceiling.position.y = roomHeight;
 
-            // Right wall with images facing inward
-            const imagePaths = ["images/identity1.webp", "images/identity2.webp", "images/identity3.webp"];
-            const imageSize = 1.33;
-            const offset = -0.05;
+            // IMAGES ///////////////////////////////////////////////////////////////
+            // Apply a material with an emissive color and texture
+            const imageMaterial1 = new BABYLON.StandardMaterial("imageMaterial1", scene);
+            imageMaterial1.diffuseTexture = new BABYLON.Texture("images/identity1.webp", scene); // Path to image
+            imageMaterial1.emissiveColor = new BABYLON.Color3.FromHexString("#DEEDFA"); // Set your emissive color
 
-            imagePaths.forEach((path, i) => {
-                const imgMaterial = new BABYLON.StandardMaterial(`imgMat${i}`, scene);
-                imgMaterial.diffuseTexture = new BABYLON.Texture(path, scene);
-                imgMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
+            const imageMaterial2 = new BABYLON.StandardMaterial("imageMaterial2", scene);
+            imageMaterial2.diffuseTexture = new BABYLON.Texture("images/identity2.webp", scene); // Path to image
+            imageMaterial2.emissiveColor = new BABYLON.Color3.FromHexString("#FFF2F6"); // Set your emissive color
 
-                const imgPlane = BABYLON.MeshBuilder.CreatePlane("imagePlane" + i, { width: imageSize, height: imageSize }, scene);
-                imgPlane.material = imgMaterial;
-                imgPlane.position = new BABYLON.Vector3(
-                    roomWidth / 2 - 0.01,
-                    2,
-                    (i - 1) * 1.8
-                );
-                imgPlane.rotation.y = Math.PI / 2;  // Face inward
-            });
+            const imageMaterial3 = new BABYLON.StandardMaterial("imageMaterial3", scene);
+            imageMaterial3.diffuseTexture = new BABYLON.Texture("images/identity3.webp", scene); // Path to image
+            imageMaterial3.emissiveColor = new BABYLON.Color3.FromHexString("#EFFFF6"); // Set your emissive color
+            
+            // Create a plane for the image
+            const emissiveImage1 = BABYLON.MeshBuilder.CreatePlane("emissiveImage1", { width: 1.2, height: 1.2 }, scene);
+            emissiveImage1.position = new BABYLON.Vector3(4, 2, 1.8); // Position at desired location
+            emissiveImage1.rotation.y = Math.PI / 2
+            const emissiveImage2 = BABYLON.MeshBuilder.CreatePlane("emissiveImage2", { width: 1.2, height: 1.2 }, scene);
+            emissiveImage2.position = new BABYLON.Vector3(4, 2, 0); // Position at desired location
+            emissiveImage2.rotation.y = Math.PI / 2
+            const emissiveImage3 = BABYLON.MeshBuilder.CreatePlane("emissiveImage3", { width: 1.2, height: 1.2 }, scene);
+            emissiveImage3.position = new BABYLON.Vector3(4, 2, -1.8); // Position at desired location
+            emissiveImage3.rotation.y = Math.PI / 2
 
-            // Left wall with text facing inward
-            const textPlane = BABYLON.MeshBuilder.CreatePlane("textPlane", { width: 6, height: 2 }, scene);
-            textPlane.position = new BABYLON.Vector3(-roomWidth / 2 + 0.01, 2, 0);
-            textPlane.rotation.y = -Math.PI / 2;  // Face inward
+            
+            emissiveImage1.material = imageMaterial1;
+            emissiveImage2.material = imageMaterial2;
+            emissiveImage3.material = imageMaterial3;
 
-            const textTexture = new BABYLON.DynamicTexture("textTexture", { width: 1024, height: 512 }, scene);
-            textTexture.hasAlpha = true;
-            textTexture.drawText("How-I-create-\tmy-identity", 50, 200, "bold 60px 'Andale Mono'", "lightgrey", "transparent");
-            textTexture.drawText("copyright Massimo Bourquin, 2024", 50, 300, "bold 30px 'Andale Mono'", "lightgrey", "transparent");
-
-            const textMaterial = new BABYLON.StandardMaterial("textMaterial", scene);
-            textMaterial.diffuseTexture = textTexture;
-            textMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
-            textMaterial.backFaceCulling = false;
-            textPlane.material = textMaterial;
-
-            // Create CSS3DRenderer
-            const renderer = new CSS3DRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            cssContainer.appendChild(renderer.domElement);
-
-            // Videos on front and back walls facing inward
-            const videoURLs = [
-                "https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/preview",  // Replace with your first video
-                "https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/preview"   // Replace with your second video
-            ];
-
-            videoURLs.forEach((url, index) => {
-                const iframe = document.createElement('iframe');
-                iframe.src = url;
-                iframe.width = 640;  // Set iframe width
-                iframe.height = 480; // Set iframe height
-                iframe.allow = "autoplay";
-                iframe.className = "video-iframe"; // Add class for styling
-
-                const cssObject = new CSS3DObject(iframe);
-                cssObject.position.set(0, roomHeight / 2, index === 0 ? roomDepth / 2 - 0.01 : -roomDepth / 2 + 0.01);
-                cssObject.rotation.y = Math.PI; // Face inward
-
-                renderer.add(cssObject);
-            });
-
-            return scene;
-        };
-
-        const startScene = () => {
-            overlay.style.opacity = '0'; // Fade out overlay
-            canvas.style.opacity = '1'; // Fade in canvas
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 1500);
-
-            scene = createScene();
 
             engine.runRenderLoop(() => {
                 scene.render();
-                renderer.render(scene, scene.activeCamera); // Render CSS3DObjects
             });
 
-            // Handle window resize
             window.addEventListener("resize", () => {
                 engine.resize();
-                renderer.setSize(window.innerWidth, window.innerHeight);
             });
-        };
-
-        // Event listener for the play button
-        playButton.addEventListener("click", startScene);
+        }
     </script>
 </body>
 </html>
