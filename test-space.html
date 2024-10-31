@@ -5,112 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Room with YouTube Videos</title>
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-        #renderCanvas {
-            width: 100%;
-            height: 100%;
-            touch-action: none;
-        }
-        #videoContainer {
+        body { margin: 0; overflow: hidden; }
+        #startButton {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Prevent interaction with the container */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 20px;
+            background-color: #444;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: block;
         }
+        #startButton.hidden { display: none; }
     </style>
 </head>
 <body>
-    <canvas id="renderCanvas"></canvas>
-    <div id="videoContainer"></div> <!-- Container for video iframes -->
-    
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script>
-        const canvas = document.getElementById("renderCanvas");
-        const engine = new BABYLON.Engine(canvas, true);
+    <button id="startButton">Start</button>
+    <script type="module">
+        import * as THREE from 'https://threejs.org/build/three.module.js';
+        import { CSS3DRenderer, CSS3DObject } from 'https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js';
+        import { OrbitControls } from 'https://threejs.org/examples/jsm/controls/OrbitControls.js';
 
-        function attachHtml(id, W, H, L, T, p, ts) {
-            let el = document.createElement('div');
-            let exist = false;
-            if (document.getElementById('spDiv' + id)) {
-                exist = true;
-                el = document.getElementById('spDiv' + id);
-            }
+        let scene, camera, renderer, cssRenderer, controls;
 
-            let zone = document.getElementById('videoContainer');
-            let w = zone.offsetWidth.valueOf() * 1;
-            let h = zone.offsetHeight.valueOf() * 1;
+        document.getElementById('startButton').addEventListener('click', () => {
+            document.getElementById('startButton').classList.add('hidden');
+            init();
+            animate();
+        });
 
-            el.setAttribute('style', 'transform: scale(1.0) scaleZ(1.0) rotateX(' + ts.rx + 'deg) rotateY(' + ts.ry + 'deg) rotateZ(' + ts.rz + 'deg);transform-origin: 50% 50%;perspective: ' + p + ';position:absolute;top:' + (h / 2 - H / 2 + T) + 'px;left:' + (w / 2 - W / 2 + L) + 'px;z-index:100;background-color:#ffffff;width:' + W + 'px;height:' + H + 'px;opacity:1;');
+        function init() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000);
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 1.66, 3);
 
-            el.id = "spDiv" + id;
-            zone.setAttribute('style', 'position:relative');
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
 
-            if (!exist) {
-                el.innerHTML = '<iframe width="1280" height="720" src="https://www.youtube.com/embed/YKqXcrWliww?autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-                zone.appendChild(el);
-            }
-        }
+            cssRenderer = new CSS3DRenderer();
+            cssRenderer.setSize(window.innerWidth, window.innerHeight);
+            cssRenderer.domElement.style.position = 'absolute';
+            cssRenderer.domElement.style.top = 0;
+            document.body.appendChild(cssRenderer.domElement);
 
-        function createPage(scene, camera) {
-            scene.registerBeforeRender(function () {
-                let cp = camera.position;
-                let dx = Math.atan(Math.sqrt(cp.x * cp.x + cp.z * cp.z) / cp.y) * 180 / Math.PI;
-                let dy = 0;
-                let sign = 1;
-                let baseSize = 180;
-                if (dx > 0) { sign = -1; }
-                let dz = sign * Math.atan(cp.x / cp.z) * 180. / Math.PI;
-                let size = baseSize * camera.fov / Math.sqrt(Math.pow(cp.x, 2.0) + Math.pow(cp.y, 2.0) + Math.pow(cp.z, 2.0));
-                attachHtml('PageWeb', baseSize * size, baseSize * size, 0, 0, '800px', { rx: dx, ry: dy, rz: dz });
+            controls = new OrbitControls(camera, cssRenderer.domElement);
+            controls.enablePan = false;
+            controls.minPolarAngle = Math.PI / 3;
+            controls.maxPolarAngle = Math.PI * 2 / 3;
+
+            const roomGeometry = new THREE.BoxGeometry(10, 4, 8);
+            const materialDarkGrey = new THREE.MeshBasicMaterial({ color: 0x111111 });
+            const materialBlack = new THREE.MeshBasicMaterial({ color: 0x000000 });
+            const materials = [materialBlack, materialBlack, materialDarkGrey, materialDarkGrey, materialBlack, materialBlack];
+            const room = new THREE.Mesh(roomGeometry, materials);
+            room.position.y = 2;
+            scene.add(room);
+
+            const loader = new THREE.FontLoader();
+            loader.load('path/to/Andale_Mono_Font.json', function (font) {
+                const textGeometry = new THREE.TextGeometry('How-I-create-my-identity', { font, size: 0.2, height: 0.01 });
+                const textMaterial = new THREE.MeshBasicMaterial({ color: 0x808080 });
+                const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+                textMesh.position.set(-4.8, 2, -3.9);
+                scene.add(textMesh);
+
+                const subtitleGeometry = new THREE.TextGeometry('copyright Massimo Bourquin, 2024', { font, size: 0.1, height: 0.01 });
+                const subtitleMesh = new THREE.Mesh(subtitleGeometry, textMaterial);
+                subtitleMesh.position.set(-4.8, 1.5, -3.9);
+                scene.add(subtitleMesh);
             });
+
+            const imagePaths = ['images/identity1.webp', 'images/identity2.webp', 'images/identity3.webp'];
+            imagePaths.forEach((path, i) => {
+                const texture = new THREE.TextureLoader().load(path);
+                const imageMaterial = new THREE.MeshBasicMaterial({ map: texture });
+                const image = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), imageMaterial);
+                image.position.set(4.9, 2 - i, -3.95);
+                scene.add(image);
+            });
+
+            function addYoutubeVideo(url, width, height, x, y, z, rotationY) {
+                const element = document.createElement('iframe');
+                element.src = `${url}?autoplay=1&mute=1&controls=0`;
+                element.width = width;
+                element.height = height;
+                element.frameBorder = 0;
+                element.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                element.referrerpolicy="strict-origin-when-cross-origin"
+
+                const cssObject = new CSS3DObject(element);
+                cssObject.position.set(x, y, z);
+                cssObject.rotation.y = rotationY;
+                cssRenderer.scene.add(cssObject);
+            }
+
+            addYoutubeVideo('https://www.youtube.com/embed/Y6I8SPj4gZ0?si=SUuGEwe9bvsCK0ZY', 200, 150, 0, 2, -4.95, 0);
+            addYoutubeVideo('https://www.youtube.com/embed/Y6I8SPj4gZ0?si=SUuGEwe9bvsCK0ZY', 700, 400, 0, 2, 4.95, Math.PI);
+
+            const videoLight1 = new THREE.PointLight(0xffffff, 1, 5);
+            videoLight1.position.set(0, 2, -4.95);
+            scene.add(videoLight1);
+
+            const videoLight2 = new THREE.PointLight(0xffffff, 0.7, 10);
+            videoLight2.position.set(0, 2, 4.95);
+            scene.add(videoLight2);
+
+            const imageLight = new THREE.PointLight(0x4444ff, 0.5, 10);
+            imageLight.position.set(4.9, 2, 0);
+            scene.add(imageLight);
         }
 
-        var createScene = function () {
-            var scene = new BABYLON.Scene(engine);
-            var camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene);
-            camera.setTarget(BABYLON.Vector3.Zero());
-            camera.attachControl(canvas, true);
-
-            // Add light to the scene
-            var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-            light.intensity = 0.5;
-
-            // Create the rectangular room
-            createRoom(scene);
-            createPage(scene, camera);
-
-            return scene;
-        };
-
-        function createRoom(scene) {
-            const roomWidth = 8;
-            const roomHeight = 5;
-            const roomLength = 10;
-
-            // Create front wall
-            const frontWall = BABYLON.MeshBuilder.CreatePlane("frontWall", { width: roomWidth, height: roomHeight }, scene);
-            frontWall.rotation.y = Math.PI; // Rotate to face inside
-            frontWall.position.z = -roomLength / 2; // Position at front
-
-            // Create back wall
-            const backWall = BABYLON.MeshBuilder.CreatePlane("backWall", { width: roomWidth, height: roomHeight }, scene);
-            backWall.position.z = roomLength / 2; // Position at back
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+            cssRenderer.render(scene, camera);
         }
-
-        const scene = createScene();
-
-        engine.runRenderLoop(function () {
-            scene.render();
-        });
-
-        window.addEventListener("resize", function () {
-            engine.resize();
-        });
     </script>
 </body>
 </html>
