@@ -182,8 +182,8 @@
             });
             
             // Load YouTube video
-            plane = BABYLON.MeshBuilder.CreatePlane("youtube", {width: 7, height: 4}, scene);
-            plane.rotation = new BABYLON.Vector3(0,0,0)
+            plane = BABYLON.MeshBuilder.CreatePlane("youtube", {width: 8, height: 4}, scene);
+            plane.rotation = new BABYLON.Vector3(0,2,0)
             plane.rotationQuaternion = null
             plane.scaling.x = 6
             plane.scaling.y = 4
@@ -195,7 +195,7 @@
             let renderer = setupRenderer();
             createCSSobject(plane, scene, 'qgKbpe4qvno', renderer);
             createMaskingScreen(plane, scene, renderer)
-            }
+            });
         
 var setupRenderer = function() {
     let container = document.createElement('div')
