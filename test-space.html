@@ -87,7 +87,7 @@
             // Create ceiling facing down
             const ceiling = BABYLON.MeshBuilder.CreateGround("ceiling", { width: 8, height: 10 }, scene);
             ceiling.position.y = 4; // Position at Y=4 for the ceiling
-            ceiling.rotation.x = Math.PI; // Rotate to face downward
+            ceiling.rotation.y = Math.PI; // Rotate to face downward
 
 
             engine.runRenderLoop(() => {
