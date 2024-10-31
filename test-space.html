@@ -70,8 +70,8 @@
             function createVideoElement(id, src, x, y, rotationY) {
                 const iframe = document.createElement('iframe');
                 iframe.src = src + "?autoplay=1&mute=1";
-                iframe.width = width;
-                iframe.height = height;
+                iframe.width = 1280;
+                iframe.height = 720;
                 iframe.classList.add("video-frame");
                 document.body.appendChild(iframe);
 
