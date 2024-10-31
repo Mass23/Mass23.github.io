@@ -49,10 +49,11 @@
             const scene = new BABYLON.Scene(engine);
             scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
 
-            // Create camera
-            const camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 1.5, 0), scene);
-            camera.setTarget(BABYLON.Vector3(4, 2, 5)); // Look at the center of the room
+            // Create the camera
+            const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 4, 5, new BABYLON.Vector3(4, 2, 5), scene);
+            camera.setTarget(new BABYLON.Vector3(4, 2, 10)); // Point to the front wall
             camera.attachControl(canvas, true);
+
 
             // Constrain camera movement
             scene.registerBeforeRender(() => {
