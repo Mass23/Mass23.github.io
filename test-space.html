@@ -51,14 +51,35 @@
             const scene = new BABYLON.Scene(engine);
             scene.clearColor = new BABYLON.Color3(0, 0, 0);
 
-            // Camera setup
-            const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(-4, 1.5, -5), scene);
+            // Create the camera
+            const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 4, 5, new BABYLON.Vector3(4, 1.5, 5), scene);
             camera.attachControl(canvas, true);
-            camera.ellipsoid = new BABYLON.Vector3(4, 1.5, 5);
-
-            // Set camera height fixed at 1.5m
-            camera.position.y = 1.5;
             
+            // Constrain camera movement
+            camera.position.y = 1.5; // Fixed height
+            
+            scene.registerBeforeRender(() => {
+                // Get current camera position
+                const camPosition = camera.position;
+                
+                // Constrain x position
+                if (camPosition.x < 0.2) {
+                    camPosition.x = 0.2;
+                } else if (camPosition.x > 7.8) {
+                    camPosition.x = 7.8;
+                }
+                
+                // Constrain z position
+                if (camPosition.z < 0.2) {
+                    camPosition.z = 0.2;
+                } else if (camPosition.z > 9.8) {
+                    camPosition.z = 9.8;
+                }
+            
+                // Update camera position
+                camera.position = camPosition;
+            });
+
             // Set camera movement limits
             camera.upperBetaLimit = Math.PI / 6;  // Limit upward movement to 30 degrees
             camera.lowerBetaLimit = -Math.PI / 6; // Limit downward movement to -30 degrees
@@ -105,25 +126,6 @@
             rightWall.rotation.y = 0;       // Right wall faces inward
             frontWall.rotation.y = -Math.PI / 2; // Front wall faces inward
             backWall.rotation.y = Math.PI / 2;   // Back wall faces inward
-
-            const cameraLimit = 0.1; // Distance from the walls
-
-            engine.runRenderLoop(() => {
-                // Constrain camera position to stay 0.1m away from the walls
-                if (camera.position.x < -4.9 + cameraLimit) {
-                    camera.position.x = -4.9 + cameraLimit;
-                } else if (camera.position.x > 4.9 - cameraLimit) {
-                    camera.position.x = 4.9 - cameraLimit;
-                }
-
-                if (camera.position.z < -5 + cameraLimit) {
-                    camera.position.z = -5 + cameraLimit;
-                } else if (camera.position.z > 5 - cameraLimit) {
-                    camera.position.z = 5 - cameraLimit;
-                }
-
-                scene.render();
-            });
 
             window.addEventListener("resize", () => {
                 engine.resize();
