@@ -210,9 +210,13 @@
 	    video2.material = planeMaterial
 
 	    // Setup the CSS renderer and Youtube object
-	    let renderer = setupRenderer();
-	    createCSSobject(video1, scene, 'Y6I8SPj4gZ0', renderer);
-	    //createMaskingScreen(video1, scene, renderer)
+	    let renderer1 = setupRenderer();
+	    createCSSobject(video1, scene, 'Y6I8SPj4gZ0', renderer1);
+	    createMaskingScreen(video1, scene, renderer1)
+
+	   let renderer2 = setupRenderer();
+	    createCSSobject(video1, scene, 'Y6I8SPj4gZ0', renderer2);
+	    createMaskingScreen(video2, scene, renderer2)
 	    
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
 	    engine.runRenderLoop(() => scene.render());
