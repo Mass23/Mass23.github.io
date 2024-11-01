@@ -271,21 +271,23 @@
 	    div.appendChild(iframe)    
 	}
 	
-	function createMaskingScreen(maskMesh, scene, engine) {
-	    let depthMask = new BABYLON.StandardMaterial('matDepthMask', scene)
-	    depthMask.backFaceCulling = false
+	function createMaskingScreen(maskMesh, scene) {
+	    let depthMask = new BABYLON.StandardMaterial("matDepthMask", scene);
+	    depthMask.backFaceCulling = false;
+	    maskMesh.material = depthMask;
 	
-	    maskMesh.material = depthMask
+	    // Use scene.getEngine() to control color write
+	    maskMesh.onBeforeRenderObservable.add(() => scene.getEngine().setColorWrite(false));
+	    maskMesh.onAfterRenderObservable.add(() => scene.getEngine().setColorWrite(true));
 	
-	    maskMesh.onBeforeRenderObservable.add(() => engine.setColorWrite(false))
-	    maskMesh.onAfterRenderObservable.add(() => engine.setColorWrite(true))
-	
-	    // swap meshes to put mask first
-	    var mask_index = scene.meshes.indexOf(maskMesh)
-	    scene.meshes[mask_index] = scene.meshes[0]
-	    scene.meshes[0] = maskMesh
-		
+	    // Optionally rearrange mesh order if needed
+	    const maskIndex = scene.meshes.indexOf(maskMesh);
+	    if (maskIndex > -1) {
+	        scene.meshes[maskIndex] = scene.meshes[0];
+	        scene.meshes[0] = maskMesh;
+	    }
 	}
+
 	
 	class CSS3DObject extends BABYLON.Mesh {
 	    constructor(element, scene) {
