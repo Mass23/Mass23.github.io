@@ -91,6 +91,7 @@
 
         var createScene = function () {
             const canvas = document.getElementById("renderCanvas");
+            const engine = new BABYLON.Engine(canvas, true);
             const scene = new BABYLON.Scene(engine);
             scene.clearColor = new BABYLON.Color3(0, 0, 0); // Set background to black
 
@@ -177,7 +178,10 @@
 	    createMaskingScreen(plane, scene, renderer)
 	    
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
-	    return scene;
+	    // RENDER & SIZE ////////////////////////////////////////////////////////
+	    engine.runRenderLoop(() => scene.render());
+            window.addEventListener("resize", () => engine.resize());
+
 	};
 
 
