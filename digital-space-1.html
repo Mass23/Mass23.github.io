@@ -151,6 +151,14 @@
 	    rightWall.rotation.y = Math.PI / 2
 	    rightWall.material = wallMaterial;
 
+	    var backWall = BABYLON.MeshBuilder.CreatePlane("backWall", {width: 8, height: 4.5}, scene);
+	    backWall.position.x = 0
+	    backWall.position.y = 2.25
+	    backWall.position.z = -5
+	    backWall.rotation.y = -Math.PI
+	    backWall.material = wallMaterial;
+
+
             // IMAGES ///////////////////////////////////////////////////////////////
             // Apply a material with an emissive color and texture
             const imageMaterial1 = new BABYLON.StandardMaterial("imageMaterial1", scene);
