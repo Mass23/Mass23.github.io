@@ -210,13 +210,12 @@
 	    video2.material = planeMaterial
 
 	    // Setup the CSS renderer and Youtube object
-	    let renderer1 = setupRenderer();
-	    createCSSobject(video1, scene, 'Y6I8SPj4gZ0', renderer1);
-	    createMaskingScreen(video1, scene, renderer1)
-
-	    let renderer2 = setupRenderer();
-	    createCSSobject(video2, scene, 'Y6I8SPj4gZ0', renderer2);
-	    createMaskingScreen(video2, scene, renderer2)
+	    let renderer = setupRenderer();
+	    createCSSobject(video1, scene, 'Y6I8SPj4gZ0', renderer);
+	    createCSSobject(video2, scene, 'Y6I8SPj4gZ0', renderer);
+		
+	    createMaskingScreen(video1, scene, renderer)
+	    createMaskingScreen(video2, scene, renderer)
 	    
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
 	    engine.runRenderLoop(() => scene.render());
@@ -278,13 +277,14 @@
 	
 	    maskMesh.material = depthMask
 	
-	    //maskMesh.onBeforeRenderObservable.add(() => engine.setColorWrite(false))
-	    //maskMesh.onAfterRenderObservable.add(() => engine.setColorWrite(true))
+	    maskMesh.onBeforeRenderObservable.add(() => engine.setColorWrite(false))
+	    maskMesh.onAfterRenderObservable.add(() => engine.setColorWrite(true))
 	
 	    // swap meshes to put mask first
 	    var mask_index = scene.meshes.indexOf(maskMesh)
 	    scene.meshes[mask_index] = scene.meshes[0]
 	    scene.meshes[0] = maskMesh
+		
 	}
 	
 	class CSS3DObject extends BABYLON.Mesh {
