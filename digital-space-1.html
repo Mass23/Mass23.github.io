@@ -186,19 +186,20 @@
             // VIDEOS ///////////////////////////////////////////////////////////////
 	    const planeMaterial = new BABYLON.StandardMaterial("planeMaterial", scene);
             planeMaterial.emissiveColor = new BABYLON.Color3(1,1,1); // Set your emissive color
-	    plane.material = planeMaterial
 		
 	    // The CSS object will follow this mesh
 	    var video1 = BABYLON.MeshBuilder.CreatePlane("video1", {width: 8, height: 4.5}, scene);
 	    video1.position.x = 0
 	    video1.position.y = 2.25
 	    video1.position.z = 5
+	    video1.material = planeMaterial
 
 	    var video2 = BABYLON.MeshBuilder.CreatePlane("video2", {width: 8, height: 4.5}, scene);
 	    video2.position.x = 0
 	    video2.position.y = 2.25
 	    video2.position.z = -5
 	    video2.position.y = Math.PI
+	    video2.material = planeMaterial
 
 	    // Setup the CSS renderer and Youtube object
 	    let renderer = setupRenderer();
