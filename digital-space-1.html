@@ -173,11 +173,10 @@
 	    plane.position.z = 5
 
 	    // Setup the CSS renderer and Youtube object
-	    let renderer = setupRenderer();
-	    createCSSobject(plane, scene, 'Y6I8SPj4gZ0', renderer);
-	    createMaskingScreen(plane, scene, renderer)
+	    /let renderer = setupRenderer();
+	    /createCSSobject(plane, scene, 'Y6I8SPj4gZ0', renderer);
+	    /createMaskingScreen(plane, scene, renderer)
 	    
-	    // RENDER & SIZE ////////////////////////////////////////////////////////
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
 	    engine.runRenderLoop(() => scene.render());
             window.addEventListener("resize", () => engine.resize());
