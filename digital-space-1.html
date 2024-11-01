@@ -202,11 +202,11 @@
 	    video1.position.z = 4.95
 	    video1.material = planeMaterial
 
-	    var video2 = BABYLON.MeshBuilder.CreatePlane("video2", {width: 8, height: 4.5}, scene);
+	    var video2 = BABYLON.MeshBuilder.CreatePlane("video2", {width: 4, height: 2.25}, scene);
 	    video2.position.x = 0
 	    video2.position.y = 2.25
 	    video2.position.z = -4.95
-	    video2.position.y = Math.PI
+	    video2.rotation.y = Math.PI
 	    video2.material = planeMaterial
 
 	    // Setup the CSS renderer and Youtube object
