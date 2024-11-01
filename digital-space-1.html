@@ -203,19 +203,19 @@
 	    video1.position.z = 4.99
 	    video1.material = planeMaterial
 
-	    // var video2 = BABYLON.MeshBuilder.CreatePlane("video2", {width: 4, height: 2.25}, scene);
-	    // video2.position.x = 0
-	    // video2.position.y = 2
-	    // video2.position.z = -4.99
-	    // video2.rotation.y = Math.PI
-	    // video2.material = planeMaterial
+	    var video2 = BABYLON.MeshBuilder.CreatePlane("video2", {width: 4, height: 2.25}, scene);
+	    video2.position.x = 0
+	    video2.position.y = 2
+	    video2.position.z = -4.99
+	    video2.rotation.y = Math.PI
+	    video2.material = planeMaterial
 
 	    // Setup the CSS renderer and Youtube object
 	    let renderer = setupRenderer();
 	    createCSSobject(video1, scene, 'Y6I8SPj4gZ0', renderer);
 	    // createCSSobject(video2, scene, 'Y6I8SPj4gZ0', renderer);
 		
-	    createMaskingScreen(video1, scene, renderer, engine)
+	    createMaskingScreen(video1, scene, renderer)
 	    // createMaskingScreen(video2, scene, renderer, engine)
 	    
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
