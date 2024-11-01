@@ -278,8 +278,8 @@
 	
 	    maskMesh.material = depthMask
 	
-	    maskMesh.onBeforeRenderObservable.add(() => engine.setColorWrite(false))
-	    maskMesh.onAfterRenderObservable.add(() => engine.setColorWrite(true))
+	    //maskMesh.onBeforeRenderObservable.add(() => engine.setColorWrite(false))
+	    //maskMesh.onAfterRenderObservable.add(() => engine.setColorWrite(true))
 	
 	    // swap meshes to put mask first
 	    var mask_index = scene.meshes.indexOf(maskMesh)
