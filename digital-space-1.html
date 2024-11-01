@@ -89,7 +89,7 @@
             });
         });
 
-        function createScene () {
+        var createScene = function () {
             const canvas = document.getElementById("renderCanvas");
             const engine = new BABYLON.Engine(canvas, true);
             const scene = new BABYLON.Scene(engine);
@@ -177,6 +177,7 @@
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
 	    engine.runRenderLoop(() => scene.render());
             window.addEventListener("resize", () => engine.resize());
+	    return scene;
 
 
 	};
