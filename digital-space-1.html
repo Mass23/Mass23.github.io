@@ -136,16 +136,19 @@
             // Apply a material with an emissive color and texture
             const imageMaterial1 = new BABYLON.StandardMaterial("imageMaterial1", scene);
             imageMaterial1.diffuseTexture = new BABYLON.Texture("images/identity1.webp", scene); // Path to image
+	    imageMaterial1.emissiveTexture = new BABYLON.Texture("images/identity1.webp", scene);
             imageMaterial1.emissiveColor = new BABYLON.Color3.FromHexString("#DEEDFA"); // Set your emissive color
 
             const imageMaterial2 = new BABYLON.StandardMaterial("imageMaterial2", scene);
             imageMaterial2.diffuseTexture = new BABYLON.Texture("images/identity2.webp", scene); // Path to image
+	    imageMaterial2.emissiveTexture = new BABYLON.Texture("images/identity2.webp", scene);
             imageMaterial2.emissiveColor = new BABYLON.Color3.FromHexString("#FFF2F6"); // Set your emissive color
 
             const imageMaterial3 = new BABYLON.StandardMaterial("imageMaterial3", scene);
             imageMaterial3.diffuseTexture = new BABYLON.Texture("images/identity3.webp", scene); // Path to image
+	    imageMaterial3.emissiveTexture = new BABYLON.Texture("images/identity3.webp", scene);
             imageMaterial3.emissiveColor = new BABYLON.Color3.FromHexString("#F6F2F6"); // Set your emissive color
-            
+	    
             // Create a plane for the image
             const emissiveImage1 = BABYLON.MeshBuilder.CreatePlane("emissiveImage1", { width: 1.2, height: 1.2 }, scene);
             emissiveImage1.position = new BABYLON.Vector3(4, 2, 1.8); // Position at desired location
@@ -165,12 +168,13 @@
             // VIDEOS ///////////////////////////////////////////////////////////////
 	    // The CSS object will follow this mesh
 	    var plane = BABYLON.MeshBuilder.CreatePlane("plane", {width: 8, height: 4}, scene);
+	    const emissiveMaterial = new BABYLON.StandardMaterial("emissivePlane", scene);
+	    emissivePlane.emissiveColor = new BABYLON.Color3(1, 1, 1); 
+	    plane.material = emissivePlane;
 	    plane.position.x = 0
 	    plane.position.y = 2
 	    plane.position.z = 5
-	    const emissiveMaterial = new BABYLON.StandardMaterial("emissiveMat", scene);
-	    emissiveMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); 
-	    plane.material = emissiveMaterial;
+	    
 
 	    // Setup the CSS renderer and Youtube object
 	    let renderer = setupRenderer();
