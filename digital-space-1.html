@@ -168,13 +168,9 @@
             // VIDEOS ///////////////////////////////////////////////////////////////
 	    // The CSS object will follow this mesh
 	    var plane = BABYLON.MeshBuilder.CreatePlane("plane", {width: 8, height: 4}, scene);
-	    const emissiveMaterial = new BABYLON.StandardMaterial("emissivePlane", scene);
-	    emissivePlane.emissiveColor = new BABYLON.Color3(1, 1, 1); 
-	    plane.material = emissivePlane;
 	    plane.position.x = 0
 	    plane.position.y = 2
 	    plane.position.z = 5
-	    
 
 	    // Setup the CSS renderer and Youtube object
 	    let renderer = setupRenderer();
@@ -185,8 +181,6 @@
 	    engine.runRenderLoop(() => scene.render());
             window.addEventListener("resize", () => engine.resize());
 	    return scene;
-
-
 	};
 
 
