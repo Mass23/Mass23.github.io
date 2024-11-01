@@ -172,6 +172,10 @@
 	    plane.position.y = 2.25
 	    plane.position.z = 5
 
+	    const planeMaterial = new BABYLON.StandardMaterial("planeMaterial", scene);
+            planeMaterial.emissiveColor = new BABYLON.Color3(1,1,1); // Set your emissive color
+	    plane.material = planeMaterial
+
 	    // Setup the CSS renderer and Youtube object
 	    //let renderer = setupRenderer();
 	    //createCSSobject(plane, scene, 'Y6I8SPj4gZ0', renderer);
