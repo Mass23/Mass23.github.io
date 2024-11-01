@@ -134,22 +134,22 @@
 
 
 	    // WALLS ///////////////////////////////////////////////////////////////	    
-	    const planeMaterial = new BABYLON.StandardMaterial("planeMaterial", scene);
-    	    planeMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+	    const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
+    	    wallMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
 
     	    var leftWall = BABYLON.MeshBuilder.CreatePlane("leftWall", {width: 10, height: 4.5}, scene);
 	    leftWall.position.x = -4
 	    leftWall.position.y = 2.25
 	    leftWall.position.z = 0
 	    leftWall.rotation.y = -Math.PI / 2 
-            leftWall.material = planeMaterial;
+            leftWall.material = wallMaterial;
 
 	    var rightWall = BABYLON.MeshBuilder.CreatePlane("rightWall", {width: 10, height: 4.5}, scene);
 	    rightWall.position.x = 4
 	    rightWall.position.y = 2.25
 	    rightWall.position.z = 0
 	    rightWall.rotation.y = Math.PI / 2
-	    rightWall.material = planeMaterial;
+	    rightWall.material = wallMaterial;
 
             // IMAGES ///////////////////////////////////////////////////////////////
             // Apply a material with an emissive color and texture
