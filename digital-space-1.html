@@ -67,8 +67,9 @@
         <h1>How-I-create-my-identity</h1>
         <h2>Massimo Bourquin, 2024</h2>
         <button id="startButton">Start</button>
-    </div>
-
+    </div>	
+    <div id="css-container" style="position: relative; width: 100vw; height: 100vh;"></div>
+	
     <div id="canvasZone" style="position: relative; width: 100vw; height: 100vh;">
         <canvas id="renderCanvas"></canvas>
     </div>
@@ -218,8 +219,8 @@
 	    createMaskingScreen(video2, scene, renderer)
 	    
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
-	    //engine.runRenderLoop(() => scene.render());
-            //window.addEventListener("resize", () => engine.resize());
+	    engine.runRenderLoop(() => scene.render());
+            window.addEventListener("resize", () => engine.resize());
 	    return scene
 
 	};
