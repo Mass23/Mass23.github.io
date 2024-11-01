@@ -214,12 +214,13 @@
 	    createCSSobject(video1, scene, 'Y6I8SPj4gZ0', renderer);
 	    createCSSobject(video2, scene, 'Y6I8SPj4gZ0', renderer);
 		
-	    createMaskingScreen(video1, scene, renderer, engine)
-	    createMaskingScreen(video2, scene, renderer, engine)
+	    createMaskingScreen(video1, scene, renderer)
+	    createMaskingScreen(video2, scene, renderer)
 	    
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
-	    engine.runRenderLoop(() => scene.render());
-            window.addEventListener("resize", () => engine.resize());
+	    //engine.runRenderLoop(() => scene.render());
+            //window.addEventListener("resize", () => engine.resize());
+	    return scene
 
 	};
 
@@ -271,7 +272,7 @@
 	    div.appendChild(iframe)    
 	}
 	
-	function createMaskingScreen(maskMesh, scene, engine) {
+	function createMaskingScreen(maskMesh, scene) {
 	    let depthMask = new BABYLON.StandardMaterial('matDepthMask', scene)
 	    depthMask.backFaceCulling = false
 	
