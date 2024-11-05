@@ -212,11 +212,11 @@
 
 	    // Setup the CSS renderer and Youtube object
 	    // let renderer = setupRenderer();
-	    // createCSSobject(video1, scene, 'Y6I8SPj4gZ0', renderer);
-	    // createCSSobject(video2, scene, 'Y6I8SPj4gZ0', renderer);
+	    // createCSSobject(video1, scene, 'https://www.youtube.com/embed/Y6I8SPj4gZ0?rel=0&enablejsapi=1&disablekb=1&autoplay=1&controls=0&fs=0&modestbranding=1', renderer);
+	    createCSSobject(video2, scene, 'https://drive.google.com/file/d/1TLPT5_8ivjT3mxlRpecAa2UzV7V4IBmQ/preview"', renderer);
 		
-	    // createMaskingScreen(video1, scene, renderer)
-	    // createMaskingScreen(video2, scene, renderer, engine)
+	    // createMaskingScreen(video1, scene)
+	    createMaskingScreen(video2, scene)
 	    
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
 	    engine.runRenderLoop(() => scene.render());
@@ -246,7 +246,7 @@
 	    return renderer
 	}
 	
-	function createCSSobject(mesh, scene, videoID, renderer) {
+	function createCSSobject(mesh, scene, videoURL, renderer) {
 	    let width = 854
 	    let height = 480
 	    scene.onBeforeRenderObservable.add(() => {
@@ -267,7 +267,7 @@
 	    iframe.style.height = height + 'px'
 	    iframe.style.border = '0px'
 	    iframe.allow = 'autoplay'
-	    iframe.src = [ 'https://www.youtube.com/embed/', videoID, '?rel=0&enablejsapi=1&disablekb=1&autoplay=1&controls=0&fs=0&modestbranding=1' ].join( '' )
+	    iframe.src = videoURL
 	    div.appendChild(iframe)    
 	}
 	
