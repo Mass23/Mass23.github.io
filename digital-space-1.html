@@ -228,7 +228,6 @@
 	    plane.position.y = 2.25
 	    plane.checkCollisions = true
 			
-	
 	    // VIDEO GIF
 	    const planeMaterial = new BABYLON.StandardMaterial("planeMaterial", scene);
 	    planeMaterial.emissiveColor = new BABYLON.Color3(1,1,1); // Set your emissive color
@@ -245,7 +244,15 @@
 	    createCSSobject(plane, scene, 'Y6I8SPj4gZ0', renderer);
 	    createMaskingScreen(plane, scene, renderer, engine)
 			
-	    return scene;
+	    // Start rendering loop
+            engine.runRenderLoop(() => {
+                scene.render();
+            });
+
+            // Resize the engine on window resize
+            window.addEventListener("resize", () => {
+                engine.resize();
+            });
 	};
 	
 
