@@ -159,31 +159,30 @@
 	    ceiling.material = floorMaterial;
 	
 	
-		// WALLS ///////////////////////////////////////////////////////////////	    
-		const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
+	    // WALLS ///////////////////////////////////////////////////////////////	    
+	    const wallMaterial = new BABYLON.StandardMaterial("wallMaterial", scene);
 	    wallMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
 	
 	    var leftWall = BABYLON.MeshBuilder.CreatePlane("leftWall", {width: 10, height: 4.5}, scene);
-		leftWall.position.x = -4
+	    leftWall.position.x = -4
 	    leftWall.position.y = 2.25
-		leftWall.position.z = 0
+	    leftWall.position.z = 0
 	    leftWall.rotation.y = -Math.PI / 2 
 	    leftWall.material = wallMaterial;
 	
 	    var rightWall = BABYLON.MeshBuilder.CreatePlane("rightWall", {width: 10, height: 4.5}, scene);
-		rightWall.position.x = 4
-		rightWall.position.y = 2.25
-		rightWall.position.z = 0
-		rightWall.rotation.y = Math.PI / 2
-		rightWall.material = wallMaterial;
+	    rightWall.position.x = 4
+	    rightWall.position.y = 2.25
+	    rightWall.position.z = 0
+	    rightWall.rotation.y = Math.PI / 2
+	    rightWall.material = wallMaterial;
 	
-		var backWall = BABYLON.MeshBuilder.CreatePlane("backWall", {width: 8, height: 4.5}, scene);
-		backWall.position.x = 0
-		backWall.position.y = 2.25
-		backWall.position.z = -5
-		backWall.rotation.y = Math.PI
-		backWall.material = wallMaterial;
-	
+	    var backWall = BABYLON.MeshBuilder.CreatePlane("backWall", {width: 8, height: 4.5}, scene);
+	    backWall.position.x = 0
+	    backWall.position.y = 2.25
+	    backWall.position.z = -5
+	    backWall.rotation.y = Math.PI
+	    backWall.material = wallMaterial;
 	
 	    // IMAGES ///////////////////////////////////////////////////////////////
 	    // Apply a material with an emissive color and texture
@@ -199,7 +198,7 @@
 	
 	    const imageMaterial3 = new BABYLON.StandardMaterial("imageMaterial3", scene);
 	    imageMaterial3.diffuseTexture = new BABYLON.Texture("images/identity3.webp", scene); // Path to image
-		imageMaterial3.emissiveTexture = new BABYLON.Texture("images/identity3.webp", scene);
+	    imageMaterial3.emissiveTexture = new BABYLON.Texture("images/identity3.webp", scene);
 	    imageMaterial3.emissiveColor = new BABYLON.Color3.FromHexString("#F6F2F6"); // Set your emissive color
 		    
 	    // Create a plane for the image
@@ -220,7 +219,7 @@
 	    emissiveImage3.material = imageMaterial3;
 			
 	    // VIDEOS ///////////////////////////////////////////////////////////////
-		// VIDEO YOUTUBE 1
+	    // VIDEO YOUTUBE 1
 	    plane = BABYLON.MeshBuilder.CreatePlane("youtube", {width: 4, height: 2.25}, scene);
 	    plane.rotation.y = 0
 	    plane.rotationQuaternion = null
@@ -234,21 +233,22 @@
 	    const planeMaterial = new BABYLON.StandardMaterial("planeMaterial", scene);
 	    planeMaterial.emissiveColor = new BABYLON.Color3(1,1,1); // Set your emissive color
 		
-		var video2 = BABYLON.MeshBuilder.CreatePlane("video2", {width: 4, height: 2.25}, scene);
-		video2.position.x = 0
-		video2.position.y = 2
-		video2.position.z = -4.99
-		video2.rotation.y = Math.PI
-		video2.material = planeMaterial
+	    var video2 = BABYLON.MeshBuilder.CreatePlane("video2", {width: 4, height: 2.25}, scene);
+	    video2.position.x = 0
+	    video2.position.y = 2
+	    video2.position.z = -4.99
+	    video2.rotation.y = Math.PI
+	    video2.material = planeMaterial
 	
-		// Apply the video texture to the plane's material
-		let renderer = setupRenderer();
-		createCSSobject(plane, scene, 'Y6I8SPj4gZ0', renderer);
-		createMaskingScreen(plane, scene, renderer, engine)
+	    // Apply the video texture to the plane's material
+	    let renderer = setupRenderer();
+	    createCSSobject(plane, scene, 'Y6I8SPj4gZ0', renderer);
+	    createMaskingScreen(plane, scene, renderer, engine)
 			
-		return scene;
-		};
+	    return scene;
+	};
 	
+
 var setupRenderer = function() {
     let container = document.createElement('div')
     container.id = 'css-container'
@@ -270,13 +270,13 @@ var setupRenderer = function() {
     return renderer
 }
 
-function refreshPosition(plane) {
+function refreshPosition() {
     CSSobject.position.copyFrom(plane.getAbsolutePosition())
     CSSobject.scaling.copyFrom(plane.scaling)
-    refreshRotation(plane)
+    refreshRotation()
 }
 
-function refreshRotation(plane) {
+function refreshRotation() {
     CSSobject.rotation.y = -plane.rotation.y
     CSSobject.rotation.x = -plane.rotation.x
     CSSobject.rotation.z = plane.rotation.z
@@ -295,7 +295,7 @@ var createCSSobject = function(mesh, scene, videoID, renderer) {
     div.style.backgroundColor = '#000'
     div.style.zIndex = '1'
     CSSobject = new CSS3DObject(div, scene)
-    refreshPosition(mesh)
+    refreshPosition()
 
     var iframe = document.createElement( 'iframe' )
     iframe.id = 'video-' + videoID
@@ -314,7 +314,7 @@ var createCSSobject = function(mesh, scene, videoID, renderer) {
     })
 }
 
-function createMaskingScreen(maskMesh, scene, engine) {
+function createMaskingScreen(maskMesh, scene) {
     let depthMask = new BABYLON.StandardMaterial('matDepthMask', scene)
     depthMask.backFaceCulling = false
 
@@ -531,9 +531,8 @@ class CSS3DRenderer {
 		}
 
         this.renderObject(scene, scene, camera, cameraCSSMatrix )
-	}
-	};
-
+	}    
+    }
     </script>
 </body>
 </html>
