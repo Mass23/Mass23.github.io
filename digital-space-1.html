@@ -193,6 +193,17 @@
             emissiveImage3.material = imageMaterial3;
 		
             // VIDEOS ///////////////////////////////////////////////////////////////
+	    // Create a video element with the direct Dropbox link
+	    const videoElement2 = document.createElement("video");
+	    videoElement2.src = "https://www.dropbox.com/scl/fi/ys3ti6xul6y5zbai3jpb7/journey.mp4?rlkey=nzt10ltqijtf9g8je07wu4znu&st=jf37wk7x&dl=0"; // Replace with your modified Dropbox link
+	    videoElement2.loop = true;
+	    videoElement2.muted = true;
+	    videoElement2.autoplay = true;
+	    videoElement2.crossOrigin = "anonymous"; // Required to avoid CORS issues
+	
+	    // Create a video texture from the video element
+	    const videoTexture2 = new BABYLON.VideoTexture("videoTexture", videoElement2, scene, true, true);
+
 	    const planeMaterial = new BABYLON.StandardMaterial("planeMaterial", scene);
             planeMaterial.emissiveColor = new BABYLON.Color3(1,1,1); // Set your emissive color
 		
@@ -201,8 +212,7 @@
 	    video1.position.x = 0
 	    video1.position.y = 2.25
 	    video1.position.z = 4.99
-	    video1.material = planeMaterial
-	    
+	    video1.material = planeMaterial	    
 
 	    var video2 = BABYLON.MeshBuilder.CreatePlane("video2", {width: 4, height: 2.25}, scene);
 	    video2.position.x = 0
@@ -210,6 +220,11 @@
 	    video2.position.z = -4.99
 	    video2.rotation.y = Math.PI
 	    video2.material = planeMaterial
+
+	    // Apply the video texture to the plane's material
+	    const videoMaterial2 = new BABYLON.StandardMaterial("videoMaterial", scene);
+	    videoMaterial2.diffuseTexture = videoTexture2;
+	    video2.material = videoMaterial2;
 
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
 	    engine.runRenderLoop(() => scene.render());
