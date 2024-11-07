@@ -68,10 +68,15 @@
         <h2>Massimo Bourquin, 2024</h2>
         <button id="startButton">Start</button>
     </div>	
-    <div id="css-container" style="position: absolute; width: 100%; height: 100%; z-index: -1;">
-	<div style="overflow: hidden; width: 754px; height: 354px; perspective: 418.644px;">
+
+    
+
+
+  <div id="canvasZone" class="canvasZone" style="width: 100%;">
+      <div id="css-container" style="position: absolute; width: 100%; height: 100%; z-index: -1;">
+	  <div style="overflow: hidden; width: 754px; height: 354px; perspective: 418.644px;">
 		<div style="transform-style: preserve-3d; pointer-events: none; width: 754px; 
-			height: 354px; transform: translateZ(418.644px) matrix3d(1, 0, 0, 0, 0, -0.894427, 0.447214, 0, 0, 0.447214, 0.894427, 0, 0, -5, -10, 1) translate(377px, 177px);">
+			 height: 354px; transform: translateZ(418.644px) matrix3d(1, 0, 0, 0, 0, -0.894427, 0.447214, 0, 0, 0.447214, 0.894427, 0, 0, -5, -10, 1) translate(377px, 177px);">
 			<div style="width: 480px; height: 360px; background-color: rgb(0, 0, 0); 
 				z-index: 1; position: absolute; pointer-events: auto; transform: translate(-50%, -50%) matrix3d(1.25, 0, 0, 0, 0, -1.11111, 0, 0, 0, 0, 100, 0, 0, -500, -1000, 0.001);">
 				<iframe id="video-Y6I8SPj4gZ0" style="width: 480px; height: 360px; border: 0px;" 
@@ -80,7 +85,8 @@
 			</div>
 		</div>
 	</div>
-    </div>
+      </div>
+  </div>
     <canvas id="renderCanvas" width="2" height="55" data-engine="Babylon.js v7.33.0" touch-action="none" style="touch-action: none;" tabindex="1"></canvas>
 	
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
