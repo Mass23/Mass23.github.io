@@ -253,7 +253,7 @@
 	    if (existingRenderer) existingRenderer.remove();
 	    let renderer = setupRenderer();
 	    createCSSobject(video2, scene, 'Y6I8SPj4gZ0', renderer);
-	    createMaskingScreen(video2, scene, renderer)
+	    createMaskingScreen(video2, scene, renderer, engine)
 		
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
 	    engine.runRenderLoop(() => scene.render());
@@ -328,7 +328,7 @@ var createCSSobject = function(mesh, scene, videoID, renderer) {
     })
 }
 
-function createMaskingScreen(maskMesh, scene) {
+function createMaskingScreen(maskMesh, scene, engine) {
     let depthMask = new BABYLON.StandardMaterial('matDepthMask', scene)
     depthMask.backFaceCulling = false
 
