@@ -284,13 +284,13 @@ var setupRenderer = function() {
     return renderer
 }
 
-function refreshPosition() {
+function refreshPosition(plane) {
     CSSobject.position.copyFrom(plane.getAbsolutePosition())
     CSSobject.scaling.copyFrom(plane.scaling)
-    refreshRotation()
+    refreshRotation(plane)
 }
 
-function refreshRotation() {
+function refreshRotation(plane) {
     CSSobject.rotation.y = -plane.rotation.y
     CSSobject.rotation.x = -plane.rotation.x
     CSSobject.rotation.z = plane.rotation.z
@@ -309,7 +309,7 @@ var createCSSobject = function(mesh, scene, videoID, renderer) {
     div.style.backgroundColor = '#000'
     div.style.zIndex = '1'
     CSSobject = new CSS3DObject(div, scene)
-    refreshPosition()
+    refreshPosition(mesh)
 
     var iframe = document.createElement( 'iframe' )
     iframe.id = 'video-' + videoID
