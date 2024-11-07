@@ -252,8 +252,8 @@
 	    let existingRenderer = document.getElementById("css-container");
 	    if (existingRenderer) existingRenderer.remove();
 	    let renderer = setupRenderer();
-	    createCSSobject(plane, scene, 'Y6I8SPj4gZ0', renderer);
-	    createMaskingScreen(plane, scene, renderer)
+	    createCSSobject(video2, scene, 'Y6I8SPj4gZ0', renderer);
+	    createMaskingScreen(video2, scene, renderer)
 		
 	    // RENDER & SIZE ////////////////////////////////////////////////////////
 	    engine.runRenderLoop(() => scene.render());
