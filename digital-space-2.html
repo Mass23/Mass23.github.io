@@ -64,9 +64,9 @@
     // Add particles
     const particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
     particleSystem.particleTexture = new BABYLON.Texture("morelove1.png", scene);
-    particleSystem.emitter = new BABYLON.Vector3(0, 10, 0); // Emit from above the screen
-    particleSystem.minEmitBox = new BABYLON.Vector3(-5, 0, -5); // Minimum box dimensions
-    particleSystem.maxEmitBox = new BABYLON.Vector3(5, 10, 5); // Maximum box dimensions
+    particleSystem.emitter = new BABYLON.Vector3(0, 0, 9); // Emit from above the screen
+    particleSystem.minEmitBox = new BABYLON.Vector3(-10,-10,-10); // Minimum box dimensions
+    particleSystem.maxEmitBox = new BABYLON.Vector3(10,10,10); // Maximum box dimensions
     particleSystem.color1 = new BABYLON.Color4(1, 1, 1, 1);
     particleSystem.color2 = new BABYLON.Color4(0.8, 0.8, 1, 1);
     particleSystem.minSize = 0.2;
