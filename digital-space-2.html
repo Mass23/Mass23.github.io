@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Babylon.js Foggy Scene</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<canvas id="renderCanvas"></canvas>
+<script>
+    // Initialize Babylon.js Scene
+    const canvas = document.getElementById('renderCanvas');
+    const engine = new BABYLON.Engine(canvas, true);
+    const scene = new BABYLON.Scene(engine);
+
+    // Add fog to the scene
+    scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
+    scene.fogDensity = 0.02;
+    scene.fogColor = new BABYLON.Color3(0.9, 0.9, 0.9);
+
+    // Create a camera
+    const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 3, 10, new BABYLON.Vector3(0, 0, 0), scene);
+    camera.setPosition(new BABYLON.Vector3(0, 5, -20));
+    camera.attachControl(canvas, true);
+    camera.lowerRadiusLimit = 10;
+    camera.upperRadiusLimit = 30;
+    camera.upperBetaLimit = Math.PI / 2.2; // Prevent looking behind the screen
+
+    // Add lighting
+    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.8;
+
+    // Create a screen (plane)
+    const screenMaterial = new BABYLON.StandardMaterial("screenMaterial", scene);
+    screenMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
+    screenMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
+    const screen = BABYLON.MeshBuilder.CreatePlane("screen", { width: 8, height: 4.5 }, scene);
+    screen.position.z = 5;
+    screen.material = screenMaterial;
+
+    // Load a random image onto the screen
+    async function loadRandomImage() {
+        const keyword = "love"; // Replace with any desired keyword
+        const response = await fetch(`https://source.unsplash.com/random/800x450/?${keyword}`);
+        screenMaterial.diffuseTexture = new BABYLON.Texture(response.url, scene);
+    }
+    loadRandomImage();
+
+    // Add particles
+    const particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
+    particleSystem.particleTexture = new BABYLON.Texture("morelove1.png", scene);
+    particleSystem.emitter = new BABYLON.Vector3(0, 5, 0); // Emit from above the screen
+    particleSystem.minEmitBox = new BABYLON.Vector3(-5, 0, -5); // Minimum box dimensions
+    particleSystem.maxEmitBox = new BABYLON.Vector3(5, 10, 5); // Maximum box dimensions
+    particleSystem.color1 = new BABYLON.Color4(1, 1, 1, 1);
+    particleSystem.color2 = new BABYLON.Color4(0.8, 0.8, 1, 1);
+    particleSystem.minSize = 0.2;
+    particleSystem.maxSize = 0.8;
+    particleSystem.minLifeTime = 2;
+    particleSystem.maxLifeTime = 5;
+    particleSystem.emitRate = 500;
+    particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+    particleSystem.direction1 = new BABYLON.Vector3(-1, 1, -1);
+    particleSystem.direction2 = new BABYLON.Vector3(1, 1, 1);
+    particleSystem.minEmitPower = 0.5;
+    particleSystem.maxEmitPower = 1.5;
+    particleSystem.gravity = new BABYLON.Vector3(0, -0.2, 0);
+    particleSystem.start();
+
+    // Load additional particle textures randomly
+    const particleTextures = ["morelove1.png", "morelove2.png", "morelove3.png"];
+    setInterval(() => {
+        const randomTexture = particleTextures[Math.floor(Math.random() * particleTextures.length)];
+        particleSystem.particleTexture = new BABYLON.Texture(randomTexture, scene);
+    }, 5000); // Change particle texture every 5 seconds
+
+    // Render loop
+    engine.runRenderLoop(() => {
+        scene.render();
+    });
+
+    // Handle window resize
+    window.addEventListener("resize", () => {
+        engine.resize();
+    });
+</script>
+</body>
+</html>
