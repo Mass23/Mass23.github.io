@@ -49,14 +49,14 @@
     const screenMaterial = new BABYLON.StandardMaterial("screenMaterial", scene);
     screenMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
     screenMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
-    const screen = BABYLON.MeshBuilder.CreatePlane("screen", { width: 8, height: 4.5 }, scene);
-    screen.position = new BABYLON.Vector3(0, 10, 0);
+    const screen = BABYLON.MeshBuilder.CreatePlane("screen", { width: 8, height: 8 }, scene);
+    screen.position = new BABYLON.Vector3(0, 0, 10);
     screen.material = screenMaterial;
 
     // Load a random image onto the screen
     async function loadRandomImage() {
         const keyword = "love"; // Replace with any desired keyword
-        const response = await fetch(`https://source.unsplash.com/random/800x450/?${keyword}`);
+        const response = await fetch(`https://source.unsplash.com/random??${keyword}`);
         screenMaterial.diffuseTexture = new BABYLON.Texture(response.url, scene);
     }
     loadRandomImage();
