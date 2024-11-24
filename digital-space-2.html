@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Babylon.js Foggy Scene</title>
+    <title>Babylon.js Fullscreen Foggy Scene</title>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
     <style>
@@ -15,6 +15,8 @@
         }
         canvas {
             display: block;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
@@ -31,24 +33,24 @@
     scene.fogDensity = 0.02;
     scene.fogColor = new BABYLON.Color3(0.9, 0.9, 0.9);
 
-    // Create a camera
-    const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 3, 10, new BABYLON.Vector3(0, 0, 0), scene);
-    camera.setPosition(new BABYLON.Vector3(0, 5, -20));
+    // Create a camera positioned at (0, 0, 0)
+    const camera = new BABYLON.ArcRotateCamera("camera", 0, Math.PI / 2, 0, new BABYLON.Vector3(0, 0, 0), scene);
     camera.attachControl(canvas, true);
+    camera.setPosition(new BABYLON.Vector3(0, 0, 0));
     camera.lowerRadiusLimit = 10;
     camera.upperRadiusLimit = 30;
-    camera.upperBetaLimit = Math.PI / 2.2; // Prevent looking behind the screen
+    camera.upperBetaLimit = Math.PI / 2; // Prevent looking behind the screen
 
     // Add lighting
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
     light.intensity = 0.8;
 
-    // Create a screen (plane)
+    // Create a screen (plane) positioned at (0, 10, 0)
     const screenMaterial = new BABYLON.StandardMaterial("screenMaterial", scene);
     screenMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
     screenMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
     const screen = BABYLON.MeshBuilder.CreatePlane("screen", { width: 8, height: 4.5 }, scene);
-    screen.position.z = 5;
+    screen.position = new BABYLON.Vector3(0, 10, 0);
     screen.material = screenMaterial;
 
     // Load a random image onto the screen
@@ -62,7 +64,7 @@
     // Add particles
     const particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
     particleSystem.particleTexture = new BABYLON.Texture("morelove1.png", scene);
-    particleSystem.emitter = new BABYLON.Vector3(0, 5, 0); // Emit from above the screen
+    particleSystem.emitter = new BABYLON.Vector3(0, 10, 0); // Emit from above the screen
     particleSystem.minEmitBox = new BABYLON.Vector3(-5, 0, -5); // Minimum box dimensions
     particleSystem.maxEmitBox = new BABYLON.Vector3(5, 10, 5); // Maximum box dimensions
     particleSystem.color1 = new BABYLON.Color4(1, 1, 1, 1);
