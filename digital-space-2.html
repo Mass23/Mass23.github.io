@@ -36,7 +36,7 @@
     // Create a camera positioned at (0, 0, 0)
     const camera = new BABYLON.ArcRotateCamera("camera", 0, Math.PI / 2, 0, new BABYLON.Vector3(0, 0, 0), scene);
     camera.attachControl(canvas, true);
-    camera.setPosition(new BABYLON.Vector3(0, 0, 10));
+    camera.setPosition(new BABYLON.Vector3(0, 0, -10));
     camera.lowerRadiusLimit = 10;
     camera.upperRadiusLimit = 30;
     camera.upperBetaLimit = Math.PI / 2; // Prevent looking behind the screen
