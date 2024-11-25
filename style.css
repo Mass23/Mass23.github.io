@@ -12,7 +12,7 @@ body {
 }
 
 p {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .title {
@@ -30,7 +30,7 @@ p {
 h2 {
     font-family: 'Arial', sans-serif;
     font-weight: lighter; /* Adjust font weight if needed */
-    font-size: 22px;
+    font-size: 26px;
     color: #242526; /* Adjust color to a lighter shade of gray */
     }
     
