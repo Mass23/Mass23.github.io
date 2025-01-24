@@ -114,6 +114,15 @@ h2 {
     padding: 0;
 }
 
+.entire-column {
+    left: 0;
+    height: calc(100% - 120px);
+    width: calc(100% - 60px);
+    background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
+    margin: 30px;
+    padding: 30px;
+}
+
 .left-column {
     left: 0;
     height: calc(100% - 120px);
