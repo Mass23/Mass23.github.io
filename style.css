@@ -12,7 +12,7 @@ body {
 }
 
 p {
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .title {
@@ -253,6 +253,6 @@ nav ul {
     height: 2px;
   }
   
-media only screen and (max-width: 600px) {
-  #hrid {top: 58px;}
-}
+/* media only screen and (max-width: 600px) {*/
+/*   #hrid {top: 58px;}*/
+/* }*/
