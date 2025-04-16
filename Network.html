@@ -76,24 +76,47 @@ let width = window.innerWidth;
 let height = window.innerHeight;
 
 const nodes = [
-  { id: "apple", cluster: ["fruit"], url: "https://en.wikipedia.org/wiki/Apple" },
-  { id: "banana", cluster: ["fruit"], url: "https://en.wikipedia.org/wiki/Banana" },
-  { id: "carrot", cluster: ["vegetable"], url: "https://en.wikipedia.org/wiki/Carrot" },
-  { id: "orange", cluster: ["fruit", "color"], url: "https://en.wikipedia.org/wiki/Orange_(fruit)" },
-  { id: "blue", cluster: ["color"], url: "https://en.wikipedia.org/wiki/Blue" }
+  { id: "Programmatic-artworks", cluster: ["Programming"], url: "https://en.wikipedia.org/wiki/Apple" },
+  { id: "Sensible-AI", cluster: ["Programming", "Video-art"], url: "https://en.wikipedia.org/wiki/Banana" },
+  { id: "How-I-create-my-identity", cluster: ["Photography", "Music", "Programming", "Video-art"], url: "https://en.wikipedia.org/wiki/Banana" },
+  { id: "Son-net-s", cluster: ["Programming", "Music", "Video-art"], url: "https://brodinskysurboue.ch/sonnets.html" },
+  { id: "The-always-series", cluster: ["Programming", "Music"], url: "Mass23.github.io/the-always-series.html" },
+  { id: "A-glitch-in-the-ethics", cluster: ["Programming", "Glitch-art"], url: "Mass23.github.io/a-glitch-in-the-ethics.html" },
+  { id: "Childhood-paradise-reenacted", cluster: ["Photography"], url: "Mass23.github.io/a-glitch-in-the-ethics.html" },
+  { id: "Disponible 2", cluster: ["Music"], url: "https://open.spotify.com/artist/7vywWVtIW4VqhmrJjy8HD7?si=is8qPeJqT-Ovxrne71XFzQ" },
+  { id: "Brodinsky sur Boue", cluster: ["Music", "Performances"], url: "https://brodinskysurboue.ch/" },
 ];
 
 const links = [
-  { source: "apple", target: "banana" },
-  { source: "banana", target: "orange" },
-  { source: "orange", target: "carrot" },
-  { source: "orange", target: "blue" }
+  { source: "Programmatic-artworks", target: "Sensible-AI" },
+  { source: "Programmatic-artworks", target: "How-I-create-my-identity" },
+  { source: "Programmatic-artworks", target: "Son-net-s" },
+  { source: "Programmatic-artworks", target: "The-always-series" },
+  { source: "Programmatic-artworks", target: "A-glitch-in-the-ethics" },
+  { source: "Programmatic-artworks", target: "Sensible-AI" },
+  { source: "Sensible-AI", target: "How-I-create-my-identity" },
+  { source: "Sensible-AI", target: "Son-net-s" },
+  { source: "Sensible-AI", target: "The-always-series" },
+  { source: "Sensible-AI", target: "A-glitch-in-the-ethics" },
+  { source: "How-I-create-my-identity", target: "Son-net-s" },
+  { source: "How-I-create-my-identity", target: "The-always-series" },
+  { source: "How-I-create-my-identity", target: "A-glitch-in-the-ethics" },
+  { source: "How-I-create-my-identity", target: "Childhood-paradise-reenacted" },
+  { source: "How-I-create-my-identity", target: "Disponible 2" },
+  { source: "How-I-create-my-identity", target: "Brodinsky sur Boue" },
+  { source: "The-always-series", target: "A-glitch-in-the-ethics" },
+  { source: "The-always-series", target: "Disponible 2" },
+  { source: "The-always-series", target: "Brodinsky sur Boue" },
+  { source: "Disponible 2", target: "Brodinsky sur Boue" }
 ];
 
 const clusterColors = {
-  fruit: "orange",
-  vegetable: "green",
-  color: "blue"
+  "Programming": "#2540D9",
+  "Video-art": "#F24C27",
+  "Glitch-art": "#2540D9",
+  "Music": "#252626", 
+  "Photography": "#F24C27",
+  "Performances": "#252626"
 };
 
 // === Preprocess cluster groups ===
