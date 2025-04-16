@@ -16,47 +16,40 @@
       display: block;
     }
     .node rect {
-      fill: #e0e0e0;
+      fill: #333;  /* dark grey default */
       stroke: #333;
       rx: 8;
       ry: 8;
       cursor: grab;
     }
+    
     .node text {
       pointer-events: none;
       font-family: Menlo, monospace;
       font-size: 24px;
-      fill: black;
+      fill: white; /* white default */
     }
+    
+    .highlighted-node rect {
+      fill: #e0e0e0;  /* light grey when hovered */
+    }
+    
+    .highlighted-node text {
+      fill: black;  /* black text when hovered */
+    }
+    
     .link {
-      stroke: #F24C27;
+      stroke: #333;  /* dark grey default */
       stroke-opacity: 0.6;
       stroke-width: 4;
     }
-    .highlighted-node rect {
-      fill: #333;
-    }
-    .highlighted-node text {
-      fill: white;
-    }
+    
     .highlighted-link {
-      stroke: #333;
+      stroke: #F24C27;  /* orange when highlighted */
       stroke-opacity: 1;
-      stroke-width: 5;
+      stroke-width: 6;
     }
-    .cluster circle {
-      fill: none;
-      stroke: #333;
-      stroke-width: 5px;
-    }
-    .cluster text {
-      font-family: Arial, sans-serif;
-      font-style: italic;
-      font-weight: bold;
-      font-size: 28px;
-      fill: #333;
-      pointer-events: none;
-    }
+
   </style>
 </head>
 <body>
@@ -150,10 +143,24 @@ node.insert("rect", "text")
   .attr("width", d => d.textWidth + 40)
   .attr("height", d => d.textHeight + 16);
 
-// === Cluster Circles Layer ===
-const clusterLayer = svg.append("g").attr("class", "clusters");
-
+// === Cluster Layer ===
 function highlightClusters(clusterList) {
+    // remove old floating texts
+  d3.selectAll(".cluster-word").remove();
+  
+  clusterList.forEach(cl => {
+    for (let i = 0; i < 20; i++) {
+      svg.append("text")
+        .attr("class", "cluster-word")
+        .attr("x", Math.random() * width)
+        .attr("y", Math.random() * height)
+        .text(cl)
+        .attr("fill", "#333")
+        .attr("opacity", 0.5)
+        .attr("font-size", "48px")
+        .attr("pointer-events", "none");
+    }
+  });
   const selected = new Set();
   clusterList.forEach(cl => clusterGroups[cl]?.forEach(n => selected.add(n.id)));
 
@@ -172,18 +179,11 @@ function highlightClusters(clusterList) {
     return { name: cl, x: (minX + maxX) / 2, y: (minY + maxY) / 2, r };
   });
 
-  const circles = clusterLayer.selectAll("g.cluster").data(data, d => d.name);
   const gEnter = circles.enter().append("g").attr("class", "cluster");
-  gEnter.append("circle");
   gEnter.append("text").attr("font-family", "Arial").attr("font-style", "italic")
     .attr("font-weight", "bold").attr("font-size", "24px").attr("text-anchor", "start");
 
   const merged = gEnter.merge(circles);
-
-  merged.select("circle")
-    .attr("cx", d => d.x)
-    .attr("cy", d => d.y)
-    .attr("r", d => d.r);
 
   merged.select("text")
     .attr("x", d => d.x - d.r + 15)
@@ -194,7 +194,7 @@ function highlightClusters(clusterList) {
 function clearHighlight() {
   node.classed("highlighted-node", false);
   link.classed("highlighted-link", false);
-  clusterLayer.selectAll("g.cluster").remove();
+  d3.selectAll(".cluster-word").remove();
 }
 
 function ticked() {
