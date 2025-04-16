@@ -16,40 +16,39 @@
       display: block;
     }
     .node rect {
-      fill: #333;  /* dark grey default */
-      stroke: #333;
-      rx: 8;
-      ry: 8;
-      cursor: grab;
-    }
-    
-    .node text {
-      pointer-events: none;
-      font-family: Menlo, monospace;
-      font-size: 24px;
-      fill: white; /* white default */
-    }
-    
-    .highlighted-node rect {
-      fill: #e0e0e0;  /* light grey when hovered */
-    }
-    
-    .highlighted-node text {
-      fill: black;  /* black text when hovered */
-    }
-    
-    .link {
-      stroke: #333;  /* dark grey default */
-      stroke-opacity: 0.6;
-      stroke-width: 4;
-    }
-    
-    .highlighted-link {
-      stroke: #F24C27;  /* orange when highlighted */
-      stroke-opacity: 1;
-      stroke-width: 6;
-    }
+  fill: #e0e0e0;
+  stroke: #333;
+  rx: 8;
+  ry: 8;
+  cursor: grab;
+}
 
+.node text {
+  pointer-events: none;
+  font-family: Menlo, monospace;
+  font-size: 16px;
+  fill: black;
+}
+
+.link {
+  stroke: #F24C27;
+  stroke-opacity: 0.6;
+  stroke-width: 2;
+}
+
+.highlighted-node rect {
+  fill: #333;
+}
+
+.highlighted-node text {
+  fill: white;
+}
+
+.highlighted-link {
+  stroke: #333;
+  stroke-opacity: 1;
+  stroke-width: 3;
+}
   </style>
 </head>
 <body>
@@ -58,7 +57,6 @@
 const svg = d3.select("svg");
 let width = window.innerWidth;
 let height = window.innerHeight;
-const backgroundTextLayer = svg.append("g").attr("class", "background-texts");
 
 // === Data ===
 const nodes = [
@@ -151,61 +149,13 @@ function highlightClusters(clusterList) {
 
   node.classed("highlighted-node", d => selected.has(d.id));
   link.classed("highlighted-link", d => selected.has(d.source.id) && selected.has(d.target.id));
-
-  // Clear old background words
-  backgroundTextLayer.selectAll("text").remove();
-
-  // Scatter new words
-  clusterList.forEach(cl => {
-    for (let i = 0; i < 20; i++) {
-      backgroundTextLayer.append("text")
-        .attr("x", Math.random() * width)
-        .attr("y", Math.random() * height)
-        .text(cl)
-        .attr("fill", "#333")
-        .attr("opacity", 0.5)
-        .attr("font-size", "48px")
-        .attr("font-family", "Menlo, monospace")
-        .attr("pointer-events", "none");
-    }
-  });
-}
-
-  const selected = new Set();
-  clusterList.forEach(cl => clusterGroups[cl]?.forEach(n => selected.add(n.id)));
-
-  node.classed("highlighted-node", d => selected.has(d.id));
-  link.classed("highlighted-link", d => selected.has(d.source.id) && selected.has(d.target.id));
-
-  const data = clusterList.map(cl => {
-    const members = clusterGroups[cl];
-    const xs = members.map(n => n.x);
-    const ys = members.map(n => n.y);
-    const minX = Math.min(...xs);
-    const maxX = Math.max(...xs);
-    const minY = Math.min(...ys);
-    const maxY = Math.max(...ys);
-    const r = Math.max((maxX - minX) / 2, (maxY - minY) / 2) + 80;
-    return { name: cl, x: (minX + maxX) / 2, y: (minY + maxY) / 2, r };
-  });
-
-  const gEnter = circles.enter().append("g").attr("class", "cluster");
-  gEnter.append("text").attr("font-family", "Arial").attr("font-style", "italic")
-    .attr("font-weight", "bold").attr("font-size", "24px").attr("text-anchor", "start");
-
-  const merged = gEnter.merge(circles);
-
-  merged.select("text")
-    .attr("x", d => d.x - d.r + 15)
-    .attr("y", d => d.y - d.r + 30)
-    .text(d => d.name);
 }
 
 function clearHighlight() {
   node.classed("highlighted-node", false);
   link.classed("highlighted-link", false);
-  backgroundTextLayer.selectAll("text").remove();
 }
+
 
 function ticked() {
   link
