@@ -58,6 +58,7 @@
 const svg = d3.select("svg");
 let width = window.innerWidth;
 let height = window.innerHeight;
+const backgroundTextLayer = svg.append("g").attr("class", "background-texts");
 
 // === Data ===
 const nodes = [
@@ -145,22 +146,31 @@ node.insert("rect", "text")
 
 // === Cluster Layer ===
 function highlightClusters(clusterList) {
-    // remove old floating texts
-  d3.selectAll(".cluster-word").remove();
-  
+  const selected = new Set();
+  clusterList.forEach(cl => clusterGroups[cl]?.forEach(n => selected.add(n.id)));
+
+  node.classed("highlighted-node", d => selected.has(d.id));
+  link.classed("highlighted-link", d => selected.has(d.source.id) && selected.has(d.target.id));
+
+  // Clear old background words
+  backgroundTextLayer.selectAll("text").remove();
+
+  // Scatter new words
   clusterList.forEach(cl => {
     for (let i = 0; i < 20; i++) {
-      svg.append("text")
-        .attr("class", "cluster-word")
+      backgroundTextLayer.append("text")
         .attr("x", Math.random() * width)
         .attr("y", Math.random() * height)
         .text(cl)
         .attr("fill", "#333")
         .attr("opacity", 0.5)
         .attr("font-size", "48px")
+        .attr("font-family", "Menlo, monospace")
         .attr("pointer-events", "none");
     }
   });
+}
+
   const selected = new Set();
   clusterList.forEach(cl => clusterGroups[cl]?.forEach(n => selected.add(n.id)));
 
@@ -194,7 +204,7 @@ function highlightClusters(clusterList) {
 function clearHighlight() {
   node.classed("highlighted-node", false);
   link.classed("highlighted-link", false);
-  d3.selectAll(".cluster-word").remove();
+  backgroundTextLayer.selectAll("text").remove();
 }
 
 function ticked() {
