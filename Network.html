@@ -2,11 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Word Network — Adaptive & Highlighted</title>
+  <title>Word Network — Gradient & Highlight</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
-    body { margin: 0; overflow: hidden; background: white; }
-    svg { width: 100vw; height: 100vh; display: block; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #263DBF 0%, #252626 25%, #252626 100%);
+    }
+
+    svg {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
 
     .node rect {
       fill: #ddd;
@@ -24,8 +33,9 @@
     }
 
     .link {
-      stroke: #999;
-      stroke-opacity: 0.6;
+      stroke: #F24C27;
+      stroke-opacity: 0.8;
+      stroke-width: 2;
     }
 
     .highlighted-node rect {
