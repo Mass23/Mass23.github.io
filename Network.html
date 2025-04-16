@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Word Network — Hover Cluster Highlight</title>
+  <title>Word Network — Adaptive & Highlighted</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
-    body { margin: 0; overflow: hidden; }
+    body { margin: 0; overflow: hidden; background: white; }
     svg { width: 100vw; height: 100vh; display: block; }
 
     .node rect {
-      fill: #aaa;
+      fill: #ddd;
       stroke: #333;
       rx: 8;
       ry: 8;
@@ -20,6 +20,7 @@
       pointer-events: none;
       font-family: Menlo, monospace;
       font-size: 16px;
+      fill: black;
     }
 
     .link {
@@ -28,11 +29,16 @@
     }
 
     .highlighted-node rect {
-      fill: orange;
+      fill: #333 !important;
+      stroke: #333 !important;
+    }
+
+    .highlighted-node text {
+      fill: white;
     }
 
     .highlighted-link {
-      stroke: orange;
+      stroke: #333 !important;
       stroke-opacity: 1;
       stroke-width: 3;
     }
@@ -40,13 +46,6 @@
     .cluster circle {
       fill: none;
       stroke-width: 4px;
-    }
-
-    .cluster text {
-      font-family: Arial, sans-serif;
-      font-weight: bold;
-      font-style: italic;
-      font-size: 24px;
     }
   </style>
 </head>
@@ -67,7 +66,7 @@ const nodes = [
   { id: "A-glitch-in-the-ethics", cluster: ["Programming", "Glitch-art"], url: "Mass23.github.io/a-glitch-in-the-ethics.html" },
   { id: "Childhood-paradise-reenacted", cluster: ["Photography"], url: "Mass23.github.io/a-glitch-in-the-ethics.html" },
   { id: "Disponible 2", cluster: ["Music"], url: "https://open.spotify.com/artist/7vywWVtIW4VqhmrJjy8HD7?si=is8qPeJqT-Ovxrne71XFzQ" },
-  { id: "Brodinsky sur Boue", cluster: ["Music", "Performances"], url: "https://brodinskysurboue.ch/" },
+  { id: "Brodinsky sur Boue", cluster: ["Music", "Performances"], url: "https://brodinskysurboue.ch/" }
 ];
 
 const links = [
@@ -101,7 +100,6 @@ const clusterColors = {
   "Performances": "#252626"
 };
 
-// === Preprocess cluster groups ===
 const clusterGroups = {};
 nodes.forEach(node => {
   node.cluster.forEach(cluster => {
@@ -111,8 +109,8 @@ nodes.forEach(node => {
 });
 
 const simulation = d3.forceSimulation(nodes)
-  .force("link", d3.forceLink(links).id(d => d.id).distance(250))
-  .force("charge", d3.forceManyBody().strength(-600))
+  .force("link", d3.forceLink(links).id(d => d.id).distance(200))
+  .force("charge", d3.forceManyBody().strength(-1000))
   .force("center", d3.forceCenter(width / 2, height / 2));
 
 const link = svg.append("g")
@@ -126,34 +124,37 @@ const node = svg.append("g")
   .data(nodes)
   .join("g")
   .attr("class", "node")
-  .on("click", (event, d) => { if (d.url) window.open(d.url, '_blank'); })
+  .on("click", (event, d) => {
+    if (d.url) window.open(d.url, '_blank');
+  })
   .on("mouseover", (event, d) => highlightClusters(d.cluster))
   .on("mouseout", clearHighlight);
 
-node.append("rect")
-  .attr("width", 140)
-  .attr("height", 50)
-  .attr("x", -70)
-  .attr("y", -25);
-
 node.append("text")
-  .text(d => d.id)
+  .attr("x", 0)
+  .attr("y", 0)
   .attr("text-anchor", "middle")
-  .attr("dy", "0.35em");
+  .attr("dy", "0.35em")
+  .text(d => d.id);
+
+node.each(function(d) {
+  const text = d3.select(this).select("text").node();
+  const bbox = text.getBBox();
+  d.bbox = bbox;
+  d3.select(this).insert("rect", "text")
+    .attr("x", bbox.x - 10)
+    .attr("y", bbox.y - 5)
+    .attr("width", bbox.width + 20)
+    .attr("height", bbox.height + 10);
+});
 
 const clusterLayer = svg.append("g").attr("class", "clusters");
 
 function highlightClusters(clusters) {
-  clearHighlight(); // clear previous highlights
+  node.classed("highlighted-node", d => clusters.some(c => d.cluster.includes(c)));
 
-  const selectedNodes = new Set();
-  clusters.forEach(cluster => {
-    clusterGroups[cluster].forEach(n => selectedNodes.add(n.id));
-  });
-
-  node.classed("highlighted-node", d => selectedNodes.has(d.id));
   link.classed("highlighted-link", d => 
-    selectedNodes.has(d.source.id) && selectedNodes.has(d.target.id)
+    clusters.some(c => d.source.cluster.includes(c) && d.target.cluster.includes(c))
   );
 
   const clusterData = clusters.map(cluster => {
@@ -164,37 +165,28 @@ function highlightClusters(clusters) {
     const maxX = Math.max(...xs);
     const minY = Math.min(...ys);
     const maxY = Math.max(...ys);
-    const centerX = (minX + maxX) / 2;
-    const centerY = (minY + maxY) / 2;
-    const radius = Math.max((maxX - minX) / 2, (maxY - minY) / 2) + 80;
-    return { name: cluster, x: centerX, y: centerY, r: radius };
+    return {
+      name: cluster,
+      x: (minX + maxX) / 2,
+      y: (minY + maxY) / 2,
+      r: Math.max((maxX - minX) / 2, (maxY - minY) / 2) + 80
+    };
   });
 
   const circles = clusterLayer.selectAll("g.cluster")
     .data(clusterData, d => d.name);
 
-  const gEnter = circles.enter()
-    .append("g")
-    .attr("class", "cluster");
+  const gEnter = circles.enter().append("g").attr("class", "cluster");
 
-  gEnter.append("circle")
-    .attr("stroke", d => clusterColors[d.name] || "gray");
-
-  gEnter.append("text")
-    .text(d => d.name);
+  gEnter.append("circle").attr("stroke", "#333");
 
   const merged = gEnter.merge(circles);
-
   merged.select("circle")
     .attr("cx", d => d.x)
     .attr("cy", d => d.y)
     .attr("r", d => d.r)
-    .attr("stroke", d => clusterColors[d.name] || "gray");
-
-  merged.select("text")
-    .attr("x", d => d.x - d.r + 15)
-    .attr("y", d => d.y - d.r + 30)
-    .attr("fill", d => clusterColors[d.name] || "gray");
+    .attr("stroke", "#333")
+    .attr("stroke-width", 5);
 }
 
 function clearHighlight() {
