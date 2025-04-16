@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Word Network Visualization</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    .node rect { fill: #aaa; stroke: #333; rx: 4; ry: 4; }
+    .node text { pointer-events: none; font-size: 12px; }
+    .link { stroke: #999; stroke-opacity: 0.6; }
+
+    .highlight-node rect { fill: orange !important; }
+    .highlight-link { stroke: orange !important; stroke-width: 2px; }
+  </style>
+</head>
+<body>
+<svg width="800" height="600"></svg>
+
+<script>
+const svg = d3.select("svg"),
+      width = +svg.attr("width"),
+      height = +svg.attr("height");
+
+const nodes = [
+  { id: "apple", cluster: ["fruit"] },
+  { id: "banana", cluster: ["fruit"] },
+  { id: "carrot", cluster: ["vegetable"] },
+  { id: "orange", cluster: ["fruit", "color"] }
+];
+
+const links = [
+  { source: "apple", target: "banana" },
+  { source: "banana", target: "orange" },
+  { source: "orange", target: "carrot" }
+];
+
+const simulation = d3.forceSimulation(nodes)
+  .force("link", d3.forceLink(links).id(d => d.id).distance(100))
+  .force("charge", d3.forceManyBody().strength(-200))
+  .force("center", d3.forceCenter(width / 2, height / 2));
+
+const link = svg.append("g")
+  .selectAll("line")
+  .data(links)
+  .join("line")
+  .attr("class", "link");
+
+const node = svg.append("g")
+  .selectAll("g")
+  .data(nodes)
+  .join("g")
+  .attr("class", "node")
+  .on("mouseover", function(event, d) {
+      const targetClusters = d.cluster;
+      node.classed("highlight-node", n => n.cluster.some(c => targetClusters.includes(c)));
+      link.classed("highlight-link", l => 
+         l.source.cluster.some(c => targetClusters.includes(c)) &&
+         l.target.cluster.some(c => targetClusters.includes(c))
+      );
+  })
+  .on("mouseout", function() {
+      node.classed("highlight-node", false);
+      link.classed("highlight-link", false);
+  });
+
+node.append("rect")
+  .attr("width", 60)
+  .attr("height", 20)
+  .attr("x", -30)
+  .attr("y", -10);
+
+node.append("text")
+  .text(d => d.id)
+  .attr("text-anchor", "middle")
+  .attr("dy", "0.35em");
+
+simulation.on("tick", () => {
+  link
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
+
+  node
+      .attr("transform", d => `translate(${d.x},${d.y})`);
+});
+</script>
+</body>
+</html>
