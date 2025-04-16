@@ -244,44 +244,32 @@ nav ul {
   /* ############################################ */
   /* GALLERY */
     
-    .image-gallery {
-        margin-top: 40px;
+  .image-gallery {
+    margin-top: 40px;
+    text-align: center;
     }
-    
+
     .image-gallery h3 {
-        text-align: center;
         font-size: 2rem;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
     }
     
-    .gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 20px;
+    .gallery-item {
+        margin-bottom: 40px;
     }
     
-    .gallery-grid figure {
-        margin: 0;
-        position: relative;
-    }
-    
-    .gallery-grid img {
-        width: 100%;
+    .gallery-item img {
+        max-width: 100%;
         height: auto;
-        display: block;
-        border-radius: 10px;
+        border-radius: 8px;
     }
     
-    .gallery-grid figcaption {
-        position: absolute;
-        bottom: 10px;
-        left: 10px;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        padding: 5px;
+    .gallery-item figcaption {
+        margin-top: 10px;
         font-size: 1rem;
-        border-radius: 5px;
+        color: #444;
     }
+
 
   
   /* ############################################ */
