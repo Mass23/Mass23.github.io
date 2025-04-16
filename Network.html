@@ -8,13 +8,13 @@
     body { margin: 0; overflow: hidden; }
     svg { width: 100vw; height: 100vh; display: block; }
 
-    .node rect { fill: #aaa; stroke: #333; rx: 6; ry: 6; }
+    .node rect { fill: #aaa; stroke: #333; rx: 8; ry: 8; }
     .node text { 
       pointer-events: none; 
-      font-family: Arial, sans-serif;
-      font-weight: bold;
-      font-style: italic;
-      font-size: 14px;
+      font-family: Menlo, monospace;
+      font-weight: normal;
+      font-style: normal;
+      font-size: 16px;
     }
 
     .link { stroke: #999; stroke-opacity: 0.6; }
@@ -26,14 +26,14 @@
       font-family: Arial, sans-serif;
       font-weight: bold;
       font-style: italic;
-      font-size: 28px;
+      font-size: 40px;
       fill: orange;
       pointer-events: none;
     }
 
     .hover-label circle {
       stroke: orange;
-      stroke-width: 3px;
+      stroke-width: 4px;
       fill: none;
       pointer-events: none;
     }
@@ -68,18 +68,20 @@ const clusterColors = {
   color: "blue"
 };
 
-// Larger, more spread-out network
+// Make the network more spread out
 let simulation = d3.forceSimulation(nodes)
-  .force("link", d3.forceLink(links).id(d => d.id).distance(200))  // more distance
-  .force("charge", d3.forceManyBody().strength(-500))             // stronger repulsion
+  .force("link", d3.forceLink(links).id(d => d.id).distance(250))
+  .force("charge", d3.forceManyBody().strength(-600))
   .force("center", d3.forceCenter(width / 2, height / 2));
 
+// Draw links
 const link = svg.append("g")
   .selectAll("line")
   .data(links)
   .join("line")
   .attr("class", "link");
 
+// Draw nodes
 const node = svg.append("g")
   .selectAll("g")
   .data(nodes)
@@ -87,7 +89,7 @@ const node = svg.append("g")
   .attr("class", "node")
   .on("mouseover", function(event, d) {
       const targetClusters = d.cluster;
-      const clusterName = targetClusters[0];  // pick the first
+      const clusterName = targetClusters[0];
       const color = clusterColors[clusterName] || "orange";
 
       node.classed("highlight-node", n => n.cluster.some(c => targetClusters.includes(c)));
@@ -97,7 +99,7 @@ const node = svg.append("g")
       );
 
       hoverLabel.select("circle")
-        .attr("r", 100)                // Bigger circle!
+        .attr("r", 140)                   // Bigger circle!
         .attr("stroke", color)
         .style("display", "block");
 
@@ -105,7 +107,7 @@ const node = svg.append("g")
         .text(clusterName)
         .attr("fill", color)
         .attr("x", 0)
-        .attr("y", 120)                // Move label outside the circle
+        .attr("y", 170)                  // Text outside of big circle
         .style("display", "block");
   })
   .on("mouseout", function() {
@@ -115,37 +117,36 @@ const node = svg.append("g")
       hoverLabel.select("text").style("display", "none");
   });
 
-// Bigger nodes to match bigger network
+// Bigger square node shapes
 node.append("rect")
-  .attr("width", 100)
-  .attr("height", 30)
-  .attr("x", -50)
-  .attr("y", -15);
+  .attr("width", 140)
+  .attr("height", 50)
+  .attr("x", -70)
+  .attr("y", -25);
 
 node.append("text")
   .text(d => d.id)
   .attr("text-anchor", "middle")
   .attr("dy", "0.35em");
 
-// Hover circle + label group
+// Hover Circle + Cluster Label
 const hoverLabel = svg.append("g")
   .attr("class", "hover-label")
   .style("pointer-events", "none");
 
 hoverLabel.append("circle").style("display", "none");
-
 hoverLabel.append("text")
   .attr("text-anchor", "middle")
   .attr("dy", "0.35em")
   .style("display", "none");
 
-// Make label follow mouse
+// Make the hover label follow the mouse
 svg.on("mousemove", function(event) {
   const [x, y] = d3.pointer(event);
   hoverLabel.attr("transform", `translate(${x},${y})`);
 });
 
-// Simulation update
+// Force layout updates positions
 simulation.on("tick", () => {
   link
       .attr("x1", d => d.source.x)
@@ -157,7 +158,7 @@ simulation.on("tick", () => {
       .attr("transform", d => `translate(${d.x},${d.y})`);
 });
 
-// Responsive recentering
+// Handle window resize and recenter
 window.addEventListener('resize', () => {
   width = window.innerWidth;
   height = window.innerHeight;
