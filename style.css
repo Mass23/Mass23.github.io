@@ -1,217 +1,258 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Word Network — Adaptive & Highlighted</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <style>
-    body { margin: 0; overflow: hidden; background: white; }
-    svg { width: 100vw; height: 100vh; display: block; }
-
-    .node rect {
-      fill: #ddd;
-      stroke: #333;
-      rx: 8;
-      ry: 8;
-      cursor: pointer;
-    }
-
-    .node text {
-      pointer-events: none;
-      font-family: Menlo, monospace;
-      font-size: 16px;
-      fill: black;
-    }
-
-    .link {
-      stroke: #999;
-      stroke-opacity: 0.6;
-    }
-
-    .highlighted-node rect {
-      fill: #333 !important;
-      stroke: #333 !important;
-    }
-
-    .highlighted-node text {
-      fill: white;
-    }
-
-    .highlighted-link {
-      stroke: #333 !important;
-      stroke-opacity: 1;
-      stroke-width: 3;
-    }
-
-    .cluster circle {
-      fill: none;
-      stroke-width: 4px;
-    }
-  </style>
-</head>
-<body>
-<svg></svg>
-
-<script>
-const svg = d3.select("svg");
-let width = window.innerWidth;
-let height = window.innerHeight;
-
-const nodes = [
-  { id: "Programmatic-artworks", cluster: ["Programming"], url: "https://en.wikipedia.org/wiki/Apple" },
-  { id: "Sensible-AI", cluster: ["Programming", "Video-art"], url: "https://en.wikipedia.org/wiki/Banana" },
-  { id: "How-I-create-my-identity", cluster: ["Photography", "Music", "Programming", "Video-art"], url: "https://en.wikipedia.org/wiki/Banana" },
-  { id: "Son-net-s", cluster: ["Programming", "Music", "Video-art"], url: "https://brodinskysurboue.ch/sonnets.html" },
-  { id: "The-always-series", cluster: ["Programming", "Music"], url: "Mass23.github.io/the-always-series.html" },
-  { id: "A-glitch-in-the-ethics", cluster: ["Programming", "Glitch-art"], url: "Mass23.github.io/a-glitch-in-the-ethics.html" },
-  { id: "Childhood-paradise-reenacted", cluster: ["Photography"], url: "Mass23.github.io/a-glitch-in-the-ethics.html" },
-  { id: "Disponible 2", cluster: ["Music"], url: "https://open.spotify.com/artist/7vywWVtIW4VqhmrJjy8HD7?si=is8qPeJqT-Ovxrne71XFzQ" },
-  { id: "Brodinsky sur Boue", cluster: ["Music", "Performances"], url: "https://brodinskysurboue.ch/" }
-];
-
-const links = [
-  { source: "Programmatic-artworks", target: "Sensible-AI" },
-  { source: "Programmatic-artworks", target: "How-I-create-my-identity" },
-  { source: "Programmatic-artworks", target: "Son-net-s" },
-  { source: "Programmatic-artworks", target: "The-always-series" },
-  { source: "Programmatic-artworks", target: "A-glitch-in-the-ethics" },
-  { source: "Sensible-AI", target: "How-I-create-my-identity" },
-  { source: "Sensible-AI", target: "Son-net-s" },
-  { source: "Sensible-AI", target: "The-always-series" },
-  { source: "Sensible-AI", target: "A-glitch-in-the-ethics" },
-  { source: "How-I-create-my-identity", target: "Son-net-s" },
-  { source: "How-I-create-my-identity", target: "The-always-series" },
-  { source: "How-I-create-my-identity", target: "A-glitch-in-the-ethics" },
-  { source: "How-I-create-my-identity", target: "Childhood-paradise-reenacted" },
-  { source: "How-I-create-my-identity", target: "Disponible 2" },
-  { source: "How-I-create-my-identity", target: "Brodinsky sur Boue" },
-  { source: "The-always-series", target: "A-glitch-in-the-ethics" },
-  { source: "The-always-series", target: "Disponible 2" },
-  { source: "The-always-series", target: "Brodinsky sur Boue" },
-  { source: "Disponible 2", target: "Brodinsky sur Boue" }
-];
-
-const clusterColors = {
-  "Programming": "#2540D9",
-  "Video-art": "#F24C27",
-  "Glitch-art": "#2540D9",
-  "Music": "#252626", 
-  "Photography": "#F24C27",
-  "Performances": "#252626"
-};
-
-const clusterGroups = {};
-nodes.forEach(node => {
-  node.cluster.forEach(cluster => {
-    if (!clusterGroups[cluster]) clusterGroups[cluster] = [];
-    clusterGroups[cluster].push(node);
-  });
-});
-
-const simulation = d3.forceSimulation(nodes)
-  .force("link", d3.forceLink(links).id(d => d.id).distance(200))
-  .force("charge", d3.forceManyBody().strength(-1000))
-  .force("center", d3.forceCenter(width / 2, height / 2));
-
-const link = svg.append("g")
-  .selectAll("line")
-  .data(links)
-  .join("line")
-  .attr("class", "link");
-
-const node = svg.append("g")
-  .selectAll("g")
-  .data(nodes)
-  .join("g")
-  .attr("class", "node")
-  .on("click", (event, d) => {
-    if (d.url) window.open(d.url, '_blank');
-  })
-  .on("mouseover", (event, d) => highlightClusters(d.cluster))
-  .on("mouseout", clearHighlight);
-
-node.append("text")
-  .attr("x", 0)
-  .attr("y", 0)
-  .attr("text-anchor", "middle")
-  .attr("dy", "0.35em")
-  .text(d => d.id);
-
-node.each(function(d) {
-  const text = d3.select(this).select("text").node();
-  const bbox = text.getBBox();
-  d.bbox = bbox;
-  d3.select(this).insert("rect", "text")
-    .attr("x", bbox.x - 10)
-    .attr("y", bbox.y - 5)
-    .attr("width", bbox.width + 20)
-    .attr("height", bbox.height + 10);
-});
-
-const clusterLayer = svg.append("g").attr("class", "clusters");
-
-function highlightClusters(clusters) {
-  node.classed("highlighted-node", d => clusters.some(c => d.cluster.includes(c)));
-
-  link.classed("highlighted-link", d => 
-    clusters.some(c => d.source.cluster.includes(c) && d.target.cluster.includes(c))
-  );
-
-  const clusterData = clusters.map(cluster => {
-    const members = clusterGroups[cluster];
-    const xs = members.map(n => n.x);
-    const ys = members.map(n => n.y);
-    const minX = Math.min(...xs);
-    const maxX = Math.max(...xs);
-    const minY = Math.min(...ys);
-    const maxY = Math.max(...ys);
-    return {
-      name: cluster,
-      x: (minX + maxX) / 2,
-      y: (minY + maxY) / 2,
-      r: Math.max((maxX - minX) / 2, (maxY - minY) / 2) + 80
-    };
-  });
-
-  const circles = clusterLayer.selectAll("g.cluster")
-    .data(clusterData, d => d.name);
-
-  const gEnter = circles.enter().append("g").attr("class", "cluster");
-
-  gEnter.append("circle").attr("stroke", "#333");
-
-  const merged = gEnter.merge(circles);
-  merged.select("circle")
-    .attr("cx", d => d.x)
-    .attr("cy", d => d.y)
-    .attr("r", d => d.r)
-    .attr("stroke", "#333")
-    .attr("stroke-width", 5);
+/* ############################################ */
+/* MAINS */
+* {
+    margin: 0;
+    padding: 0;
 }
 
-function clearHighlight() {
-  node.classed("highlighted-node", false);
-  link.classed("highlighted-link", false);
-  clusterLayer.selectAll("g.cluster").remove();
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
-simulation.on("tick", () => {
-  link
-    .attr("x1", d => d.source.x)
-    .attr("y1", d => d.source.y)
-    .attr("x2", d => d.target.x)
-    .attr("y2", d => d.target.y);
+p {
+    font-size: 16px;
+}
 
-  node
-    .attr("transform", d => `translate(${d.x},${d.y})`);
-});
+.title {
+    padding-left: 30px;
+    width: 60%;
+    font-family: 'Arial', sans-serif;
+    font-size: 40px;
+    font-style: italic;
+    font-weight: bold;
+    color: #000; /* Black text color */
+    transition: color 0.667s ease; /* Smooth transition for color changes */
+    align-items: center;
+    }
+        
+h2 {
+    font-family: 'Arial', sans-serif;
+    font-weight: lighter; /* Adjust font weight if needed */
+    font-size: 28px;
+    color: #242526; /* Adjust color to a lighter shade of gray */
+    }
 
-window.addEventListener('resize', () => {
-  width = window.innerWidth;
-  height = window.innerHeight;
-  simulation.force("center", d3.forceCenter(width / 2, height / 2));
-  simulation.alpha(0.5).restart();
-});
-</script>
-</body>
-</html>
+h3 {
+    font-family: Arial, sans-serif;
+    font-style: italic;
+    font-size: 16px; /* Font size in pixels */
+    color: #242526; /* Adjust color to a lighter shade of gray */
+    }
+    
+@media only screen and (max-width: 1000px) {
+    .title {
+        width: 33%;
+        padding-left: 5px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        font-size: 16px;
+        line-height: 1em;
+        }
+    
+    .h2 {
+        padding-right: 5px;
+        padding-left: 2px;
+        font-size: 8px;
+        }
+    p {
+        font-size: 10px;
+      }
+    }
+
+/* ############################################ */
+/* HEADER */
+.top-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    top: 0px;
+    width: 100%;
+    height: 78px;
+    cursor: pointer;
+    z-index: 2;
+    background: linear-gradient(90deg, #F0F0F0, #242526 35%);
+    position: relative;
+  }
+  
+.top-banner a:hover {
+    color: #ff4500; /* Bright red-orange on hover */
+  }
+  
+.banner-element {
+    font-family: "Arial", Arial, sans-serif;
+    font-style: italic;
+    font-stretch: condensed;
+    font-size: 16px;
+    color: #F0F0F0;
+    padding-right: 0px;
+    padding-left: 20px;
+    margin-left: auto; 
+    margin-right: 0;
+  }
+  
+@media only screen and (max-width: 1000px) {
+    
+  .top-banner {
+    height: 48px;
+    background: linear-gradient(90deg, #F0F0F0, #242526 30%);
+    }
+    
+  .banner-element {
+    font-weight: lighter;
+    letter-spacing: -1px;
+    font-size: 12px;
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+    
+}
+
+/* ############################################ */
+/* CONTENT */
+.content {
+    display: flex;
+    background: linear-gradient(to bottom, #233BD9, #242526 10%);
+    height: 120vh;
+    width: 100%;
+    top: 80px;
+    margin: 0;
+    padding: 0;
+}
+
+.entire-column {
+    left: 0;
+    height: calc(100% - 120px);
+    width: calc(100% - 60px);
+    background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
+    margin: 30px;
+    padding: 30px;
+}
+
+.left-column {
+    left: 0;
+    height: calc(100% - 120px);
+    width: calc(55% - 60px);
+    background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
+    margin: 30px;
+    padding: 30px;
+}
+
+.right-column {
+    right: 0;
+    align-items: center;
+    height: calc(100% - 60px);
+    width: 45%; /* Adjust the width to your desired size */
+    margin: 0;
+    padding: 30px;
+    background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
+}
+
+.right-column:hover {
+    background: #D0D6DB; /* Shaded background color when not hovered */
+}
+  
+.right-column figure {
+    margin-bottom: 20px; /* Add bottom margin to each figure */
+  }
+  
+.right-column img {
+    max-width: 100%; /* Ensure images don't exceed their container width */
+  }
+.right-column img {
+    max-width: 100%; /* Ensure images don't exceed their container width */
+  }
+  
+@media only screen and (max-width: 1000px) {
+  .content {
+    top: 50px;
+    }
+
+  .left-column {
+    font-size: 6px;
+    width: 100%;  /* Full width for very small screens */
+    margin: 15px;
+    padding: 15px;
+
+  }
+
+  .right-column {
+    display: none;
+  }
+  }
+
+/* ############################################ */
+/* NAV */
+nav ul {
+    list-style: none;
+    display: flex;
+  }
+  
+  nav li {
+    margin-right: 20px;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: #333; /* Dark grey text color */
+    font-style: italic;
+    font-weight: bold;
+    transition: color 0.3s ease; /* Smooth transition for color changes */
+  }
+
+/* ############################################ */
+/* SWARMS */
+#imageSwarm {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    cursor: pointer;
+  }
+  
+.title-swarm {
+    font-family: 'Arial', sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    color: #ff4500; /* Adjust title color */
+  }
+  
+.title-swarm h1 {
+    font-size: 40px;
+    color: #ff4500; /* Adjust title color */
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+  }
+  
+ .title-swarm .line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #ff4500; /* Adjust line color */
+    top: 50%;
+    transform-origin: left;
+    z-index: 0;
+  }
+  
+  
+  /* ############################################ */
+  /* MISC */
+  
+  #hrid {
+    width: 100%;
+    background:  #ff4500 50%;
+    border: 0px;
+    top: 98px;
+    height: 2px;
+  }
+  
+/* media only screen and (max-width: 600px) {*/
+/*   #hrid {top: 58px;}*/
+/* }*/
