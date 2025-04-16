@@ -2,39 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Word Network Visualization</title>
+  <title>Word Network with Cluster Circles</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     body { margin: 0; overflow: hidden; }
     svg { width: 100vw; height: 100vh; display: block; }
 
-    .node rect { fill: #aaa; stroke: #333; rx: 8; ry: 8; }
-    .node text { 
-      pointer-events: none; 
-      font-family: Menlo, monospace;
-      font-weight: normal;
-      font-style: normal;
-      font-size: 16px;
+    .node rect {
+      fill: #aaa;
+      stroke: #333;
+      rx: 8;
+      ry: 8;
+      cursor: pointer;
     }
 
-    .link { stroke: #999; stroke-opacity: 0.6; }
+    .node text {
+      pointer-events: none;
+      font-family: Menlo, monospace;
+      font-size: 16px;
+      font-weight: normal;
+      font-style: normal;
+    }
 
-    .highlight-node rect { fill: orange !important; }
-    .highlight-link { stroke: orange !important; stroke-width: 2px; }
+    .link {
+      stroke: #999;
+      stroke-opacity: 0.6;
+    }
 
-    .hover-label text {
+    .cluster circle {
+      fill: none;
+      stroke-width: 4px;
+    }
+
+    .cluster text {
       font-family: Arial, sans-serif;
       font-weight: bold;
       font-style: italic;
-      font-size: 40px;
-      fill: orange;
-      pointer-events: none;
-    }
-
-    .hover-label circle {
-      stroke: orange;
-      stroke-width: 4px;
-      fill: none;
+      font-size: 24px;
       pointer-events: none;
     }
   </style>
@@ -47,77 +51,61 @@ const svg = d3.select("svg");
 let width = window.innerWidth;
 let height = window.innerHeight;
 
-// Sample Data
+// === Sample Data ===
 const nodes = [
-  { id: "apple", cluster: ["fruit"] },
-  { id: "banana", cluster: ["fruit"] },
-  { id: "carrot", cluster: ["vegetable"] },
-  { id: "orange", cluster: ["fruit", "color"] }
+  { id: "apple", cluster: ["fruit"], url: "https://en.wikipedia.org/wiki/Apple" },
+  { id: "banana", cluster: ["fruit"], url: "https://en.wikipedia.org/wiki/Banana" },
+  { id: "carrot", cluster: ["vegetable"], url: "https://en.wikipedia.org/wiki/Carrot" },
+  { id: "orange", cluster: ["fruit", "color"], url: "https://en.wikipedia.org/wiki/Orange_(fruit)" },
+  { id: "blue", cluster: ["color"], url: "https://en.wikipedia.org/wiki/Blue" }
 ];
 
 const links = [
   { source: "apple", target: "banana" },
   { source: "banana", target: "orange" },
-  { source: "orange", target: "carrot" }
+  { source: "orange", target: "carrot" },
+  { source: "orange", target: "blue" }
 ];
 
-// Cluster Colors
 const clusterColors = {
   fruit: "orange",
   vegetable: "green",
   color: "blue"
 };
 
-// Make the network more spread out
-let simulation = d3.forceSimulation(nodes)
+// === Cluster grouping ===
+const clusterGroups = {};
+nodes.forEach(node => {
+  node.cluster.forEach(cluster => {
+    if (!clusterGroups[cluster]) clusterGroups[cluster] = [];
+    clusterGroups[cluster].push(node);
+  });
+});
+
+// === Simulation ===
+const simulation = d3.forceSimulation(nodes)
   .force("link", d3.forceLink(links).id(d => d.id).distance(250))
   .force("charge", d3.forceManyBody().strength(-600))
   .force("center", d3.forceCenter(width / 2, height / 2));
 
-// Draw links
+// === Draw Links ===
 const link = svg.append("g")
   .selectAll("line")
   .data(links)
   .join("line")
   .attr("class", "link");
 
-// Draw nodes
+// === Draw Nodes ===
 const node = svg.append("g")
   .selectAll("g")
   .data(nodes)
   .join("g")
   .attr("class", "node")
-  .on("mouseover", function(event, d) {
-      const targetClusters = d.cluster;
-      const clusterName = targetClusters[0];
-      const color = clusterColors[clusterName] || "orange";
-
-      node.classed("highlight-node", n => n.cluster.some(c => targetClusters.includes(c)));
-      link.classed("highlight-link", l =>
-         l.source.cluster.some(c => targetClusters.includes(c)) &&
-         l.target.cluster.some(c => targetClusters.includes(c))
-      );
-
-      hoverLabel.select("circle")
-        .attr("r", 140)                   // Bigger circle!
-        .attr("stroke", color)
-        .style("display", "block");
-
-      hoverLabel.select("text")
-        .text(clusterName)
-        .attr("fill", color)
-        .attr("x", 0)
-        .attr("y", 170)                  // Text outside of big circle
-        .style("display", "block");
-  })
-  .on("mouseout", function() {
-      node.classed("highlight-node", false);
-      link.classed("highlight-link", false);
-      hoverLabel.select("circle").style("display", "none");
-      hoverLabel.select("text").style("display", "none");
+  .on("click", function(event, d) {
+    if (d.url) window.open(d.url, '_blank');
   });
 
-// Bigger square node shapes
+// Make squares bigger
 node.append("rect")
   .attr("width", 140)
   .attr("height", 50)
@@ -129,36 +117,69 @@ node.append("text")
   .attr("text-anchor", "middle")
   .attr("dy", "0.35em");
 
-// Hover Circle + Cluster Label
-const hoverLabel = svg.append("g")
-  .attr("class", "hover-label")
-  .style("pointer-events", "none");
+// === Cluster Circles and Labels ===
+const clusterLayer = svg.append("g").attr("class", "clusters");
 
-hoverLabel.append("circle").style("display", "none");
-hoverLabel.append("text")
-  .attr("text-anchor", "middle")
-  .attr("dy", "0.35em")
-  .style("display", "none");
-
-// Make the hover label follow the mouse
-svg.on("mousemove", function(event) {
-  const [x, y] = d3.pointer(event);
-  hoverLabel.attr("transform", `translate(${x},${y})`);
-});
-
-// Force layout updates positions
 simulation.on("tick", () => {
+  // Update link positions
   link
-      .attr("x1", d => d.source.x)
-      .attr("y1", d => d.source.y)
-      .attr("x2", d => d.target.x)
-      .attr("y2", d => d.target.y);
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
 
+  // Update node positions
   node
-      .attr("transform", d => `translate(${d.x},${d.y})`);
+    .attr("transform", d => `translate(${d.x},${d.y})`);
+
+  // Compute bounding circles for clusters
+  const clusterData = Object.entries(clusterGroups).map(([name, nodes]) => {
+    const xs = nodes.map(n => n.x);
+    const ys = nodes.map(n => n.y);
+    const minX = Math.min(...xs);
+    const maxX = Math.max(...xs);
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys);
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    const radius = Math.max(
+      (maxX - minX) / 2,
+      (maxY - minY) / 2
+    ) + 80;  // Padding for square size
+
+    return { name, x: centerX, y: centerY, r: radius };
+  });
+
+  const circles = clusterLayer.selectAll("g.cluster")
+    .data(clusterData, d => d.name);
+
+  const gEnter = circles.enter()
+    .append("g")
+    .attr("class", "cluster");
+
+  gEnter.append("circle")
+    .attr("stroke", d => clusterColors[d.name] || "gray");
+
+  gEnter.append("text")
+    .text(d => d.name);
+
+  const merged = gEnter.merge(circles);
+
+  merged.select("circle")
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
+    .attr("r", d => d.r)
+    .attr("stroke", d => clusterColors[d.name] || "gray");
+
+  merged.select("text")
+    .attr("x", d => d.x - d.r + 15)  // top-left inside circle
+    .attr("y", d => d.y - d.r + 30)  // slight padding down
+    .attr("fill", d => clusterColors[d.name] || "gray");
+
+  circles.exit().remove();
 });
 
-// Handle window resize and recenter
+// === Handle window resize ===
 window.addEventListener('resize', () => {
   width = window.innerWidth;
   height = window.innerHeight;
