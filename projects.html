@@ -123,8 +123,9 @@ const node = svg.append("g")
   .on("click", (event, d) => {
     if (d.url) window.open(d.url, "_blank");
   })
-  .on("mouseover", (event, d) => highlightClusters(d.cluster))
+  .on("mouseover", (event, d) => highlightClusters(d.id))
   .on("mouseout", clearHighlight);
+
 
 node.append("text")
   .text(d => d.id)
@@ -143,19 +144,16 @@ node.insert("rect", "text")
   .attr("height", d => d.textHeight + 16);
 
 // === Cluster Layer ===
-function highlightClusters(clusterList) {
-  const selected = new Set();
-  clusterList.forEach(cl => clusterGroups[cl]?.forEach(n => selected.add(n.id)));
-
-  node.classed("highlighted-node", d => selected.has(d.id));
-  link.classed("highlighted-link", d => selected.has(d.source.id) && selected.has(d.target.id));
+function highlightClusters(nodeId) {
+  // Only highlight the hovered node and its connections
+  node.classed("highlighted-node", d => d.id === nodeId);
+  link.classed("highlighted-link", d => d.source.id === nodeId || d.target.id === nodeId);
 }
 
 function clearHighlight() {
   node.classed("highlighted-node", false);
   link.classed("highlighted-link", false);
 }
-
 
 function ticked() {
   link
