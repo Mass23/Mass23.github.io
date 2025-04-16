@@ -2,91 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Word Network — Highlight & Drag</title>
+  <title>Word Network — Hover Highlight</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     body {
       margin: 0;
       overflow: hidden;
-      background: linear-gradient(to bottom, #263DBF 0%, #252626 25%, #252626 100%);
+      background: linear-gradient(to bottom, #263DBF 25%, #252626 100%);
     }
-
     svg {
       width: 100vw;
       height: 100vh;
       display: block;
     }
-
     .node rect {
-      fill: #ddd;
+      fill: #e0e0e0;
       stroke: #333;
       rx: 8;
       ry: 8;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      cursor: grab;
     }
-
     .node text {
       pointer-events: none;
       font-family: Menlo, monospace;
       font-size: 16px;
       fill: black;
-      transition: all 0.2s ease;
     }
-
     .link {
       stroke: #F24C27;
-      stroke-opacity: 0.8;
+      stroke-opacity: 0.6;
       stroke-width: 2;
-      transition: all 0.2s ease;
     }
-
     .highlighted-node rect {
-      fill: #253259 !important;
-      stroke: #253259 !important;
+      fill: #253259;
     }
-
     .highlighted-node text {
-      fill: white !important;
+      fill: white;
     }
-
     .highlighted-link {
-      stroke: #253259 !important;
-      stroke-opacity: 1 !important;
-      stroke-width: 3 !important;
+      stroke: #253259;
+      stroke-opacity: 1;
+      stroke-width: 3;
     }
-
     .cluster circle {
       fill: none;
+      stroke: #253259;
       stroke-width: 4px;
-      transition: all 0.2s ease;
     }
-
-    .highlighted-cluster circle {
-      stroke: #253259 !important;
-      stroke-width: 5 !important;
+    .cluster text {
+      font-family: Arial, sans-serif;
+      font-style: italic;
+      font-weight: bold;
+      font-size: 24px;
+      fill: #253259;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-
 <svg></svg>
-
 <script>
 const svg = d3.select("svg");
 let width = window.innerWidth;
 let height = window.innerHeight;
 
+// === Data ===
 const nodes = [
   { id: "Programmatic-artworks", cluster: ["Programming"], url: "https://en.wikipedia.org/wiki/Apple" },
   { id: "Sensible-AI", cluster: ["Programming", "Video-art"], url: "https://en.wikipedia.org/wiki/Banana" },
   { id: "How-I-create-my-identity", cluster: ["Photography", "Music", "Programming", "Video-art"], url: "https://en.wikipedia.org/wiki/Banana" },
   { id: "Son-net-s", cluster: ["Programming", "Music", "Video-art"], url: "https://brodinskysurboue.ch/sonnets.html" },
-  { id: "The-always-series", cluster: ["Programming", "Music"], url: "https://Mass23.github.io/the-always-series.html" },
-  { id: "A-glitch-in-the-ethics", cluster: ["Programming", "Glitch-art"], url: "https://Mass23.github.io/a-glitch-in-the-ethics.html" },
-  { id: "Childhood-paradise-reenacted", cluster: ["Photography"], url: "https://Mass23.github.io/a-glitch-in-the-ethics.html" },
+  { id: "The-always-series", cluster: ["Programming", "Music"], url: "Mass23.github.io/the-always-series.html" },
+  { id: "A-glitch-in-the-ethics", cluster: ["Programming", "Glitch-art"], url: "Mass23.github.io/a-glitch-in-the-ethics.html" },
+  { id: "Childhood-paradise-reenacted", cluster: ["Photography"], url: "Mass23.github.io/a-glitch-in-the-ethics.html" },
   { id: "Disponible 2", cluster: ["Music"], url: "https://open.spotify.com/artist/7vywWVtIW4VqhmrJjy8HD7?si=is8qPeJqT-Ovxrne71XFzQ" },
-  { id: "Brodinsky sur Boue", cluster: ["Music", "Performances"], url: "https://brodinskysurboue.ch/" }
+  { id: "Brodinsky sur Boue", cluster: ["Music", "Performances"], url: "https://brodinskysurboue.ch/" },
 ];
 
 const links = [
@@ -111,16 +101,7 @@ const links = [
   { source: "Disponible 2", target: "Brodinsky sur Boue" }
 ];
 
-const clusterColors = {
-  "Programming": "#2540D9",
-  "Video-art": "#F24C27",
-  "Glitch-art": "#2540D9",
-  "Music": "#252626",
-  "Photography": "#F24C27",
-  "Performances": "#252626"
-};
-
-// Preprocess cluster groups
+// === Cluster Groups ===
 const clusterGroups = {};
 nodes.forEach(node => {
   node.cluster.forEach(cluster => {
@@ -129,106 +110,84 @@ nodes.forEach(node => {
   });
 });
 
-// Simulation setup
+// === Force Simulation ===
 const simulation = d3.forceSimulation(nodes)
   .force("link", d3.forceLink(links).id(d => d.id).distance(250))
   .force("charge", d3.forceManyBody().strength(-600))
-  .force("center", d3.forceCenter(width / 2, height / 2));
+  .force("center", d3.forceCenter(width / 2, height / 2))
+  .on("tick", ticked);
 
-// Dragging behavior
-const drag = d3.drag()
-  .on("start", (event, d) => {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  })
-  .on("drag", (event, d) => {
-    d.fx = event.x;
-    d.fy = event.y;
-  })
-  .on("end", (event, d) => {
-    if (!event.active) simulation.alphaTarget(0);
-    d.fx = event.x;
-    d.fy = event.y;  // Fix at new spot
-  });
-
-// Draw links
+// === Draw Links ===
 const link = svg.append("g")
   .selectAll("line")
   .data(links)
   .join("line")
   .attr("class", "link");
 
-// Draw nodes
+// === Draw Nodes ===
 const node = svg.append("g")
   .selectAll("g")
   .data(nodes)
   .join("g")
   .attr("class", "node")
+  .call(drag(simulation))
   .on("click", (event, d) => {
-    if (d.url) window.open(d.url, '_blank');
+    if (d.url) window.open(d.url, "_blank");
   })
   .on("mouseover", (event, d) => highlightClusters(d.cluster))
-  .on("mouseout", clearHighlight)
-  .call(drag);
-
-// Dynamic rect sizing based on text
-node.each(function(d) {
-  const temp = svg.append("text")
-    .attr("font-family", "Menlo")
-    .attr("font-size", 16)
-    .text(d.id);
-  const bbox = temp.node().getBBox();
-  d.width = bbox.width + 20;
-  d.height = bbox.height + 20;
-  temp.remove();
-});
+  .on("mouseout", clearHighlight);
 
 node.append("rect")
-  .attr("x", d => -d.width / 2)
-  .attr("y", d => -d.height / 2)
-  .attr("width", d => d.width)
-  .attr("height", d => d.height);
+  .each(function(d) {
+    const text = d.id;
+    const approxWidth = text.length * 8 + 20;
+    d.rectWidth = approxWidth;
+  })
+  .attr("x", d => -d.rectWidth / 2)
+  .attr("y", -25)
+  .attr("width", d => d.rectWidth)
+  .attr("height", 50);
 
 node.append("text")
+  .text(d => d.id)
   .attr("text-anchor", "middle")
-  .attr("dy", "0.35em")
-  .text(d => d.id);
+  .attr("dy", "0.35em");
 
-// Cluster layer
+// === Cluster Circles Layer ===
 const clusterLayer = svg.append("g").attr("class", "clusters");
 
-function highlightClusters(clusterNames) {
-  const activeNodes = new Set();
-  clusterNames.forEach(name => {
-    clusterGroups[name]?.forEach(node => activeNodes.add(node.id));
-  });
+function highlightClusters(clusterList) {
+  const selected = new Set();
+  clusterList.forEach(cl => clusterGroups[cl].forEach(n => selected.add(n.id)));
 
-  node.classed("highlighted-node", d => activeNodes.has(d.id));
-  link.classed("highlighted-link", d => activeNodes.has(d.source.id) && activeNodes.has(d.target.id));
+  node.classed("highlighted-node", d => selected.has(d.id));
+  link.classed("highlighted-link", d => selected.has(d.source.id) && selected.has(d.target.id));
 
-  const circlesData = clusterNames.map(cluster => {
-    const members = clusterGroups[cluster] || [];
-    if (members.length === 0) return null;
+  const data = clusterList.map(cl => {
+    const members = clusterGroups[cl];
     const xs = members.map(n => n.x);
     const ys = members.map(n => n.y);
-    const centerX = (Math.min(...xs) + Math.max(...xs)) / 2;
-    const centerY = (Math.min(...ys) + Math.max(...ys)) / 2;
-    const radius = Math.max((Math.max(...xs) - Math.min(...xs)) / 2, (Math.max(...ys) - Math.min(...ys)) / 2) + 80;
-    return { name: cluster, x: centerX, y: centerY, r: radius };
-  }).filter(Boolean);
+    const minX = Math.min(...xs);
+    const maxX = Math.max(...xs);
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys);
+    const r = Math.max((maxX - minX) / 2, (maxY - minY) / 2) + 80;
+    return { name: cl, x: (minX + maxX) / 2, y: (minY + maxY) / 2, r };
+  });
 
-  const clusterCircles = clusterLayer.selectAll("g.cluster")
-    .data(circlesData, d => d.name);
+  const circles = clusterLayer.selectAll("g.cluster").data(data, d => d.name);
+  const gEnter = circles.enter().append("g").attr("class", "cluster");
 
-  const gEnter = clusterCircles.enter()
-    .append("g")
-    .attr("class", "cluster highlighted-cluster");
+  gEnter.append("circle").attr("stroke", "#253259");
+  gEnter.append("text")
+    .attr("font-family", "Arial")
+    .attr("font-style", "italic")
+    .attr("font-weight", "bold")
+    .attr("font-size", "24px")
+    .attr("text-anchor", "start")
+    .attr("fill", "#253259");
 
-  gEnter.append("circle");
-  gEnter.append("text");
-
-  const merged = gEnter.merge(clusterCircles);
+  const merged = gEnter.merge(circles);
 
   merged.select("circle")
     .attr("cx", d => d.x)
@@ -238,7 +197,6 @@ function highlightClusters(clusterNames) {
   merged.select("text")
     .attr("x", d => d.x - d.r + 15)
     .attr("y", d => d.y - d.r + 30)
-    .attr("fill", d => clusterColors[d.name] || "#253259")
     .text(d => d.name);
 }
 
@@ -248,16 +206,32 @@ function clearHighlight() {
   clusterLayer.selectAll("g.cluster").remove();
 }
 
-simulation.on("tick", () => {
+function ticked() {
   link
     .attr("x1", d => d.source.x)
     .attr("y1", d => d.source.y)
     .attr("x2", d => d.target.x)
     .attr("y2", d => d.target.y);
+  node.attr("transform", d => `translate(${d.x},${d.y})`);
+}
 
-  node
-    .attr("transform", d => `translate(${d.x},${d.y})`);
-});
+function drag(simulation) {
+  return d3.drag()
+    .on("start", (event, d) => {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    })
+    .on("drag", (event, d) => {
+      d.fx = event.x;
+      d.fy = event.y;
+    })
+    .on("end", (event, d) => {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = event.x;
+      d.fy = event.y;
+    });
+}
 
 window.addEventListener('resize', () => {
   width = window.innerWidth;
