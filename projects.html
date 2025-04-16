@@ -25,13 +25,13 @@
     .node text {
       pointer-events: none;
       font-family: Menlo, monospace;
-      font-size: 16px;
+      font-size: 24px;
       fill: black;
     }
     .link {
       stroke: #F24C27;
       stroke-opacity: 0.6;
-      stroke-width: 2;
+      stroke-width: 4;
     }
     .highlighted-node rect {
       fill: #333;
@@ -42,18 +42,18 @@
     .highlighted-link {
       stroke: #333;
       stroke-opacity: 1;
-      stroke-width: 3;
+      stroke-width: 5;
     }
     .cluster circle {
       fill: none;
       stroke: #333;
-      stroke-width: 4px;
+      stroke-width: 5px;
     }
     .cluster text {
       font-family: Arial, sans-serif;
       font-style: italic;
       font-weight: bold;
-      font-size: 24px;
+      font-size: 28px;
       fill: #333;
       pointer-events: none;
     }
@@ -144,10 +144,10 @@ node.append("text")
   });
 
 node.insert("rect", "text")
-  .attr("x", d => -d.textWidth / 2 - 10)
-  .attr("y", d => -d.textHeight / 2 - 4)
-  .attr("width", d => d.textWidth + 20)
-  .attr("height", d => d.textHeight + 8);
+  .attr("x", d => -d.textWidth / 2 - 20)
+  .attr("y", d => -d.textHeight / 2 - 8)
+  .attr("width", d => d.textWidth + 40)
+  .attr("height", d => d.textHeight + 16);
 
 // === Cluster Circles Layer ===
 const clusterLayer = svg.append("g").attr("class", "clusters");
