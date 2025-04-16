@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Word Network with Cluster Circles</title>
+  <title>Word Network — Hover Highlight</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     body { margin: 0; overflow: hidden; }
@@ -20,8 +20,6 @@
       pointer-events: none;
       font-family: Menlo, monospace;
       font-size: 16px;
-      font-weight: normal;
-      font-style: normal;
     }
 
     .link {
@@ -29,21 +27,47 @@
       stroke-opacity: 0.6;
     }
 
+    .highlighted-node rect {
+      fill: orange;
+    }
+
+    .highlighted-link {
+      stroke: orange;
+      stroke-opacity: 1;
+      stroke-width: 3;
+    }
+
     .cluster circle {
       fill: none;
       stroke-width: 4px;
     }
 
-    .cluster text {
+    .cluster-labels {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255,255,255,0.8);
+      padding: 10px;
+      border-radius: 8px;
       font-family: Arial, sans-serif;
       font-weight: bold;
       font-style: italic;
-      font-size: 24px;
-      pointer-events: none;
+      font-size: 20px;
+    }
+
+    .cluster-labels div {
+      margin: 4px 0;
+      cursor: pointer;
+    }
+
+    .cluster-labels div:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
+
+<div class="cluster-labels" id="clusterMenu"></div>
 <svg></svg>
 
 <script>
@@ -51,7 +75,6 @@ const svg = d3.select("svg");
 let width = window.innerWidth;
 let height = window.innerHeight;
 
-// === Sample Data ===
 const nodes = [
   { id: "apple", cluster: ["fruit"], url: "https://en.wikipedia.org/wiki/Apple" },
   { id: "banana", cluster: ["fruit"], url: "https://en.wikipedia.org/wiki/Banana" },
@@ -73,7 +96,7 @@ const clusterColors = {
   color: "blue"
 };
 
-// === Cluster grouping ===
+// === Preprocess cluster groups ===
 const clusterGroups = {};
 nodes.forEach(node => {
   node.cluster.forEach(cluster => {
@@ -82,7 +105,7 @@ nodes.forEach(node => {
   });
 });
 
-// === Simulation ===
+// === Force Simulation ===
 const simulation = d3.forceSimulation(nodes)
   .force("link", d3.forceLink(links).id(d => d.id).distance(250))
   .force("charge", d3.forceManyBody().strength(-600))
@@ -105,7 +128,6 @@ const node = svg.append("g")
     if (d.url) window.open(d.url, '_blank');
   });
 
-// Make squares bigger
 node.append("rect")
   .attr("width", 140)
   .attr("height", 50)
@@ -117,38 +139,40 @@ node.append("text")
   .attr("text-anchor", "middle")
   .attr("dy", "0.35em");
 
-// === Cluster Circles and Labels ===
+// === Cluster Circle Layer ===
 const clusterLayer = svg.append("g").attr("class", "clusters");
 
-simulation.on("tick", () => {
-  // Update link positions
-  link
-    .attr("x1", d => d.source.x)
-    .attr("y1", d => d.source.y)
-    .attr("x2", d => d.target.x)
-    .attr("y2", d => d.target.y);
+// === Draw Menu for Clusters ===
+const menu = d3.select("#clusterMenu");
+Object.keys(clusterGroups).forEach(cluster => {
+  menu.append("div")
+    .text(cluster)
+    .style("color", clusterColors[cluster] || "black")
+    .on("mouseover", () => highlightCluster(cluster))
+    .on("mouseout", () => clearHighlight());
+});
 
-  // Update node positions
-  node
-    .attr("transform", d => `translate(${d.x},${d.y})`);
+function highlightCluster(cluster) {
+  const selectedNodes = new Set(clusterGroups[cluster].map(d => d.id));
 
-  // Compute bounding circles for clusters
-  const clusterData = Object.entries(clusterGroups).map(([name, nodes]) => {
-    const xs = nodes.map(n => n.x);
-    const ys = nodes.map(n => n.y);
-    const minX = Math.min(...xs);
-    const maxX = Math.max(...xs);
-    const minY = Math.min(...ys);
-    const maxY = Math.max(...ys);
-    const centerX = (minX + maxX) / 2;
-    const centerY = (minY + maxY) / 2;
-    const radius = Math.max(
-      (maxX - minX) / 2,
-      (maxY - minY) / 2
-    ) + 80;  // Padding for square size
+  node.classed("highlighted-node", d => selectedNodes.has(d.id));
+  link.classed("highlighted-link", d => 
+    selectedNodes.has(d.source.id) && selectedNodes.has(d.target.id)
+  );
 
-    return { name, x: centerX, y: centerY, r: radius };
-  });
+  // Draw circle around cluster
+  const members = clusterGroups[cluster];
+  const xs = members.map(n => n.x);
+  const ys = members.map(n => n.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  const centerX = (minX + maxX) / 2;
+  const centerY = (minY + maxY) / 2;
+  const radius = Math.max((maxX - minX) / 2, (maxY - minY) / 2) + 80;
+
+  const clusterData = [{ name: cluster, x: centerX, y: centerY, r: radius }];
 
   const circles = clusterLayer.selectAll("g.cluster")
     .data(clusterData, d => d.name);
@@ -172,14 +196,30 @@ simulation.on("tick", () => {
     .attr("stroke", d => clusterColors[d.name] || "gray");
 
   merged.select("text")
-    .attr("x", d => d.x - d.r + 15)  // top-left inside circle
-    .attr("y", d => d.y - d.r + 30)  // slight padding down
+    .attr("x", d => d.x - d.r + 15)
+    .attr("y", d => d.y - d.r + 30)
     .attr("fill", d => clusterColors[d.name] || "gray");
+}
 
-  circles.exit().remove();
+function clearHighlight() {
+  node.classed("highlighted-node", false);
+  link.classed("highlighted-link", false);
+  clusterLayer.selectAll("g.cluster").remove();
+}
+
+// === Simulation Tick Update ===
+simulation.on("tick", () => {
+  link
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+
+  node
+    .attr("transform", d => `translate(${d.x},${d.y})`);
 });
 
-// === Handle window resize ===
+// === Handle Window Resize ===
 window.addEventListener('resize', () => {
   width = window.innerWidth;
   height = window.innerHeight;
