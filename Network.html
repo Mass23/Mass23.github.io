@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Word Network — Hover Highlight</title>
+  <title>Word Network — Responsive + Highlights</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     body {
@@ -34,19 +34,19 @@
       stroke-width: 2;
     }
     .highlighted-node rect {
-      fill: #253259;
+      fill: #333;
     }
     .highlighted-node text {
       fill: white;
     }
     .highlighted-link {
-      stroke: #253259;
+      stroke: #333;
       stroke-opacity: 1;
       stroke-width: 3;
     }
     .cluster circle {
       fill: none;
-      stroke: #253259;
+      stroke: #333;
       stroke-width: 4px;
     }
     .cluster text {
@@ -54,7 +54,7 @@
       font-style: italic;
       font-weight: bold;
       font-size: 24px;
-      fill: #253259;
+      fill: #333;
       pointer-events: none;
     }
   </style>
@@ -137,21 +137,21 @@ const node = svg.append("g")
   .on("mouseover", (event, d) => highlightClusters(d.cluster))
   .on("mouseout", clearHighlight);
 
-node.append("rect")
-  .each(function(d) {
-    const text = d.id;
-    const approxWidth = text.length * 8 + 20;
-    d.rectWidth = approxWidth;
-  })
-  .attr("x", d => -d.rectWidth / 2)
-  .attr("y", -25)
-  .attr("width", d => d.rectWidth)
-  .attr("height", 50);
-
 node.append("text")
   .text(d => d.id)
   .attr("text-anchor", "middle")
-  .attr("dy", "0.35em");
+  .attr("dy", "0.35em")
+  .each(function(d) {
+    const bbox = this.getBBox();
+    d.textWidth = bbox.width;
+    d.textHeight = bbox.height;
+  });
+
+node.insert("rect", "text")
+  .attr("x", d => -d.textWidth / 2 - 10)
+  .attr("y", d => -d.textHeight / 2 - 4)
+  .attr("width", d => d.textWidth + 20)
+  .attr("height", d => d.textHeight + 8);
 
 // === Cluster Circles Layer ===
 const clusterLayer = svg.append("g").attr("class", "clusters");
@@ -178,14 +178,13 @@ function highlightClusters(clusterList) {
   const circles = clusterLayer.selectAll("g.cluster").data(data, d => d.name);
   const gEnter = circles.enter().append("g").attr("class", "cluster");
 
-  gEnter.append("circle").attr("stroke", "#253259");
+  gEnter.append("circle");
   gEnter.append("text")
     .attr("font-family", "Arial")
     .attr("font-style", "italic")
     .attr("font-weight", "bold")
     .attr("font-size", "24px")
-    .attr("text-anchor", "start")
-    .attr("fill", "#253259");
+    .attr("text-anchor", "start");
 
   const merged = gEnter.merge(circles);
 
