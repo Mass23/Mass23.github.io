@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Word Network — Gradient & Highlight</title>
+  <title>Word Network — Highlight & Drag</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     body {
@@ -23,6 +23,7 @@
       rx: 8;
       ry: 8;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
 
     .node text {
@@ -30,12 +31,14 @@
       font-family: Menlo, monospace;
       font-size: 16px;
       fill: black;
+      transition: all 0.2s ease;
     }
 
     .link {
       stroke: #F24C27;
       stroke-opacity: 0.8;
       stroke-width: 2;
+      transition: all 0.2s ease;
     }
 
     .highlighted-node rect {
@@ -44,22 +47,29 @@
     }
 
     .highlighted-node text {
-      fill: white;
+      fill: white !important;
     }
 
     .highlighted-link {
       stroke: #253259 !important;
-      stroke-opacity: 1;
-      stroke-width: 3;
+      stroke-opacity: 1 !important;
+      stroke-width: 3 !important;
     }
 
     .cluster circle {
       fill: none;
       stroke-width: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .highlighted-cluster circle {
+      stroke: #253259 !important;
+      stroke-width: 5 !important;
     }
   </style>
 </head>
 <body>
+
 <svg></svg>
 
 <script>
@@ -72,9 +82,9 @@ const nodes = [
   { id: "Sensible-AI", cluster: ["Programming", "Video-art"], url: "https://en.wikipedia.org/wiki/Banana" },
   { id: "How-I-create-my-identity", cluster: ["Photography", "Music", "Programming", "Video-art"], url: "https://en.wikipedia.org/wiki/Banana" },
   { id: "Son-net-s", cluster: ["Programming", "Music", "Video-art"], url: "https://brodinskysurboue.ch/sonnets.html" },
-  { id: "The-always-series", cluster: ["Programming", "Music"], url: "Mass23.github.io/the-always-series.html" },
-  { id: "A-glitch-in-the-ethics", cluster: ["Programming", "Glitch-art"], url: "Mass23.github.io/a-glitch-in-the-ethics.html" },
-  { id: "Childhood-paradise-reenacted", cluster: ["Photography"], url: "Mass23.github.io/a-glitch-in-the-ethics.html" },
+  { id: "The-always-series", cluster: ["Programming", "Music"], url: "https://Mass23.github.io/the-always-series.html" },
+  { id: "A-glitch-in-the-ethics", cluster: ["Programming", "Glitch-art"], url: "https://Mass23.github.io/a-glitch-in-the-ethics.html" },
+  { id: "Childhood-paradise-reenacted", cluster: ["Photography"], url: "https://Mass23.github.io/a-glitch-in-the-ethics.html" },
   { id: "Disponible 2", cluster: ["Music"], url: "https://open.spotify.com/artist/7vywWVtIW4VqhmrJjy8HD7?si=is8qPeJqT-Ovxrne71XFzQ" },
   { id: "Brodinsky sur Boue", cluster: ["Music", "Performances"], url: "https://brodinskysurboue.ch/" }
 ];
@@ -105,11 +115,12 @@ const clusterColors = {
   "Programming": "#2540D9",
   "Video-art": "#F24C27",
   "Glitch-art": "#2540D9",
-  "Music": "#252626", 
+  "Music": "#252626",
   "Photography": "#F24C27",
   "Performances": "#252626"
 };
 
+// Preprocess cluster groups
 const clusterGroups = {};
 nodes.forEach(node => {
   node.cluster.forEach(cluster => {
@@ -118,17 +129,37 @@ nodes.forEach(node => {
   });
 });
 
+// Simulation setup
 const simulation = d3.forceSimulation(nodes)
-  .force("link", d3.forceLink(links).id(d => d.id).distance(200))
-  .force("charge", d3.forceManyBody().strength(-1000))
+  .force("link", d3.forceLink(links).id(d => d.id).distance(250))
+  .force("charge", d3.forceManyBody().strength(-600))
   .force("center", d3.forceCenter(width / 2, height / 2));
 
+// Dragging behavior
+const drag = d3.drag()
+  .on("start", (event, d) => {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  })
+  .on("drag", (event, d) => {
+    d.fx = event.x;
+    d.fy = event.y;
+  })
+  .on("end", (event, d) => {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = event.x;
+    d.fy = event.y;  // Fix at new spot
+  });
+
+// Draw links
 const link = svg.append("g")
   .selectAll("line")
   .data(links)
   .join("line")
   .attr("class", "link");
 
+// Draw nodes
 const node = svg.append("g")
   .selectAll("g")
   .data(nodes)
@@ -138,65 +169,77 @@ const node = svg.append("g")
     if (d.url) window.open(d.url, '_blank');
   })
   .on("mouseover", (event, d) => highlightClusters(d.cluster))
-  .on("mouseout", clearHighlight);
+  .on("mouseout", clearHighlight)
+  .call(drag);
+
+// Dynamic rect sizing based on text
+node.each(function(d) {
+  const temp = svg.append("text")
+    .attr("font-family", "Menlo")
+    .attr("font-size", 16)
+    .text(d.id);
+  const bbox = temp.node().getBBox();
+  d.width = bbox.width + 20;
+  d.height = bbox.height + 20;
+  temp.remove();
+});
+
+node.append("rect")
+  .attr("x", d => -d.width / 2)
+  .attr("y", d => -d.height / 2)
+  .attr("width", d => d.width)
+  .attr("height", d => d.height);
 
 node.append("text")
-  .attr("x", 0)
-  .attr("y", 0)
   .attr("text-anchor", "middle")
   .attr("dy", "0.35em")
   .text(d => d.id);
 
-node.each(function(d) {
-  const text = d3.select(this).select("text").node();
-  const bbox = text.getBBox();
-  d.bbox = bbox;
-  d3.select(this).insert("rect", "text")
-    .attr("x", bbox.x - 10)
-    .attr("y", bbox.y - 5)
-    .attr("width", bbox.width + 20)
-    .attr("height", bbox.height + 10);
-});
-
+// Cluster layer
 const clusterLayer = svg.append("g").attr("class", "clusters");
 
-function highlightClusters(clusters) {
-  node.classed("highlighted-node", d => clusters.some(c => d.cluster.includes(c)));
-
-  link.classed("highlighted-link", d => 
-    clusters.some(c => d.source.cluster.includes(c) && d.target.cluster.includes(c))
-  );
-
-  const clusterData = clusters.map(cluster => {
-    const members = clusterGroups[cluster];
-    const xs = members.map(n => n.x);
-    const ys = members.map(n => n.y);
-    const minX = Math.min(...xs);
-    const maxX = Math.max(...xs);
-    const minY = Math.min(...ys);
-    const maxY = Math.max(...ys);
-    return {
-      name: cluster,
-      x: (minX + maxX) / 2,
-      y: (minY + maxY) / 2,
-      r: Math.max((maxX - minX) / 2, (maxY - minY) / 2) + 80
-    };
+function highlightClusters(clusterNames) {
+  const activeNodes = new Set();
+  clusterNames.forEach(name => {
+    clusterGroups[name]?.forEach(node => activeNodes.add(node.id));
   });
 
-  const circles = clusterLayer.selectAll("g.cluster")
-    .data(clusterData, d => d.name);
+  node.classed("highlighted-node", d => activeNodes.has(d.id));
+  link.classed("highlighted-link", d => activeNodes.has(d.source.id) && activeNodes.has(d.target.id));
 
-  const gEnter = circles.enter().append("g").attr("class", "cluster");
+  const circlesData = clusterNames.map(cluster => {
+    const members = clusterGroups[cluster] || [];
+    if (members.length === 0) return null;
+    const xs = members.map(n => n.x);
+    const ys = members.map(n => n.y);
+    const centerX = (Math.min(...xs) + Math.max(...xs)) / 2;
+    const centerY = (Math.min(...ys) + Math.max(...ys)) / 2;
+    const radius = Math.max((Math.max(...xs) - Math.min(...xs)) / 2, (Math.max(...ys) - Math.min(...ys)) / 2) + 80;
+    return { name: cluster, x: centerX, y: centerY, r: radius };
+  }).filter(Boolean);
 
-  gEnter.append("circle").attr("stroke", "#333");
+  const clusterCircles = clusterLayer.selectAll("g.cluster")
+    .data(circlesData, d => d.name);
 
-  const merged = gEnter.merge(circles);
+  const gEnter = clusterCircles.enter()
+    .append("g")
+    .attr("class", "cluster highlighted-cluster");
+
+  gEnter.append("circle");
+  gEnter.append("text");
+
+  const merged = gEnter.merge(clusterCircles);
+
   merged.select("circle")
     .attr("cx", d => d.x)
     .attr("cy", d => d.y)
-    .attr("r", d => d.r)
-    .attr("stroke", "#333")
-    .attr("stroke-width", 5);
+    .attr("r", d => d.r);
+
+  merged.select("text")
+    .attr("x", d => d.x - d.r + 15)
+    .attr("y", d => d.y - d.r + 30)
+    .attr("fill", d => clusterColors[d.name] || "#253259")
+    .text(d => d.name);
 }
 
 function clearHighlight() {
