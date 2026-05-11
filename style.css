@@ -3,16 +3,19 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
     margin: 0;
     padding: 0;
-    height: 100%;
+    min-height: 100%;
+    background-color: #242526;
 }
 
 p {
     font-size: 16px;
+    line-height: 1.6;
 }
 
 .title {
@@ -22,44 +25,24 @@ p {
     font-size: 40px;
     font-style: italic;
     font-weight: bold;
-    color: #000; /* Black text color */
-    transition: color 0.667s ease; /* Smooth transition for color changes */
+    color: #000;
+    transition: color 0.667s ease;
     align-items: center;
-    }
+}
         
 h2 {
     font-family: 'Arial', sans-serif;
-    font-weight: lighter; /* Adjust font weight if needed */
+    font-weight: lighter;
     font-size: 28px;
-    color: #242526; /* Adjust color to a lighter shade of gray */
-    }
+    color: #242526;
+}
 
 h3 {
     font-family: Arial, sans-serif;
     font-style: italic;
-    font-size: 16px; /* Font size in pixels */
-    color: #242526; /* Adjust color to a lighter shade of gray */
-    }
-    
-@media only screen and (max-width: 1000px) {
-    .title {
-        width: 33%;
-        padding-left: 5px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        font-size: 16px;
-        line-height: 1em;
-        }
-    
-    .h2 {
-        padding-right: 5px;
-        padding-left: 2px;
-        font-size: 8px;
-        }
-    p {
-        font-size: 10px;
-      }
-    }
+    font-size: 16px;
+    color: #242526;
+}
 
 /* ############################################ */
 /* HEADER */
@@ -67,18 +50,20 @@ h3 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
     top: 0px;
     width: 100%;
-    height: 78px;
+    min-height: 78px;
     cursor: pointer;
     z-index: 2;
     background: linear-gradient(90deg, #F0F0F0, #242526 35%);
     position: relative;
-  }
+    padding: 16px 24px;
+}
   
 .top-banner a:hover {
-    color: #ff4500; /* Bright red-orange on hover */
-  }
+    color: #ff4500;
+}
   
 .banner-element {
     font-family: "Arial", Arial, sans-serif;
@@ -90,116 +75,120 @@ h3 {
     padding-left: 20px;
     margin-left: auto; 
     margin-right: 0;
-  }
-  
-@media only screen and (max-width: 1000px) {
-    
-  .top-banner {
-    height: 48px;
-    background: linear-gradient(90deg, #F0F0F0, #242526 30%);
-    }
-    
-  .banner-element {
-    font-weight: lighter;
-    letter-spacing: -1px;
-    font-size: 12px;
-    padding-right: 0px;
-    padding-left: 0px;
-  }
-    
 }
 
 /* ############################################ */
 /* CONTENT */
 .content {
     display: flex;
+    align-items: stretch;
+    gap: 30px;
     background: linear-gradient(to bottom, #233BD9, #242526 10%);
-    height: 120vh;
+    min-height: calc(100vh - 80px);
     width: 100%;
-    top: 80px;
     margin: 0;
-    padding: 0;
+    padding: 30px;
 }
 
 .entire-column {
     left: 0;
-    height: calc(100% - 120px);
-    width: calc(100% - 60px);
+    min-height: 100%;
+    width: 100%;
     background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
-    margin: 30px;
+    margin: 0;
     padding: 30px;
 }
 
 .left-column {
     left: 0;
-    height: calc(100% - 120px);
-    width: calc(55% - 60px);
+    min-height: 100%;
+    width: 55%;
     background: linear-gradient(to bottom, #ff4500, #f0f0f0ea 1%);
-    margin: 30px;
+    margin: 0;
     padding: 30px;
 }
 
 .right-column {
     right: 0;
-    align-items: center;
-    height: calc(100% - 60px);
-    width: 45%; /* Adjust the width to your desired size */
+    width: 45%;
     margin: 0;
     padding: 30px;
     background: linear-gradient(to bottom, #D0D6DB, #242526 33.3%);
 }
 
 .right-column:hover {
-    background: #D0D6DB; /* Shaded background color when not hovered */
+    background: #D0D6DB;
 }
   
 .right-column figure {
-    margin-bottom: 20px; /* Add bottom margin to each figure */
-  }
+    margin-bottom: 20px;
+}
   
 .right-column img {
-    max-width: 100%; /* Ensure images don't exceed their container width */
-  }
-.right-column img {
-    max-width: 100%; /* Ensure images don't exceed their container width */
-  }
-  
-@media only screen and (max-width: 1000px) {
-  .content {
-    top: 50px;
-    }
+    max-width: 100%;
+}
 
-  .left-column {
-    font-size: 6px;
-    width: 100%;  /* Full width for very small screens */
-    margin: 15px;
-    padding: 15px;
+.release-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
 
-  }
+.release-embed {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #111;
+}
 
-  .right-column {
-    display: none;
-  }
-  }
+.release-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.release-title,
+.release-description,
+.release-list {
+    font-family: 'Andale Mono', monospace;
+}
+
+.release-title a {
+    color: #242526;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.release-description {
+    font-size: 14px;
+    line-height: 1.7;
+}
 
 /* ############################################ */
 /* NAV */
 nav ul {
     list-style: none;
     display: flex;
-  }
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px;
+}
   
-  nav li {
-    margin-right: 20px;
-  }
+nav li {
+    margin-right: 0;
+}
   
-  nav a {
+nav a {
     text-decoration: none;
-    color: #333; /* Dark grey text color */
+    color: #333;
     font-style: italic;
     font-weight: bold;
-    transition: color 0.3s ease; /* Smooth transition for color changes */
-  }
+    transition: color 0.3s ease;
+}
 
 /* ############################################ */
 /* SWARMS */
@@ -209,7 +198,7 @@ nav ul {
     left: 0;
     pointer-events: none;
     cursor: pointer;
-  }
+}
   
 .title-swarm {
     font-family: 'Arial', sans-serif;
@@ -220,26 +209,26 @@ nav ul {
     left: 50%;
     transform: translateY(-50%);
     z-index: 1;
-    color: #ff4500; /* Adjust title color */
-  }
+    color: #ff4500;
+}
   
 .title-swarm h1 {
     font-size: 40px;
-    color: #ff4500; /* Adjust title color */
+    color: #ff4500;
     font-weight: bold;
     position: relative;
     z-index: 1;
-  }
+}
   
  .title-swarm .line {
     position: absolute;
     width: 100%;
     height: 2px;
-    background-color: #ff4500; /* Adjust line color */
+    background-color: #ff4500;
     top: 50%;
     transform-origin: left;
     z-index: 0;
-  }
+}
 
   /* ############################################ */
   /* GALLERY */
@@ -282,7 +271,104 @@ nav ul {
     top: 98px;
     height: 2px;
   }
-  
-/* media only screen and (max-width: 600px) {*/
-/*   #hrid {top: 58px;}*/
-/* }*/
+
+@media only screen and (max-width: 1000px) {
+    .title {
+        width: 100%;
+        padding-left: 0;
+        font-size: 24px;
+        line-height: 1.1;
+    }
+
+    h2 {
+        padding-right: 0;
+        padding-left: 0;
+        font-size: 24px;
+    }
+
+    p {
+        font-size: 15px;
+    }
+
+    .top-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        min-height: auto;
+        padding: 16px;
+        background: linear-gradient(180deg, #F0F0F0, #242526 65%);
+    }
+
+    .banner-element {
+        font-weight: lighter;
+        letter-spacing: 0;
+        font-size: 14px;
+        padding-left: 0;
+    }
+
+    nav {
+        width: 100%;
+    }
+
+    nav ul {
+        justify-content: flex-start;
+        gap: 10px 18px;
+    }
+
+    .content {
+        flex-direction: column;
+        min-height: auto;
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .left-column,
+    .right-column,
+    .entire-column {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .right-column {
+        display: block;
+    }
+
+    .release-description {
+        font-size: 13px;
+    }
+
+    #imageSwarm,
+    #titleSwarm {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .title {
+        font-size: 20px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    p,
+    .release-description {
+        font-size: 14px;
+    }
+
+    .top-banner {
+        padding: 14px;
+    }
+
+    .content {
+        padding: 12px;
+    }
+
+    .left-column,
+    .right-column,
+    .entire-column {
+        padding: 16px;
+    }
+}
