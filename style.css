@@ -44,6 +44,15 @@ h3 {
     color: #242526;
 }
 
+.release-heading {
+    font-family: Arial, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 28px;
+    color: #242526;
+    letter-spacing: 0.02em;
+}
+
 /* ############################################ */
 /* HEADER */
 .top-banner {
@@ -131,13 +140,14 @@ h3 {
 .release-card {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .release-embed {
     position: relative;
     width: 100%;
-    padding-top: 56.25%;
+    max-width: 520px;
+    padding-top: 62%;
     overflow: hidden;
     border-radius: 10px;
     background: #111;
@@ -154,13 +164,23 @@ h3 {
 .release-title,
 .release-description,
 .release-list {
-    font-family: 'Andale Mono', monospace;
+    font-family: "Andale Mono", Consolas, monospace;
+    color: #3f4347;
+}
+
+.release-title {
+    font-size: 15px;
+    line-height: 1.6;
 }
 
 .release-title a {
+    color: #3f4347;
+    text-decoration: none;
+}
+
+.release-title a:hover {
     color: #242526;
     text-decoration: underline;
-    text-underline-offset: 3px;
 }
 
 .release-description {
@@ -280,7 +300,8 @@ nav a {
         line-height: 1.1;
     }
 
-    h2 {
+    h2,
+    .release-heading {
         padding-right: 0;
         padding-left: 0;
         font-size: 24px;
@@ -319,6 +340,7 @@ nav a {
         min-height: auto;
         padding: 15px;
         gap: 15px;
+        background: #233BD9;
     }
 
     .left-column,
@@ -332,6 +354,16 @@ nav a {
 
     .right-column {
         display: block;
+        background: #D0D6DB;
+    }
+
+    .release-embed {
+        max-width: 100%;
+        padding-top: 60%;
+    }
+
+    .release-title {
+        font-size: 14px;
     }
 
     .release-description {
@@ -349,11 +381,13 @@ nav a {
         font-size: 20px;
     }
 
-    h2 {
+    h2,
+    .release-heading {
         font-size: 22px;
     }
 
     p,
+    .release-title,
     .release-description {
         font-size: 14px;
     }
@@ -370,5 +404,9 @@ nav a {
     .right-column,
     .entire-column {
         padding: 16px;
+    }
+
+    .release-embed {
+        padding-top: 58%;
     }
 }
