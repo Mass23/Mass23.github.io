@@ -49,6 +49,40 @@
   stroke-opacity: 1;
   stroke-width: 5;
 }
+
+.project-preview {
+  position: fixed;
+  display: none;
+  max-width: 280px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #e0e0e0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  font-family: Menlo, monospace;
+  color: #111;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.project-preview-image {
+  display: none;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.project-preview-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.project-preview-keywords {
+  font-size: 12px;
+  line-height: 1.4;
+}
   </style>
 </head>
 <body>
@@ -59,45 +93,85 @@ let width = window.innerWidth;
 let height = window.innerHeight;
 
 // === Data ===
-const nodes = [
-  { id: "Programmatic-artworks", cluster: ["Programming"], url: "https://mass23.github.io/p_programmatic-artworks.html" },
-  { id: "Sensible-AI", cluster: ["Programming", "Video-art", "Photography"], url: "https://mass23.github.io/p_sensible-ai.html" },
-  { id: "How-I-create-my-identity", cluster: ["Photography", "Music", "Programming", "Video-art"], url: "https://mass23.github.io/p_how-i-create-my-identity.html" },
-  { id: "The-always-series", cluster: ["Programming", "Music"], url: "https://mass23.github.io/p_the-always-series.html" },
-  { id: "A-glitch-in-the-ethics", cluster: ["Programming", "Glitch-art"], url: "https://mass23.github.io/p_a-glitch-in-the-ethics.html" },
-  { id: "Childhood-paradise-reenacted", cluster: ["Photography"], url: "https://mass23.github.io/p_childhood-paradise-reenacted.html" },
-  { id: "Brodinsky-sur-Boue", cluster: ["Music", "Performances", "Video-art"], url: "https://brodinskysurboue.ch/" },
-  // Homepage Node
-  { id: "🏠 ABOUT", cluster: [], fixed: true, fx: 100, fy: 50, url: "https://mass23.github.io/" }
+const projectNodes = [
+  {
+    id: "Programmatic-artworks",
+    url: "https://mass23.github.io/p_programmatic-artworks.html",
+    keywords: ["code", "visuals", "generative", "videos", "manifesto"],
+    previewImage: "images/programmatic-preview.jpg"
+  },
+  {
+    id: "Brodinsky-sur-Boue",
+    url: "https://brodinskysurboue.ch/",
+    keywords: ["bw", "installation", "performance", "videos", "music"],
+    previewImage: "images/brodinsky-preview.jpg"
+  },
+  {
+    id: "Bridging-the-gap-with-myself",
+    url: "https://mass23.github.io/p_programmatic-artworks.html",
+    keywords: ["code", "visuals", "installation", "videos", "music"],
+    previewImage: "images/bridging-preview.jpg"
+  },
+  {
+    id: "The-always-series",
+    url: "https://mass23.github.io/p_the-always-series.html",
+    keywords: ["data", "ethical", "generative", "videos", "music"],
+    previewImage: "images/programmatic-artworks.jpg"
+  },
+  {
+    id: "Childhood-paradise-reenacted",
+    url: "https://mass23.github.io/p_programmatic-artworks.html",
+    keywords: ["mountain", "visuals", "generative", "videos", "ethical"],
+    previewImage: "images/programmatic-artworks.jpg"
+  },
+  {
+    id: "A-glitch-in-the-ethics",
+    url: "https://mass23.github.io/p_programmatic-artworks.html",
+    keywords: ["glitch", "visuals", "bw", "code", "ethical"],
+    previewImage: "images/programmatic-artworks.jpg"
+  }
 ];
 
-const links = [
-  { source: "Programmatic-artworks", target: "Sensible-AI" },
-  { source: "Programmatic-artworks", target: "How-I-create-my-identity" },
-  { source: "Programmatic-artworks", target: "The-always-series" },
-  { source: "Programmatic-artworks", target: "A-glitch-in-the-ethics" },
-  { source: "Programmatic-artworks", target: "Brodinsky-sur-Boue" },
-  { source: "Sensible-AI", target: "How-I-create-my-identity" },
-  { source: "Sensible-AI", target: "The-always-series" },
-  { source: "Sensible-AI", target: "A-glitch-in-the-ethics" },
-  { source: "Sensible-AI", target: "Brodinsky-sur-Boue" },
-  { source: "Sensible-AI", target: "Childhood-paradise-reenacted" },
-  { source: "How-I-create-my-identity", target: "The-always-series" },
-  { source: "How-I-create-my-identity", target: "A-glitch-in-the-ethics" },
-  { source: "How-I-create-my-identity", target: "Childhood-paradise-reenacted" },
-  { source: "How-I-create-my-identity", target: "Brodinsky-sur-Boue" },
-  { source: "The-always-series", target: "A-glitch-in-the-ethics" },
-  { source: "The-always-series", target: "Brodinsky-sur-Boue" }
-];
+const homeNode = {
+  id: "🏠 ABOUT",
+  keywords: [],
+  fixed: true,
+  fx: 100,
+  fy: 50,
+  url: "https://mass23.github.io/",
+  isHome: true
+};
 
-// === Clusters ===
-const clusterGroups = {};
-nodes.forEach(node => {
-  node.cluster.forEach(cluster => {
-    if (!clusterGroups[cluster]) clusterGroups[cluster] = [];
-    clusterGroups[cluster].push(node);
-  });
-});
+const nodes = [...projectNodes, homeNode];
+
+function sharedKeywords(firstKeywords, secondKeywords) {
+  const secondSet = new Set(secondKeywords);
+  return firstKeywords.filter(keyword => secondSet.has(keyword));
+}
+
+const links = [];
+for (let i = 0; i < projectNodes.length; i += 1) {
+  for (let j = i + 1; j < projectNodes.length; j += 1) {
+    const overlap = sharedKeywords(projectNodes[i].keywords, projectNodes[j].keywords);
+    if (overlap.length >= 2) {
+      links.push({
+        source: projectNodes[i].id,
+        target: projectNodes[j].id,
+        sharedCount: overlap.length,
+        sharedKeywords: overlap
+      });
+    }
+  }
+}
+
+const preview = d3.select("body")
+  .append("div")
+  .attr("class", "project-preview");
+
+const previewImage = preview.append("img").attr("class", "project-preview-image");
+const previewTitle = preview.append("div").attr("class", "project-preview-title");
+const previewKeywords = preview.append("div").attr("class", "project-preview-keywords");
+let pendingPreviewImage = null;
 
 // === Force Simulation ===
 const simulation = d3.forceSimulation(nodes)
@@ -123,8 +197,15 @@ const node = svg.append("g")
   .on("click", (event, d) => {
     if (d.url) window.open(d.url, "_blank");
   })
-  .on("mouseover", (event, d) => highlightClusters(d.id))
-  .on("mouseout", clearHighlight);
+  .on("mouseover", (event, d) => {
+    highlightClusters(d.id);
+    showPreview(event, d);
+  })
+  .on("mousemove", (event, d) => movePreview(event, d))
+  .on("mouseout", () => {
+    clearHighlight();
+    hidePreview();
+  });
 
 
 node.append("text")
@@ -162,6 +243,59 @@ function ticked() {
     .attr("x2", d => d.target.x)
     .attr("y2", d => d.target.y);
   node.attr("transform", d => `translate(${d.x},${d.y})`);
+}
+
+function showPreview(event, nodeData) {
+  if (nodeData.isHome) return;
+  previewTitle.text(nodeData.id);
+  previewKeywords.text(nodeData.keywords.join(" • "));
+  preview.style("display", "block");
+
+  previewImage.style("display", "none").attr("src", null);
+  if (pendingPreviewImage) {
+    pendingPreviewImage.onload = null;
+    pendingPreviewImage.onerror = null;
+  }
+
+  if (nodeData.previewImage) {
+    const imageProbe = new Image();
+    pendingPreviewImage = imageProbe;
+    imageProbe.onload = () => {
+      if (pendingPreviewImage !== imageProbe) return;
+      previewImage.attr("src", nodeData.previewImage).style("display", "block");
+    };
+    imageProbe.onerror = () => {
+      if (pendingPreviewImage !== imageProbe) return;
+      previewImage.style("display", "none").attr("src", null);
+    };
+    imageProbe.src = nodeData.previewImage;
+  }
+
+  movePreview(event, nodeData);
+}
+
+function movePreview(event, nodeData) {
+  if (nodeData.isHome || preview.style("display") === "none") return;
+  const offset = 16;
+  let left = event.clientX + offset;
+  let top = event.clientY + offset;
+  const previewRect = preview.node().getBoundingClientRect();
+
+  if (left + previewRect.width > window.innerWidth - 8) {
+    left = event.clientX - previewRect.width - offset;
+  }
+
+  if (top + previewRect.height > window.innerHeight - 8) {
+    top = event.clientY - previewRect.height - offset;
+  }
+
+  preview
+    .style("left", `${Math.max(8, left)}px`)
+    .style("top", `${Math.max(8, top)}px`);
+}
+
+function hidePreview() {
+  preview.style("display", "none");
 }
 
 function drag(simulation) {
