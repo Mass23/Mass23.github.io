@@ -138,6 +138,11 @@
       return slugifyForLookup(params.get("id"));
     }
 
+    function getProjectIdentifier(item) {
+      if (!item) return "";
+      return item.id || (item.card && item.card.title) || "";
+    }
+
     async function loadProject() {
       const status = document.getElementById("status");
       const container = document.getElementById("project-detail");
@@ -157,7 +162,7 @@
 
         const data = await response.json();
         const projects = Array.isArray(data.projects) ? data.projects : [];
-        const project = projects.find(item => slugifyForLookup(item && (item.id || (item.card && item.card.title))) === projectId);
+        const project = projects.find(item => slugifyForLookup(getProjectIdentifier(item)) === projectId);
 
         if (!project || !project.card || !project.page) {
           status.textContent = "Project not found.";
