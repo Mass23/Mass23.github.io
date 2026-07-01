@@ -1,0 +1,136 @@
+{
+  "projects": [
+    {
+      "id": "programmatic-artworks",
+      "card": {
+        "title": "Programmatic Artworks",
+        "shortDescription": "Computational artworks combining code, visuals, and sound.",
+        "keywords": ["code", "visuals", "generative", "videos", "manifesto"],
+        "previewImage": "images/previews/programmatic-artworks.webp"
+      },
+      "page": {
+        "fullDescription": "In my programmatic-artworks, I leverage computational processes to generate artistic outcomes. Using code and programs, I create works that integrate visuals, sound, and interactivity at the intersection of technology and aesthetics.",
+        "gallery": [
+          {
+            "image": "images/projects/programmatic-artworks/image-01.webp",
+            "caption": "Generative frame study"
+          },
+          {
+            "image": "images/projects/programmatic-artworks/image-02.webp",
+            "caption": "Layered visual composition"
+          }
+        ]
+      }
+    },
+    {
+      "id": "brodinsky-sur-boue",
+      "card": {
+        "title": "Brodinsky-sur-Boue",
+        "shortDescription": "Performance and installation work blending movement, sound, and visuals.",
+        "keywords": ["bw", "installation", "performance", "videos", "music"],
+        "previewImage": "images/previews/brodinsky-sur-boue.webp"
+      },
+      "page": {
+        "fullDescription": "Brodinsky-sur-Boue explores embodied performance through audiovisual staging, connecting installation practices with iterative sonic experimentation.",
+        "gallery": [
+          {
+            "image": "images/projects/brodinsky-sur-boue/image-01.webp",
+            "caption": "Performance setting and projection"
+          },
+          {
+            "image": "images/projects/brodinsky-sur-boue/image-02.webp",
+            "caption": "On-site installation detail"
+          }
+        ]
+      }
+    },
+    {
+      "id": "bridging-the-gap-with-myself",
+      "card": {
+        "title": "Bridging the Gap with Myself",
+        "shortDescription": "An introspective media project mixing code, sound, and installation.",
+        "keywords": ["code", "visuals", "installation", "videos", "music"],
+        "previewImage": "images/previews/bridging-the-gap-with-myself.webp"
+      },
+      "page": {
+        "fullDescription": "Bridging the Gap with Myself examines identity through modular digital scenes, combining audiovisual fragments and algorithmic composition.",
+        "gallery": [
+          {
+            "image": "images/projects/bridging-the-gap-with-myself/image-01.webp",
+            "caption": "Fragmented self-portrait sequence"
+          },
+          {
+            "image": "images/projects/bridging-the-gap-with-myself/image-02.webp",
+            "caption": "Installation view with synchronized sound"
+          }
+        ]
+      }
+    },
+    {
+      "id": "the-always-series",
+      "card": {
+        "title": "The Always Series",
+        "shortDescription": "Data-driven audiovisual studies around repetition and memory.",
+        "keywords": ["data", "ethical", "generative", "videos", "music"],
+        "previewImage": "images/previews/the-always-series.webp"
+      },
+      "page": {
+        "fullDescription": "The Always Series investigates loops, recurrence, and traces of memory through data-informed visual and sonic structures.",
+        "gallery": [
+          {
+            "image": "images/projects/the-always-series/image-01.webp",
+            "caption": "Recurring pattern experiment"
+          },
+          {
+            "image": "images/projects/the-always-series/image-02.webp",
+            "caption": "Series variation in low-light palette"
+          }
+        ]
+      }
+    },
+    {
+      "id": "childhood-paradise-reenacted",
+      "card": {
+        "title": "Childhood Paradise Reenacted",
+        "shortDescription": "A memory-centered visual project built from synthetic and archival textures.",
+        "keywords": ["mountains", "visuals", "generative", "videos", "ethical"],
+        "previewImage": "images/previews/childhood-paradise-reenacted.webp"
+      },
+      "page": {
+        "fullDescription": "Childhood Paradise Reenacted reconstructs remembered landscapes through generative methods and visual transformations.",
+        "gallery": [
+          {
+            "image": "images/projects/childhood-paradise-reenacted/image-01.webp",
+            "caption": "Reconstructed mountain memory"
+          },
+          {
+            "image": "images/projects/childhood-paradise-reenacted/image-02.webp",
+            "caption": "Textural blend of archive and synthesis"
+          }
+        ]
+      }
+    },
+    {
+      "id": "a-glitch-in-the-ethics",
+      "card": {
+        "title": "A Glitch in the Ethics",
+        "shortDescription": "Glitch-driven exploration of ethics, perception, and digital distortion.",
+        "keywords": ["glitch", "visuals", "bw", "code", "ethical"],
+        "previewImage": "images/previews/a-glitch-in-the-ethics.webp"
+      },
+      "page": {
+        "fullDescription": "A Glitch in the Ethics uses intentional system disruptions to probe responsibility, aesthetics, and algorithmic mediation.",
+        "gallery": [
+          {
+            "image": "images/projects/a-glitch-in-the-ethics/image-01.webp",
+            "caption": "High-contrast glitch frame"
+          },
+          {
+            "image": "images/projects/a-glitch-in-the-ethics/image-02.webp",
+            "caption": "Error cascade composition"
+          }
+        ]
+      }
+    }
+  ]
+}
