@@ -176,11 +176,10 @@
             "description": "Selected by jury"
           }
         ],
-        "video": "https://vimeo.com/manage/videos/1185570996",
         "gallery": [
           {
-            "image": "images/projects/crumbling-the-shoulders-of-giants/image-01.webp",
-            "caption": "Simulated landslide composition"
+            "video": "https://vimeo.com/1185570996",
+            "caption": "Crumbling the Shoulders of Giants"
           }
         ]
       }
@@ -204,11 +203,10 @@
             "link": "https://www.unil.ch/events/fr/1777638033711"
           }
         ],
-        "video": "https://vimeo.com/manage/videos/1203427261",
         "gallery": [
           {
-            "image": "images/projects/ai-manifesto-2026/image-01.webp",
-            "caption": "Video still"
+            "video": "https://vimeo.com/1203427261",
+            "caption": "AI MANIFESTO 2026"
           }
         ]
       }
