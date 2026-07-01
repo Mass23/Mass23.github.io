@@ -274,7 +274,7 @@ function renderGraph(projectNodes) {
     .attr("class", "node")
     .call(drag(simulation))
     .on("click", (event, d) => {
-      if (d.url) window.location.href = d.url;
+      if (d.url) window.open(d.url, "_blank");
     })
     .on("mouseover", (event, d) => {
       node.classed("highlighted-node", item => item.id === d.id);
@@ -332,7 +332,7 @@ function normalizeProject(project) {
 
 async function initProjects() {
   try {
-    const response = await fetch("projects.json", { cache: "no-store" });
+    const response = await fetch("projects.json");
     if (!response.ok) {
       throw new Error(`Unable to load projects.json (${response.status})`);
     }

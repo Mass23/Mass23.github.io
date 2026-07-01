@@ -152,7 +152,7 @@
       }
 
       try {
-        const response = await fetch("projects.json", { cache: "no-store" });
+        const response = await fetch("projects.json");
         if (!response.ok) throw new Error(`Unable to load projects.json (${response.status})`);
 
         const data = await response.json();
