@@ -18,7 +18,7 @@
     }
 
     .project-detail {
-      width: min(980px, 100%);
+      width: min(1120px, 100%);
       margin: 0 auto;
       background: linear-gradient(to bottom, #F24C27, #e0e0e0 2%);
       border-radius: 10px;
@@ -27,22 +27,9 @@
       font-family: "Andale Mono", Menlo, monospace;
     }
 
-    .project-detail h2 {
-      margin-bottom: 18px;
-      font-family: Arial, sans-serif;
-      font-weight: lighter;
-    }
-
-    .project-full-description {
-      font-size: 15px;
-      line-height: 1.7;
-      margin-bottom: 30px;
-      white-space: pre-line;
-    }
-
     .back-link {
       display: inline-block;
-      margin-bottom: 24px;
+      margin-bottom: 18px;
       color: #263DBF;
       text-decoration: none;
       font-weight: bold;
@@ -53,6 +40,25 @@
     .back-link:hover {
       color: #F24C27;
       text-decoration: underline;
+    }
+
+    .project-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.75fr) minmax(260px, 0.95fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .project-main {
+      min-width: 0;
+    }
+
+    .project-full-description {
+      font-size: 15px;
+      line-height: 1.7;
+      margin-top: 24px;
+      margin-bottom: 0;
+      white-space: pre-line;
     }
 
     .gallery-grid {
@@ -76,6 +82,21 @@
       object-fit: cover;
     }
 
+    .gallery-grid .video-frame {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #111;
+    }
+
+    .gallery-grid .video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
     .gallery-grid figcaption {
       padding: 10px 12px;
       font-size: 13px;
@@ -83,11 +104,74 @@
       color: #252626;
     }
 
+    .project-sidebar {
+      background: linear-gradient(to bottom, #D0D6DB, #f3f5f7 28%);
+      border: 1px solid rgba(37, 38, 38, 0.2);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .sidebar-block + .sidebar-block {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(37, 38, 38, 0.16);
+    }
+
+    .sidebar-title {
+      font-family: Arial, sans-serif;
+      font-style: italic;
+      font-size: 15px;
+      margin-bottom: 10px;
+      color: #252626;
+    }
+
+    .sidebar-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .sidebar-item-title {
+      font-size: 13px;
+      line-height: 1.45;
+      color: #252626;
+    }
+
+    .sidebar-item-desc {
+      font-size: 12px;
+      line-height: 1.45;
+      color: #444c52;
+      margin-top: 2px;
+    }
+
+    .sidebar-link {
+      color: #263DBF;
+      text-decoration: none;
+      word-break: break-word;
+    }
+
+    .sidebar-link:hover {
+      color: #F24C27;
+      text-decoration: underline;
+    }
+
     .status-message {
       font-family: Menlo, monospace;
       color: #e0e0e0;
       margin: 20px auto;
-      width: min(980px, calc(100% - 30px));
+      width: min(1120px, calc(100% - 30px));
+    }
+
+    @media (max-width: 980px) {
+      .project-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .project-sidebar {
+        margin-top: 4px;
+      }
     }
 
     @media (max-width: 700px) {
@@ -97,6 +181,11 @@
 
       .gallery-grid {
         grid-template-columns: 1fr;
+      }
+
+      .project-full-description {
+        margin-top: 18px;
+        font-size: 14px;
       }
     }
   </style>
@@ -120,11 +209,32 @@
     <div id="status" class="status-message">Loading project…</div>
     <article id="project-detail" class="project-detail" style="display:none;">
       <a class="back-link" href="projects.html">← Back to projects</a>
-      <h2 id="project-title"></h2>
-      <p id="project-description" class="project-full-description"></p>
-      <section class="image-gallery" aria-label="Project gallery">
-        <div id="gallery-grid" class="gallery-grid"></div>
-      </section>
+
+      <div class="project-layout">
+        <section class="project-main" aria-label="Project main content">
+          <section class="image-gallery" aria-label="Project gallery">
+            <div id="gallery-grid" class="gallery-grid"></div>
+          </section>
+          <p id="project-description" class="project-full-description"></p>
+        </section>
+
+        <aside class="project-sidebar" aria-label="Project info sidebar">
+          <section id="sidebar-exhibitions" class="sidebar-block" style="display:none;">
+            <h3 class="sidebar-title">EXHIBITIONS</h3>
+            <ul id="sidebar-exhibitions-list" class="sidebar-list"></ul>
+          </section>
+
+          <section id="sidebar-outreach" class="sidebar-block" style="display:none;">
+            <h3 class="sidebar-title">OUTREACH</h3>
+            <ul id="sidebar-outreach-list" class="sidebar-list"></ul>
+          </section>
+
+          <section id="sidebar-links" class="sidebar-block" style="display:none;">
+            <h3 class="sidebar-title">LINKS</h3>
+            <ul id="sidebar-links-list" class="sidebar-list"></ul>
+          </section>
+        </aside>
+      </div>
     </article>
   </div>
 
@@ -143,12 +253,73 @@
       return item.id || (item.card && item.card.title) || "";
     }
 
+    function toVimeoEmbedUrl(url) {
+      if (!url) return "";
+      const match = String(url).match(/vimeo\.com\/(?:manage\/videos\/)?(\d+)/i);
+      if (!match || !match[1]) return "";
+      return `https://player.vimeo.com/video/${match[1]}`;
+    }
+
+    function renderSidebarList(sectionEl, listEl, entries, fallbackAsLink = false) {
+      listEl.innerHTML = "";
+      const valid = Array.isArray(entries) ? entries.filter(Boolean) : [];
+      if (!valid.length) {
+        sectionEl.style.display = "none";
+        return;
+      }
+
+      valid.forEach((entry) => {
+        const li = document.createElement("li");
+
+        const title = document.createElement("div");
+        title.className = "sidebar-item-title";
+
+        const linkTarget = entry.url || entry.link || "";
+        if (linkTarget) {
+          const a = document.createElement("a");
+          a.className = "sidebar-link";
+          a.href = linkTarget;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = entry.title || entry.name || linkTarget;
+          title.appendChild(a);
+        } else {
+          title.textContent = entry.title || entry.name || "Untitled";
+        }
+
+        li.appendChild(title);
+
+        if (entry.description) {
+          const desc = document.createElement("div");
+          desc.className = "sidebar-item-desc";
+          desc.textContent = entry.description;
+          li.appendChild(desc);
+        } else if (fallbackAsLink && !linkTarget && entry.url) {
+          const desc = document.createElement("div");
+          desc.className = "sidebar-item-desc";
+          desc.textContent = entry.url;
+          li.appendChild(desc);
+        }
+
+        listEl.appendChild(li);
+      });
+
+      sectionEl.style.display = "block";
+    }
+
     async function loadProject() {
       const status = document.getElementById("status");
       const container = document.getElementById("project-detail");
-      const title = document.getElementById("project-title");
       const description = document.getElementById("project-description");
       const galleryGrid = document.getElementById("gallery-grid");
+
+      const exhibitionsSection = document.getElementById("sidebar-exhibitions");
+      const outreachSection = document.getElementById("sidebar-outreach");
+      const linksSection = document.getElementById("sidebar-links");
+      const exhibitionsList = document.getElementById("sidebar-exhibitions-list");
+      const outreachList = document.getElementById("sidebar-outreach-list");
+      const linksList = document.getElementById("sidebar-links-list");
+
       const projectId = getProjectIdFromUrl();
 
       if (!projectId) {
@@ -169,34 +340,53 @@
           return;
         }
 
-        title.textContent = project.card.title || project.id || "Project";
         description.textContent = project.page.fullDescription || "";
 
         const galleryItems = Array.isArray(project.page.gallery) ? project.page.gallery : [];
         if (!galleryItems.length) {
           const emptyCaption = document.createElement("p");
           emptyCaption.textContent = "No gallery images yet.";
-          emptyCaption.style.fontFamily = 'Menlo, monospace';
-          emptyCaption.style.fontSize = '14px';
+          emptyCaption.style.fontFamily = "Menlo, monospace";
+          emptyCaption.style.fontSize = "14px";
           galleryGrid.appendChild(emptyCaption);
         } else {
           galleryItems.forEach((item, index) => {
             const figure = document.createElement("figure");
-            const img = document.createElement("img");
             const caption = document.createElement("figcaption");
-
-            img.src = item.image || "";
-            img.alt = (project.card.title || "Project") + " image " + (index + 1);
-            img.loading = "lazy";
             caption.textContent = item.caption || "";
 
-            figure.appendChild(img);
+            if (item.video) {
+              const embedUrl = toVimeoEmbedUrl(item.video);
+              if (embedUrl) {
+                const frameWrap = document.createElement("div");
+                frameWrap.className = "video-frame";
+                const iframe = document.createElement("iframe");
+                iframe.src = embedUrl;
+                iframe.title = (project.card.title || "Project") + " video " + (index + 1);
+                iframe.allow = "autoplay; fullscreen; picture-in-picture";
+                iframe.allowFullscreen = true;
+                frameWrap.appendChild(iframe);
+                figure.appendChild(frameWrap);
+              }
+            } else {
+              const img = document.createElement("img");
+              img.src = item.image || "";
+              img.alt = (project.card.title || "Project") + " image " + (index + 1);
+              img.loading = "lazy";
+              figure.appendChild(img);
+            }
+
             figure.appendChild(caption);
             galleryGrid.appendChild(figure);
           });
         }
 
-        document.title = `${project.card.title || 'Project'} | Projects`;
+        const sidebar = project.page.sidebar || {};
+        renderSidebarList(exhibitionsSection, exhibitionsList, sidebar.exhibitions || []);
+        renderSidebarList(outreachSection, outreachList, sidebar.outreach || []);
+        renderSidebarList(linksSection, linksList, sidebar.links || [], true);
+
+        document.title = `${project.card.title || "Project"} | Projects`;
         status.style.display = "none";
         container.style.display = "block";
       } catch (error) {
