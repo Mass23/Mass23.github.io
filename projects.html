@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Projects</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
@@ -9,160 +10,134 @@
       margin: 0;
       overflow: hidden;
       background: linear-gradient(to bottom, #263DBF 25%, #252626 100%);
+      font-family: Menlo, "Andale Mono", monospace;
     }
+
     svg {
       width: 100vw;
       height: 100vh;
       display: block;
     }
+
     .node rect {
-  fill: #e0e0e0;
-  stroke: #333;
-  rx: 8;
-  ry: 8;
-  cursor: grab;
-}
+      fill: #e0e0e0;
+      stroke: #333;
+      rx: 8;
+      ry: 8;
+      cursor: grab;
+    }
 
-.node text {
-  pointer-events: none;
-  font-family: Menlo, monospace;
-  font-size: 28px;
-  fill: black;
-}
+    .node text {
+      pointer-events: none;
+      font-family: Menlo, monospace;
+      font-size: 28px;
+      fill: black;
+    }
 
-.link {
-  stroke: #F24C27;
-  stroke-opacity: 0.6;
-  stroke-width: 4;
-}
+    .link {
+      stroke: #F24C27;
+      stroke-opacity: 0.6;
+      stroke-width: 4;
+    }
 
-.highlighted-node rect {
-  fill: #333;
-}
+    .highlighted-node rect {
+      fill: #333;
+    }
 
-.highlighted-node text {
-  fill: white;
-}
+    .highlighted-node text {
+      fill: white;
+    }
 
-.highlighted-link {
-  stroke: #333;
-  stroke-opacity: 1;
-  stroke-width: 5;
-}
+    .highlighted-link {
+      stroke: #333;
+      stroke-opacity: 1;
+      stroke-width: 5;
+    }
 
-.project-preview {
-  position: fixed;
-  display: none;
-  max-width: 280px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #333;
-  background: #e0e0e0;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  font-family: Menlo, monospace;
-  color: #111;
-  pointer-events: none;
-  z-index: 20;
-}
+    .project-preview {
+      position: fixed;
+      display: none;
+      max-width: 320px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #e0e0e0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      color: #111;
+      pointer-events: none;
+      z-index: 20;
+    }
 
-.project-preview-image {
-  display: none;
-  width: 100%;
-  height: auto;
-  border-radius: 6px;
-  margin-bottom: 8px;
-}
+    .project-preview-image {
+      display: none;
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
 
-.project-preview-title {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
+    .project-preview-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
 
-.project-preview-keywords {
-  font-size: 12px;
-  line-height: 1.4;
-}
+    .project-preview-description {
+      font-size: 12px;
+      line-height: 1.45;
+      margin-bottom: 6px;
+    }
+
+    .project-preview-keywords {
+      font-size: 12px;
+      line-height: 1.4;
+      color: #252626;
+    }
+
+    .status-message {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: #e0e0e0;
+      color: #252626;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .node text {
+        font-size: 18px;
+      }
+
+      .project-preview {
+        max-width: min(86vw, 320px);
+      }
+    }
   </style>
 </head>
 <body>
 <svg></svg>
+<div id="status" class="status-message">Loading projects…</div>
+
 <script>
 const svg = d3.select("svg");
+const statusMessage = d3.select("#status");
 let width = window.innerWidth;
 let height = window.innerHeight;
 
-// === Data ===
-const projectNodes = [
-  {
-    id: "Programmatic-artworks",
-    url: "https://mass23.github.io/p_programmatic-artworks.html",
-    keywords: ["code", "visuals", "generative", "videos", "manifesto"],
-    previewImage: "images/programmatic-preview.jpg"
-  },
-  {
-    id: "Brodinsky-sur-Boue",
-    url: "https://brodinskysurboue.ch/",
-    keywords: ["bw", "installation", "performance", "videos", "music"],
-    previewImage: "images/brodinsky-preview.jpg"
-  },
-  {
-    id: "Bridging-the-gap-with-myself",
-    url: "https://mass23.github.io/p_programmatic-artworks.html",
-    keywords: ["code", "visuals", "installation", "videos", "music"],
-    previewImage: "images/bridging-preview.jpg"
-  },
-  {
-    id: "The-always-series",
-    url: "https://mass23.github.io/p_the-always-series.html",
-    keywords: ["data", "ethical", "generative", "videos", "music"],
-    previewImage: "images/programmatic-artworks.jpg"
-  },
-  {
-    id: "Childhood-paradise-reenacted",
-    url: "https://mass23.github.io/p_programmatic-artworks.html",
-    keywords: ["mountains", "visuals", "generative", "videos", "ethical"],
-    previewImage: "images/programmatic-artworks.jpg"
-  },
-  {
-    id: "A-glitch-in-the-ethics",
-    url: "https://mass23.github.io/p_programmatic-artworks.html",
-    keywords: ["glitch", "visuals", "bw", "code", "ethical"],
-    previewImage: "images/programmatic-artworks.jpg"
-  }
-];
-
 const homeNode = {
   id: "🏠 ABOUT",
+  title: "ABOUT",
   keywords: [],
   fixed: true,
   fx: 100,
   fy: 50,
-  url: "https://mass23.github.io/",
+  url: "index.html",
   isHome: true
 };
-
-const nodes = [...projectNodes, homeNode];
-
-function sharedKeywords(firstKeywords, secondKeywords) {
-  const secondSet = new Set(secondKeywords);
-  return firstKeywords.filter(keyword => secondSet.has(keyword));
-}
-
-const links = [];
-for (let i = 0; i < projectNodes.length; i += 1) {
-  for (let j = i + 1; j < projectNodes.length; j += 1) {
-    const overlap = sharedKeywords(projectNodes[i].keywords, projectNodes[j].keywords);
-    if (overlap.length >= 2) {
-      links.push({
-        source: projectNodes[i].id,
-        target: projectNodes[j].id,
-        sharedCount: overlap.length,
-        sharedKeywords: overlap
-      });
-    }
-  }
-}
 
 const preview = d3.select("body")
   .append("div")
@@ -170,85 +145,44 @@ const preview = d3.select("body")
 
 const previewImage = preview.append("img").attr("class", "project-preview-image");
 const previewTitle = preview.append("div").attr("class", "project-preview-title");
+const previewDescription = preview.append("div").attr("class", "project-preview-description");
 const previewKeywords = preview.append("div").attr("class", "project-preview-keywords");
 let pendingPreviewImage = null;
+let simulation = null;
 
-// === Force Simulation ===
-const simulation = d3.forceSimulation(nodes)
-  .force("link", d3.forceLink(links).id(d => d.id).distance(400))
-  .force("charge", d3.forceManyBody().strength(-600))
-  .force("center", d3.forceCenter(width / 2, height / 2))
-  .on("tick", ticked);
-
-// === Draw Links ===
-const link = svg.append("g")
-  .selectAll("line")
-  .data(links)
-  .join("line")
-  .attr("class", "link");
-
-// === Draw Nodes ===
-const node = svg.append("g")
-  .selectAll("g")
-  .data(nodes)
-  .join("g")
-  .attr("class", "node")
-  .call(drag(simulation))
-  .on("click", (event, d) => {
-    if (d.url) window.open(d.url, "_blank");
-  })
-  .on("mouseover", (event, d) => {
-    highlightClusters(d.id);
-    showPreview(event, d);
-  })
-  .on("mousemove", (event, d) => movePreview(event, d))
-  .on("mouseout", () => {
-    clearHighlight();
-    hidePreview();
-  });
-
-
-node.append("text")
-  .text(d => d.id)
-  .attr("text-anchor", "middle")
-  .attr("dy", "0.35em")
-  .each(function(d) {
-    const bbox = this.getBBox();
-    d.textWidth = bbox.width;
-    d.textHeight = bbox.height;
-  });
-
-node.insert("rect", "text")
-  .attr("x", d => -d.textWidth / 2 - 20)
-  .attr("y", d => -d.textHeight / 2 - 8)
-  .attr("width", d => d.textWidth + 40)
-  .attr("height", d => d.textHeight + 16);
-
-// === Cluster Layer ===
-function highlightClusters(nodeId) {
-  // Only highlight the hovered node and its connections
-  node.classed("highlighted-node", d => d.id === nodeId);
-  link.classed("highlighted-link", d => d.source.id === nodeId || d.target.id === nodeId);
+function sharedKeywords(firstKeywords, secondKeywords) {
+  const secondSet = new Set(secondKeywords);
+  return firstKeywords.filter(keyword => secondSet.has(keyword));
 }
 
-function clearHighlight() {
-  node.classed("highlighted-node", false);
-  link.classed("highlighted-link", false);
+function slugifyForPage(id) {
+  return String(id || "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
 }
 
-function ticked() {
-  link
-    .attr("x1", d => d.source.x)
-    .attr("y1", d => d.source.y)
-    .attr("x2", d => d.target.x)
-    .attr("y2", d => d.target.y);
-  node.attr("transform", d => `translate(${d.x},${d.y})`);
+function createLinks(projectNodes) {
+  const links = [];
+  for (let i = 0; i < projectNodes.length; i += 1) {
+    for (let j = i + 1; j < projectNodes.length; j += 1) {
+      const overlap = sharedKeywords(projectNodes[i].keywords, projectNodes[j].keywords);
+      if (overlap.length >= 2) {
+        links.push({
+          source: projectNodes[i].id,
+          target: projectNodes[j].id,
+          sharedCount: overlap.length,
+          sharedKeywords: overlap
+        });
+      }
+    }
+  }
+  return links;
 }
 
 function showPreview(event, nodeData) {
   if (nodeData.isHome) return;
-  previewTitle.text(nodeData.id);
-  previewKeywords.text(nodeData.keywords.join(" • "));
+
+  previewTitle.text(nodeData.title || nodeData.id);
+  previewDescription.text(nodeData.shortDescription || "");
+  previewKeywords.text((nodeData.keywords || []).join(" • "));
   preview.style("display", "block");
 
   previewImage.style("display", "none").attr("src", null);
@@ -298,10 +232,10 @@ function hidePreview() {
   preview.style("display", "none");
 }
 
-function drag(simulation) {
+function drag(simulationRef) {
   return d3.drag()
     .on("start", (event, d) => {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
+      if (!event.active) simulationRef.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
     })
@@ -310,18 +244,125 @@ function drag(simulation) {
       d.fy = event.y;
     })
     .on("end", (event, d) => {
-      if (!event.active) simulation.alphaTarget(0);
+      if (!event.active) simulationRef.alphaTarget(0);
       d.fx = event.x;
       d.fy = event.y;
     });
 }
 
-window.addEventListener('resize', () => {
+function renderGraph(projectNodes) {
+  svg.selectAll("*").remove();
+
+  const nodes = [...projectNodes, homeNode];
+  const links = createLinks(projectNodes);
+
+  simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links).id(d => d.id).distance(400))
+    .force("charge", d3.forceManyBody().strength(-600))
+    .force("center", d3.forceCenter(width / 2, height / 2));
+
+  const link = svg.append("g")
+    .selectAll("line")
+    .data(links)
+    .join("line")
+    .attr("class", "link");
+
+  const node = svg.append("g")
+    .selectAll("g")
+    .data(nodes)
+    .join("g")
+    .attr("class", "node")
+    .call(drag(simulation))
+    .on("click", (event, d) => {
+      if (d.url) window.open(d.url, "_blank");
+    })
+    .on("mouseover", (event, d) => {
+      node.classed("highlighted-node", item => item.id === d.id);
+      link.classed("highlighted-link", item => item.source.id === d.id || item.target.id === d.id);
+      showPreview(event, d);
+    })
+    .on("mousemove", (event, d) => movePreview(event, d))
+    .on("mouseout", () => {
+      node.classed("highlighted-node", false);
+      link.classed("highlighted-link", false);
+      hidePreview();
+    });
+
+  node.append("text")
+    .text(d => d.id)
+    .attr("text-anchor", "middle")
+    .attr("dy", "0.35em")
+    .each(function(d) {
+      const bbox = this.getBBox();
+      d.textWidth = bbox.width;
+      d.textHeight = bbox.height;
+    });
+
+  node.insert("rect", "text")
+    .attr("x", d => -d.textWidth / 2 - 20)
+    .attr("y", d => -d.textHeight / 2 - 8)
+    .attr("width", d => d.textWidth + 40)
+    .attr("height", d => d.textHeight + 16);
+
+  simulation.on("tick", () => {
+    link
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
+
+    node.attr("transform", d => `translate(${d.x},${d.y})`);
+  });
+}
+
+function normalizeProject(project) {
+  if (!project || !project.card) return null;
+  const baseId = project.id || project.card.title;
+  if (!baseId) return null;
+  const safeId = String(baseId);
+  return {
+    id: safeId,
+    title: project.card.title || safeId,
+    shortDescription: project.card.shortDescription || "",
+    keywords: Array.isArray(project.card.keywords) ? project.card.keywords : [],
+    previewImage: project.card.previewImage || "",
+    url: `project-[id].html?id=${encodeURIComponent(slugifyForPage(safeId))}`
+  };
+}
+
+async function initProjects() {
+  try {
+    const response = await fetch("projects.json");
+    if (!response.ok) {
+      throw new Error(`Unable to load projects.json (${response.status})`);
+    }
+
+    const payload = await response.json();
+    const projectNodes = (payload.projects || []).map(normalizeProject).filter(Boolean);
+
+    if (!projectNodes.length) {
+      statusMessage.text("No projects found in projects.json");
+      return;
+    }
+
+    statusMessage.style("display", "none");
+    renderGraph(projectNodes);
+  } catch (error) {
+    statusMessage.text("Could not load projects.json");
+    console.error(error);
+  }
+}
+
+window.addEventListener("resize", () => {
   width = window.innerWidth;
   height = window.innerHeight;
-  simulation.force("center", d3.forceCenter(width / 2, height / 2));
-  simulation.alpha(0.5).restart();
+  if (simulation) {
+    simulation.force("center", d3.forceCenter(width / 2, height / 2));
+    simulation.alpha(0.5).restart();
+  }
 });
+
+initProjects();
 </script>
 </body>
 </html>

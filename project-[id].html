@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Detail</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="images/me.webp" sizes="48x48" />
+  <style>
+    body {
+      background: #252626;
+    }
+
+    .content {
+      background: linear-gradient(to bottom, #263DBF, #252626 14%);
+      min-height: calc(100vh - 80px);
+      align-items: flex-start;
+    }
+
+    .project-detail {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      background: linear-gradient(to bottom, #F24C27, #e0e0e0 2%);
+      border-radius: 10px;
+      padding: 28px;
+      color: #252626;
+      font-family: "Andale Mono", Menlo, monospace;
+    }
+
+    .project-detail h2 {
+      margin-bottom: 18px;
+      font-family: Arial, sans-serif;
+      font-weight: lighter;
+    }
+
+    .project-full-description {
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 30px;
+      white-space: pre-line;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 24px;
+      color: #263DBF;
+      text-decoration: none;
+      font-weight: bold;
+      font-style: italic;
+      font-family: Arial, sans-serif;
+    }
+
+    .back-link:hover {
+      color: #F24C27;
+      text-decoration: underline;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .gallery-grid figure {
+      margin: 0;
+      background: #d0d6db;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(37, 38, 38, 0.2);
+    }
+
+    .gallery-grid img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    .gallery-grid figcaption {
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #252626;
+    }
+
+    .status-message {
+      font-family: Menlo, monospace;
+      color: #e0e0e0;
+      margin: 20px auto;
+      width: min(980px, calc(100% - 30px));
+    }
+
+    @media (max-width: 700px) {
+      .project-detail {
+        padding: 18px;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-banner">
+    <h1 class="title">■■■■■■■ ■■■■■■■■</h1>
+    <nav>
+      <ul>
+        <li><a class="banner-element" href="index.html">ABOUT</a></li>
+        <li><a class="banner-element" href="projects.html">PROJECTS</a></li>
+        <li><a class="banner-element" href="music.html">MUSIC</a></li>
+        <li><a class="banner-element" href="science.html">SCIENCE</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <hr id="hrid" />
+
+  <div class="content">
+    <div id="status" class="status-message">Loading project…</div>
+    <article id="project-detail" class="project-detail" style="display:none;">
+      <a class="back-link" href="projects.html">← Back to projects</a>
+      <h2 id="project-title"></h2>
+      <p id="project-description" class="project-full-description"></p>
+      <section class="image-gallery" aria-label="Project gallery">
+        <div id="gallery-grid" class="gallery-grid"></div>
+      </section>
+    </article>
+  </div>
+
+  <script>
+    function slugifyForLookup(value) {
+      return String(value || "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+    }
+
+    function getProjectIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return slugifyForLookup(params.get("id"));
+    }
+
+    function getProjectIdentifier(item) {
+      if (!item) return "";
+      return item.id || (item.card && item.card.title) || "";
+    }
+
+    async function loadProject() {
+      const status = document.getElementById("status");
+      const container = document.getElementById("project-detail");
+      const title = document.getElementById("project-title");
+      const description = document.getElementById("project-description");
+      const galleryGrid = document.getElementById("gallery-grid");
+      const projectId = getProjectIdFromUrl();
+
+      if (!projectId) {
+        status.textContent = "Project not found.";
+        return;
+      }
+
+      try {
+        const response = await fetch("projects.json");
+        if (!response.ok) throw new Error(`Unable to load projects.json (${response.status})`);
+
+        const data = await response.json();
+        const projects = Array.isArray(data.projects) ? data.projects : [];
+        const project = projects.find(item => slugifyForLookup(getProjectIdentifier(item)) === projectId);
+
+        if (!project || !project.card || !project.page) {
+          status.textContent = "Project not found.";
+          return;
+        }
+
+        title.textContent = project.card.title || project.id || "Project";
+        description.textContent = project.page.fullDescription || "";
+
+        const galleryItems = Array.isArray(project.page.gallery) ? project.page.gallery : [];
+        if (!galleryItems.length) {
+          const emptyCaption = document.createElement("p");
+          emptyCaption.textContent = "No gallery images yet.";
+          emptyCaption.style.fontFamily = 'Menlo, monospace';
+          emptyCaption.style.fontSize = '14px';
+          galleryGrid.appendChild(emptyCaption);
+        } else {
+          galleryItems.forEach((item, index) => {
+            const figure = document.createElement("figure");
+            const img = document.createElement("img");
+            const caption = document.createElement("figcaption");
+
+            img.src = item.image || "";
+            img.alt = (project.card.title || "Project") + " image " + (index + 1);
+            img.loading = "lazy";
+            caption.textContent = item.caption || "";
+
+            figure.appendChild(img);
+            figure.appendChild(caption);
+            galleryGrid.appendChild(figure);
+          });
+        }
+
+        document.title = `${project.card.title || 'Project'} | Projects`;
+        status.style.display = "none";
+        container.style.display = "block";
+      } catch (error) {
+        status.textContent = "Could not load project content.";
+        console.error(error);
+      }
+    }
+
+    loadProject();
+  </script>
+</body>
+</html>
