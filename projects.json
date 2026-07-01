@@ -16,7 +16,17 @@
             "caption": "Performance and installation"
           }
         ],
-        "fullDescription": "Uni-e-s par un désir d'élargir leurs horizons artistiques respectifs, les membres de BSB cherchent à conjuguer leurs compétences pour permettre des créations contemporaines interdisciplinaires et organiques.\n\nFondé en 2019, le collectif Brodinsky sur Boue réunit 3 artistes uni-e-s par un désir commun: celui d'élargir les horizons de l'art et ne pas le réduire à ses formats classiques trop clivants. Au contraire, les membres du collectif souhaitent conjuguer leurs compétences diverses pour créer des œuvres totales. Les membres de BSB font tout elles-mêmes: écriture des pièces, composition de la musique, design graphique, montage vidéo, costumes, etc. Leurs projets sont des créations 100% originales et interdisciplinaires, où tous les éléments sont d'égale importance.\n\nEn plus de sa forme interdisciplinaire, BSB est animé par une vision: celle de faire de l'art un moyen de connaissance et d'exploration. Tous les membres de BSB ont effectué une formation universitaire avancée (Doctorat en philosophie, Master en dramaturgie, Doctorat en bioinformatique) et considèrent que celle-ci ne peut aboutir pleinement que dans une réalisation artistique, hors du carcan contraignant des institutions. Pour BSB, l'art est un moyen fondamental de partage de connaissances, car il est à la fois intuitif, sensitif et émotionnel.\n\nLes créations des BSB puisent tant dans des inspirations littéraires, que philosophiques ou scientifiques. Une fois encore, l'objectif est de ne pas laisser le savoir se faire enfermer dans des cases. Elles font appel à des concepts abstraits et universels dans le but de réfléchir (sur) notre monde particulier.\n\nLe thème de la diversité des points de vue est omniprésent dans les projets du collectif. Pour BSB, celui-ci a une portée sociale et politique; il met en avant l'idée de mise en perspective, l'élargissement de notre champ de vision individuel pour (re)fonder un collectif."
+        "fullDescription": "Uni-e-s par un désir d'élargir leurs horizons artistiques respectifs, les membres de BSB cherchent à conjuguer leurs compétences pour permettre des créations contemporaines interdisciplinaires et organiques.\n\nFondé en 2019, le collectif Brodinsky sur Boue réunit 3 artistes uni-e-s par un désir commun: celui d'élargir les horizons de l'art et ne pas le réduire à ses formats classiques trop clivants. Au contraire, les membres du collectif souhaitent conjuguer leurs compétences diverses pour créer des œuvres totales. Les membres de BSB font tout elles-mêmes: écriture des pièces, composition de la musique, design graphique, montage vidéo, costumes, etc. Leurs projets sont des créations 100% originales et interdisciplinaires, où tous les éléments sont d'égale importance.\n\nEn plus de sa forme interdisciplinaire, BSB est animé par une vision: celle de faire de l'art un moyen de connaissance et d'exploration. Tous les membres de BSB ont effectué une formation universitaire avancée (Doctorat en philosophie, Master en dramaturgie, Doctorat en bioinformatique) et considèrent que celle-ci ne peut aboutir pleinement que dans une réalisation artistique, hors du carcan contraignant des institutions. Pour BSB, l'art est un moyen fondamental de partage de connaissances, car il est à la fois intuitif, sensitif et émotionnel.\n\nLes créations des BSB puisent tant dans des inspirations littéraires, que philosophiques ou scientifiques. Une fois encore, l'objectif est de ne pas laisser le savoir se faire enfermer dans des cases. Elles font appel à des concepts abstraits et universels dans le but de réfléchir (sur) notre monde particulier.\n\nLe thème de la diversité des points de vue est omniprésent dans les projets du collectif. Pour BSB, celui-ci a une portée sociale et politique; il met en avant l'idée de mise en perspective, l'élargissement de notre champ de vision individuel pour (re)fonder un collectif.",
+        "sidebar": {
+          "exhibitions": [],
+          "outreach": [],
+          "links": [
+            {
+              "title": "Brodinsky-sur-Boue website",
+              "url": "https://brodinskysurboue.com"
+            }
+          ]
+        }
       }
     },
     {
@@ -43,6 +53,34 @@
           }
         ],
         "fullDescription": "In my programmatic artworks, I use computational processes to generate artistic outcomes. Through code and programs, I create works that integrate visuals, sound, and interactivity, operating at the intersection of technology and aesthetics. I frequently include references to scientific methods and techniques, repurposing a technical medium for artistic expression and challenging the historical division between art and science. My practice also includes glitch art, internet art, sound design, and audiovisual compositions. Projects often combine multiple mediums to achieve outcomes tailored to specific conceptual frameworks. Code functions as a tool to manipulate digital artifacts, model abstract systems, and produce results aligned with the intended goals of each work.",
+        "sidebar": {
+          "exhibitions": [
+            {
+              "title": "Figure1a 2022 and 2023-2024 competitions",
+              "description": "Selected by the jury"
+            },
+            {
+              "title": "Hôtel de Ville Lausanne",
+              "description": "Exhibition"
+            },
+            {
+              "title": "EPFL Pavilions",
+              "description": "Exhibition"
+            },
+            {
+              "title": "Centre Otium",
+              "description": "Exhibition"
+            }
+          ],
+          "outreach": [
+            {
+              "title": "Dimensions, n°11",
+              "description": "Interview on artistic practice (pages 50-51)",
+              "url": "https://drive.switch.ch/index.php/s/dYxjpADzHlGJU0O"
+            }
+          ],
+          "links": []
+        },
         "artworks": [
           {
             "title": "The Annunciation",
@@ -56,19 +94,6 @@
           {
             "title": "ALWAYS",
             "year": 2023
-          }
-        ],
-        "exhibitions": [
-          {
-            "title": "Figure1a 2022 and 2023-2024 competitions",
-            "description": "Selected by the jury. Exhibitions at Hôtel de Ville Lausanne, EPFL Pavilions, and Centre Otium"
-          }
-        ],
-        "outreach": [
-          {
-            "title": "Dimensions, n°11, pages 50-51",
-            "description": "Interview on artistic practice",
-            "link": "https://drive.switch.ch/index.php/s/dYxjpADzHlGJU0O"
           }
         ]
       }
@@ -89,6 +114,16 @@
           }
         ],
         "fullDescription": "Through the exploration of the artist's identity, the installation \"How-I-create-my-identity\" investigates the structure of one's identity, particularly through the lens of time and space. Time is symbolically represented by the three visual elements of the installation. The two videos \"PAST\" and \"FUTURE\" respectively depict the past (in a diapositive style video) and the future (as projected videos and images). In contrast, the triptych \"IDENTITY\" composed of motionless programmatic pictures represents the illusion of present. These three visual elements explore the deterministic influence of the past on one's identity, but also how individuals alter their identity in the future. The music \"ULTRASYNCHRONICITY\" further expands on the link between the past, the illusion of present, and the future.\n\nThis deterministic perspective is paradoxically challenged by the theme of the \"existential coincidence\". The artist takes the example of his parents' meeting, conditional on his mother's family immigrating from Italy to Switzerland in the 1960s. This narrative challenges our interpretation of fortuity: by bridging the past and the future through shared themes and aesthetics, it illustrates the only conceivable present capable of connecting the two, emphasising the deterministic vision behind this artwork. Moreover, the choice of images expands on how space has affected and affects the artist's identity through cultural and social influences.\n\nThrough the deconstruction of past influences, and the reconstruction of a synthetic future identity, the installation \"How-I-create-my-identity\" invites the viewer to reflect on the formation of their own identity.",
+        "sidebar": {
+          "exhibitions": [
+            {
+              "title": "Structures - Figure1a",
+              "url": "https://figure1a.org/past-events/structures"
+            }
+          ],
+          "outreach": [],
+          "links": []
+        },
         "artworks": [
           {
             "title": "PAST (video)"
@@ -101,13 +136,6 @@
           },
           {
             "title": "ULTRASYNCHRONICITY (music)"
-          }
-        ],
-        "exhibitions": [
-          {
-            "title": "Structures - Figure1a",
-            "link": "https://figure1a.org/past-events/structures",
-            "image": "https://images.squarespace-cdn.com/content/v1/58e61af4a5790ab156e17bc1/c227fbf0-2845-4f4f-b068-63c923825e65/F1A00019.jpg"
           }
         ],
         "poeticText": "I found the needle in the haystack\nA thousand billion years ago\n\nA defining moment\nA precise occasion\nA breach in the universe\nA glimpse into the truth\n\nI lost my nightmares in my dreams\nA thousand billion times over\n\nI heard god is now the devil\nI heard god is now the devil\n\nEverything in the universe aligned to perfection\n\nI gave my body to the fire\nA thousand billion years from now\n\nA restoring moment\nA bath onto the moon\nA breach in the universe\nA glimpse into the next one"
@@ -133,6 +161,24 @@
           }
         ],
         "fullDescription": "A Glitch in the Ethics uses digital manipulation and glitch aesthetics to explore the ethical complexities surrounding human actions, both in relation to the natural world and to broader societal issues.",
+        "sidebar": {
+          "exhibitions": [
+            {
+              "title": "Figure1a 2023-2024 competition",
+              "description": "Where Do We Go From Here selected"
+            },
+            {
+              "title": "Figure1a 2025 competition",
+              "description": "Drunk Landscape selected"
+            },
+            {
+              "title": "Hôtel de Ville Lausanne",
+              "description": "Exhibition"
+            }
+          ],
+          "outreach": [],
+          "links": []
+        },
         "artworks": [
           {
             "title": "Where Do We Go From Here",
@@ -147,12 +193,6 @@
             "year": 2025,
             "description": "Drunk Landscape is a generative digital artwork that examines one cultural landscape as a telling example of humanity's far-reaching impact on the environment. Composed of glitched composites that merge photographs of Vipera aspis (asp viper) with images of anthropogenic impact in the same environment, the work confronts the viewer with the contradictions of Lavaux, a UNESCO World Heritage site in Switzerland. Though widely admired for its vineyards and terraced hills, Lavaux bears the deep imprint of human transformation: the dry meadows that once covered these slopes—biodiversity-rich ecosystems crucial to native fauna—have been systematically replaced by vineyards and infrastructure. Nationwide, more than 95% of these meadows have disappeared since 1900.\n\nThe landscape today is shaped by intensive viticulture, which has driven the widespread use of pesticides and led to the concretisation of space through roads, walls, highways, and rail infrastructure. Within this heavily altered terrain, the artist has spent years following populations of Vipera aspis, a species now critically endangered on the Swiss plateau. Remarkably, the snakes persist in these hostile environments—inhabiting vineyard walls, embankments, and marginal patches of vegetation. In this context, the viper is framed as a kind of extremophile—an organism surviving in a deeply anthropised ecosystem where most native habitats have been replaced—a symbol of resilience, adapting to an environment saturated with chemicals and fractured by human infrastructure.\n\nThe title Drunk Landscape alludes to this disorientation—visual, ecological, and societal. The glitch aesthetic reflects a fractured ecosystem, and the notion of \"drunkenness\" also evokes a social reality: as of 2022, 16.4% of the Swiss population consumes alcohol at harmful levels, with approximately 1,500 alcohol-related deaths annually. The landscape, much like the society that celebrates it, appears coherent from a distance but is internally unstable. This work is part of the A-glitch-in-the-ethics series, where digital manipulation and glitch aesthetics are used to explore the ethical complexities surrounding human actions, both in relation to the natural world and to broader societal issues.",
             "technicalDescription": "Drunk Landscape was created using a custom Python script that manipulates photographs through programming. Photographs of Vipera aspis and signs of anthropogenic impact were acquired in the Lavaux region at sites where the species persists despite intensive land use. The images were processed using the NumPy and Pillow libraries. Regions of high contrast in the images were identified, and horizontal stripes were extracted and centered to form the compositional base. The paired images were then blended via pixel-level operations. To produce the glitch aesthetic, 80,000 localized distortions—color perturbations, pixel scrambling, and noise overlays—were algorithmically applied to the image."
-          }
-        ],
-        "exhibitions": [
-          {
-            "title": "Figure1a 2023-2024 and 2025 competitions",
-            "description": "Where Do We Go From Here and Drunk Landscape selected by jury. Exhibition at Hôtel de Ville Lausanne"
           }
         ]
       }
@@ -173,13 +213,17 @@
           }
         ],
         "fullDescription": "Crumbling the Shoulders of Giants is a generative digital artwork that explores the tension between the visible impacts of climate change in alpine environments and the increasing public disbelief in scientific evidence. Trust in science is eroding—not only ideologically, but structurally. Research funding is shrinking as political priorities shift toward militarization and short-term crisis management. While the climate emergency accelerates, meaningful action is delayed by denial, disinformation, or distraction.\n\nThrough simulated landslides rendered on high-resolution photographs, the work draws parallels between the physical destabilization of mountainous terrain and a broader societal erosion—where foundational systems built on knowledge begin to collapse. Alpine regions in Switzerland are increasingly prone to landslides due to permafrost thaw and intensified weather patterns. These landscapes are becoming more hostile to human activity—trails close, infrastructures break, and safety becomes uncertain. The glitch techniques mirror this transformation, fragmenting the images into visual ruptures. A custom soundscape, echoing the tension of shifting terrain and distant landslides, reinforces the atmosphere of instability.\n\nThe title reworks Newton's \"standing on the shoulders of giants,\" implying that the scientific and cultural foundations once trusted are now ignored or destabilized. Part of the Childhood Paradise Reenacted series, the piece also engages with themes of personal memory and collective space, linking the aesthetics of collapse to a broader reflection on how humans—like the ecosystems they inhabit—must now adapt to a reality of environmental unpredictability.",
-        "technicalDescription": "Crumbling the Shoulders of Giants was developed using custom Python scripts to simulate landslide dynamics in photographic images of alpine landscapes. The process involves algorithmically shifting image blocks to mimic the displacement of soil and rock, creating visual analogs of geological instability. Pixel-level manipulations were implemented using the Pillow and OpenCV2 libraries, including pixel scrambling and noise overlays to simulate physical disturbance. Source images were captured by the artist during hikes in Switzerland between 2020 and 2025. A custom sound layer, composed of synthetic textures, was integrated to support the audiovisual presentation.",
-        "exhibitions": [
-          {
-            "title": "Figure1a 2025 competition",
-            "description": "Selected by jury"
-          }
-        ]
+        "sidebar": {
+          "exhibitions": [
+            {
+              "title": "Figure1a 2025 competition",
+              "description": "Selected by jury"
+            }
+          ],
+          "outreach": [],
+          "links": []
+        },
+        "technicalDescription": "Crumbling the Shoulders of Giants was developed using custom Python scripts to simulate landslide dynamics in photographic images of alpine landscapes. The process involves algorithmically shifting image blocks to mimic the displacement of soil and rock, creating visual analogs of geological instability. Pixel-level manipulations were implemented using the Pillow and OpenCV2 libraries, including pixel scrambling and noise overlays to simulate physical disturbance. Source images were captured by the artist during hikes in Switzerland between 2020 and 2025. A custom sound layer, composed of synthetic textures, was integrated to support the audiovisual presentation."
       }
     },
     {
@@ -198,14 +242,18 @@
           }
         ],
         "fullDescription": "AI MANIFESTO 2026 is a 15-minute narrative programmatic video that confronts the saturation of artificial intelligence in contemporary creative practice. At a moment when generative systems have become ambient infrastructure — embedded in every layer of image-making, text production, and cultural output — the work refuses both uncritical celebration and reflexive rejection. Instead, it holds the contradictions: the question of whether AI-generated work constitutes art at all; the problem of novelty and authorship when outputs are statistically shaped by the entirety of prior human expression; and the possibility that these tensions are not obstacles to resolve but conditions to inhabit.\n\nThe video unfolds as a scored narration — part manifesto, part commentary, part instructions that undercut themselves — delivered through a glitch-saturated visual language that mirrors the instability of the claims being made. The eerie, fragmented aesthetic refuses the smoothness that AI systems typically promise, insisting instead on rupture, compression artifacts, and temporal dissonance as honest representations of what it feels like to work inside these systems. The piece does not argue for AI as a neutral tool; it argues for a specific, politically conscious mode of engagement — one that acknowledges the environmental cost of computation, the biases encoded in training data, and the institutional pressures that shape which uses of AI are normalized.\n\nThe work closes with a disclosure: a list of the models and tools involved in its own production, making the creative infrastructure visible as content rather than concealing it. This gesture echoes the transparency politics of open-source culture and resists the mystification that often accompanies AI-assisted creative work. Part of an ongoing practice at the intersection of computation, critique, and artistic autonomy, AI MANIFESTO 2026 treats the question \"is AI art, art?\" not as a provocation to settle but as a site to inhabit — productively, skeptically, and without resolution.",
-        "technicalDescription": "AI MANIFESTO 2026 was developed as a programmatic video work, combining custom Python-based processing pipelines with a structured narrative layer. The visual texture of the piece — its glitches, distortions, and temporal ruptures — was generated through frame-level manipulation scripts, extending techniques developed across earlier works in the series. Narration was recorded by the artist and cleaned of room acoustics using Clarity DeReverb, then processed and mixed alongside a composed soundtrack using Sonible SmartEQ4 and SmartLimit.\n\nVoice synthesis was produced using coqui-tts, trained on a sample of the artist's voice, generating synthetic speech from written segments of the narration and blurring the boundary between recorded and generated presence. Upscaling of video frames and source images was performed using ESPCN and EDSR x4 and x3 models, applied selectively to introduce resolution inconsistencies as an intentional aesthetic rather than correcting them. Text generation, scripting assistance, and code development were supported by Claude Sonnet 4.6.",
-        "exhibitions": [
-          {
-            "title": "AI and Forms of Life conference",
-            "description": "Academic conference at University of Lausanne, June 2026",
-            "link": "https://www.unil.ch/events/fr/1777638033711"
-          }
-        ]
+        "sidebar": {
+          "exhibitions": [
+            {
+              "title": "AI and Forms of Life conference",
+              "description": "University of Lausanne, June 2026",
+              "url": "https://www.unil.ch/events/fr/1777638033711"
+            }
+          ],
+          "outreach": [],
+          "links": []
+        },
+        "technicalDescription": "AI MANIFESTO 2026 was developed as a programmatic video work, combining custom Python-based processing pipelines with a structured narrative layer. The visual texture of the piece — its glitches, distortions, and temporal ruptures — was generated through frame-level manipulation scripts, extending techniques developed across earlier works in the series. Narration was recorded by the artist and cleaned of room acoustics using Clarity DeReverb, then processed and mixed alongside a composed soundtrack using Sonible SmartEQ4 and SmartLimit.\n\nVoice synthesis was produced using coqui-tts, trained on a sample of the artist's voice, generating synthetic speech from written segments of the narration and blurring the boundary between recorded and generated presence. Upscaling of video frames and source images was performed using ESPCN and EDSR x4 and x3 models, applied selectively to introduce resolution inconsistencies as an intentional aesthetic rather than correcting them. Text generation, scripting assistance, and code development were supported by Claude Sonnet 4.6."
       }
     }
   ]
