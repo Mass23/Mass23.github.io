@@ -73,23 +73,36 @@
       border-radius: 8px;
       overflow: hidden;
       border: 1px solid rgba(37, 38, 38, 0.2);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+      transform-origin: center;
+      isolation: isolate;
+    }
+
+    .gallery-grid figure:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+      background: #e0e0e0;
+      z-index: 1;
+    }
+
+    .gallery-grid .gallery-media-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #111;
     }
 
     .gallery-grid img {
       width: 100%;
-      height: auto;
+      height: 100%;
       display: block;
       object-fit: cover;
     }
 
-    .gallery-grid .video-frame {
-      position: relative;
-      width: 100%;
-      padding-top: 56.25%;
-      background: #111;
-    }
-
-    .gallery-grid .video-frame iframe {
+    .gallery-grid .gallery-media-frame iframe {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -98,7 +111,7 @@
     }
 
     .gallery-grid figcaption {
-      padding: 10px 12px;
+      padding: 12px;
       font-size: 13px;
       line-height: 1.5;
       color: #252626;
@@ -188,6 +201,16 @@
         font-size: 14px;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gallery-grid figure {
+        transition: none;
+      }
+
+      .gallery-grid figure:hover {
+        transform: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -258,6 +281,56 @@
       const match = String(url).match(/vimeo\.com\/(?:manage\/videos\/)?(\d+)/i);
       if (!match || !match[1]) return "";
       return `https://player.vimeo.com/video/${match[1]}`;
+    }
+
+    function normalizeGalleryMediaPath(value) {
+      return typeof value === "string" ? value.trim() : "";
+    }
+
+    function extractFilenameFromPath(normalizedPath) {
+      const safePath = String(normalizedPath || "");
+      const pathWithoutQuery = safePath.split(/[?#]/)[0];
+      const pathSegments = pathWithoutQuery.split("/");
+      return pathSegments[pathSegments.length - 1] || "";
+    }
+
+    function safeDecodeURIComponent(value) {
+      try {
+        return decodeURIComponent(value);
+      } catch (error) {
+        return value;
+      }
+    }
+
+    function setTextContent(node, value) {
+      node.textContent = String(value || "");
+    }
+
+    function getGalleryItemLabel(item, index) {
+      if (item && typeof item.caption === "string" && item.caption.trim()) {
+        return item.caption.trim();
+      }
+
+      if (item && typeof item.title === "string" && item.title.trim()) {
+        return item.title.trim();
+      }
+
+      const mediaPath = normalizeGalleryMediaPath((item && (item.image || item.video)) || "");
+      if (!mediaPath) return `Gallery item ${index + 1}`;
+
+      if (item && item.video) return `Video ${index + 1}`;
+
+      const filename = extractFilenameFromPath(mediaPath);
+      const stem = filename.replace(/\.[^.]+$/, "");
+      const readable = safeDecodeURIComponent(stem)
+        .replace(/[_-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      return readable || `Image ${index + 1}`;
+    }
+
+    function getGalleryMediaAltText(projectTitle, label, index) {
+      return label || `${projectTitle || "Project"} image ${index + 1}`;
     }
 
     function renderSidebarList(sectionEl, listEl, entries, fallbackAsLink = false) {
@@ -343,42 +416,54 @@
         description.textContent = project.page.fullDescription || "";
 
         const galleryItems = Array.isArray(project.page.gallery) ? project.page.gallery : [];
+        galleryGrid.replaceChildren();
         if (!galleryItems.length) {
           const emptyCaption = document.createElement("p");
-          emptyCaption.textContent = "No gallery images yet.";
+          setTextContent(emptyCaption, "No gallery images yet.");
           emptyCaption.style.fontFamily = "Menlo, monospace";
           emptyCaption.style.fontSize = "14px";
           galleryGrid.appendChild(emptyCaption);
         } else {
-          galleryItems.forEach((item, index) => {
+          for (const [index, item] of galleryItems.entries()) {
             const figure = document.createElement("figure");
+            const mediaFrame = document.createElement("div");
+            mediaFrame.className = "gallery-media-frame";
             const caption = document.createElement("figcaption");
-            caption.textContent = item.caption || "";
+            const label = getGalleryItemLabel(item, index);
+            setTextContent(caption, label);
+            let hasMedia = false;
 
             if (item.video) {
               const embedUrl = toVimeoEmbedUrl(item.video);
               if (embedUrl) {
-                const frameWrap = document.createElement("div");
-                frameWrap.className = "video-frame";
                 const iframe = document.createElement("iframe");
                 iframe.src = embedUrl;
                 iframe.title = (project.card.title || "Project") + " video " + (index + 1);
                 iframe.allow = "autoplay; fullscreen; picture-in-picture";
                 iframe.allowFullscreen = true;
-                frameWrap.appendChild(iframe);
-                figure.appendChild(frameWrap);
+                mediaFrame.appendChild(iframe);
+                hasMedia = true;
               }
             } else {
-              const img = document.createElement("img");
-              img.src = item.image || "";
-              img.alt = (project.card.title || "Project") + " image " + (index + 1);
-              img.loading = "lazy";
-              figure.appendChild(img);
+              const imagePath = normalizeGalleryMediaPath(item.image);
+              if (imagePath) {
+                const img = document.createElement("img");
+                img.src = imagePath;
+                img.alt = getGalleryMediaAltText(project.card.title, label, index);
+                img.loading = "lazy";
+                mediaFrame.appendChild(img);
+                hasMedia = true;
+              }
             }
 
+            if (!hasMedia) {
+              continue;
+            }
+
+            figure.appendChild(mediaFrame);
             figure.appendChild(caption);
             galleryGrid.appendChild(figure);
-          });
+          }
         }
 
         const sidebar = project.page.sidebar || {};
