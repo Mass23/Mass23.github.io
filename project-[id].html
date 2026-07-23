@@ -115,9 +115,6 @@
       font-size: 13px;
       line-height: 1.5;
       color: #252626;
-      font-family: Arial, sans-serif;
-      font-style: italic;
-      font-weight: 600;
     }
 
     .project-sidebar {
@@ -294,12 +291,16 @@
       return normalizeGalleryMediaPath(path).split(/[?#]/)[0].split("/").pop() || "";
     }
 
-    function isSupportedGalleryImage(path) {
-      const normalized = normalizeGalleryMediaPath(path);
-      if (!normalized) return false;
-      // Keep accepting extensionless paths because the previous gallery logic rendered any non-empty image path.
-      return /\.(avif|gif|jpe?g|png|svg|webp)(?:[?#].*)?$/i.test(normalized)
-        || !/\.[a-z0-9]+(?:[?#].*)?$/i.test(normalized);
+    function hasGalleryImagePath(path) {
+      return normalizeGalleryMediaPath(path) !== "";
+    }
+
+    function safeDecodeURIComponent(value) {
+      try {
+        return decodeURIComponent(value);
+      } catch (error) {
+        return value;
+      }
     }
 
     function getGalleryItemLabel(item, index) {
@@ -318,7 +319,7 @@
 
       const filename = extractFilenameFromPath(mediaPath);
       const stem = filename.replace(/\.[^.]+$/, "");
-      const readable = decodeURIComponent(stem).replace(/[_-]+/g, " ").trim();
+      const readable = safeDecodeURIComponent(stem).replace(/[_-]+/g, " ").trim();
       return readable || `Image ${index + 1}`;
     }
 
@@ -434,7 +435,7 @@
               }
             } else {
               const imagePath = normalizeGalleryMediaPath(item.image);
-              if (isSupportedGalleryImage(imagePath)) {
+              if (hasGalleryImagePath(imagePath)) {
                 const img = document.createElement("img");
                 img.src = imagePath;
                 img.alt = caption.textContent || ((project.card.title || "Project") + " image " + (index + 1));
