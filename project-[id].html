@@ -112,11 +112,12 @@
   left: 50%;
   width: auto;
   height: auto;
-  max-width: 500px;
-  max-height: 500px;
+  max-width: 85vw;
+  max-height: 80vh;
   object-fit: contain;
   transform: translate(-50%, -50%);
   z-index: 1000;
+  border: 3px solid #fff;
   box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
@@ -127,11 +128,29 @@
   height: 100%;
   border: 0;
 }
+
+/* hide the normal caption in the grid, show it attached to the popup on hover */
 .gallery-grid figcaption {
   padding: 12px;
   font-size: 13px;
   line-height: 1.5;
   color: #252626;
+}
+
+.gallery-grid figure:hover figcaption {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* push it below the enlarged image - tweak the 250px to roughly half your image's max height */
+  transform: translate(-50%, calc(-50% + 260px));
+  width: max-content;
+  max-width: 500px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  z-index: 1001;
+  text-align: center;
 }
 
     .project-sidebar {
