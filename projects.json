@@ -152,11 +152,15 @@
       "page": {
         "gallery": [
           {
-            "image": "images/projects/a-glitch-in-the-ethics/image-01.webp",
+            "image": "images/a-glitch-in-the-ethics/WDWGFH.gif",
             "caption": "Where Do We Go From Here (2023)"
           },
           {
-            "image": "images/projects/a-glitch-in-the-ethics/image-02.webp",
+            "image": "images/a-glitch-in-the-ethics/will_you_call_it_a_genocide.webp",
+            "caption": "Will you call it a genocide if the word is hardcoded in the jpeg file? (2024)"
+          },
+          {
+            "image": "images/a-glitch-in-the-ethics/drunk_landscape.webp",
             "caption": "Drunk Landscape (2025)"
           }
         ],
