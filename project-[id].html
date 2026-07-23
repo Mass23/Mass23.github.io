@@ -288,7 +288,10 @@
     }
 
     function extractFilenameFromPath(normalizedPath) {
-      return String(normalizedPath || "").split(/[?#]/)[0].split("/").pop() || "";
+      const safePath = String(normalizedPath || "");
+      const pathWithoutQuery = safePath.split(/[?#]/)[0];
+      const pathSegments = pathWithoutQuery.split("/");
+      return pathSegments[pathSegments.length - 1] || "";
     }
 
     function safeDecodeURIComponent(value) {
@@ -315,7 +318,10 @@
 
       const filename = extractFilenameFromPath(mediaPath);
       const stem = filename.replace(/\.[^.]+$/, "");
-      const readable = safeDecodeURIComponent(stem).replace(/[_-]+/g, " ").trim();
+      const readable = safeDecodeURIComponent(stem)
+        .replace(/[_-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
       return readable || `Image ${index + 1}`;
     }
 
@@ -402,7 +408,7 @@
         description.textContent = project.page.fullDescription || "";
 
         const galleryItems = Array.isArray(project.page.gallery) ? project.page.gallery : [];
-        galleryGrid.innerHTML = "";
+        galleryGrid.replaceChildren();
         if (!galleryItems.length) {
           const emptyCaption = document.createElement("p");
           emptyCaption.textContent = "No gallery images yet.";
