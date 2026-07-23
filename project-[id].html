@@ -302,6 +302,10 @@
       }
     }
 
+    function setTextContent(node, value) {
+      node.textContent = String(value || "");
+    }
+
     function getGalleryItemLabel(item, index) {
       if (item && typeof item.caption === "string" && item.caption.trim()) {
         return item.caption.trim();
@@ -323,6 +327,10 @@
         .replace(/\s+/g, " ")
         .trim();
       return readable || `Image ${index + 1}`;
+    }
+
+    function getGalleryMediaAltText(projectTitle, label, index) {
+      return label || `${projectTitle || "Project"} image ${index + 1}`;
     }
 
     function renderSidebarList(sectionEl, listEl, entries, fallbackAsLink = false) {
@@ -411,17 +419,18 @@
         galleryGrid.replaceChildren();
         if (!galleryItems.length) {
           const emptyCaption = document.createElement("p");
-          emptyCaption.textContent = "No gallery images yet.";
+          setTextContent(emptyCaption, "No gallery images yet.");
           emptyCaption.style.fontFamily = "Menlo, monospace";
           emptyCaption.style.fontSize = "14px";
           galleryGrid.appendChild(emptyCaption);
         } else {
-          galleryItems.forEach((item, index) => {
+          for (const [index, item] of galleryItems.entries()) {
             const figure = document.createElement("figure");
             const mediaFrame = document.createElement("div");
             mediaFrame.className = "gallery-media-frame";
             const caption = document.createElement("figcaption");
-            caption.textContent = getGalleryItemLabel(item, index);
+            const label = getGalleryItemLabel(item, index);
+            setTextContent(caption, label);
             let hasMedia = false;
 
             if (item.video) {
@@ -440,7 +449,7 @@
               if (imagePath) {
                 const img = document.createElement("img");
                 img.src = imagePath;
-                img.alt = caption.textContent || ((project.card.title || "Project") + " image " + (index + 1));
+                img.alt = getGalleryMediaAltText(project.card.title, label, index);
                 img.loading = "lazy";
                 mediaFrame.appendChild(img);
                 hasMedia = true;
@@ -454,7 +463,7 @@
             figure.appendChild(mediaFrame);
             figure.appendChild(caption);
             galleryGrid.appendChild(figure);
-          });
+          }
         }
 
         const sidebar = project.page.sidebar || {};
