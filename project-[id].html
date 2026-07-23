@@ -287,12 +287,8 @@
       return typeof value === "string" ? value.trim() : "";
     }
 
-    function extractFilenameFromPath(path) {
-      return normalizeGalleryMediaPath(path).split(/[?#]/)[0].split("/").pop() || "";
-    }
-
-    function hasGalleryImagePath(path) {
-      return normalizeGalleryMediaPath(path) !== "";
+    function extractFilenameFromPath(normalizedPath) {
+      return String(normalizedPath || "").split(/[?#]/)[0].split("/").pop() || "";
     }
 
     function safeDecodeURIComponent(value) {
@@ -435,7 +431,7 @@
               }
             } else {
               const imagePath = normalizeGalleryMediaPath(item.image);
-              if (hasGalleryImagePath(imagePath)) {
+              if (imagePath) {
                 const img = document.createElement("img");
                 img.src = imagePath;
                 img.alt = caption.textContent || ((project.card.title || "Project") + " image " + (index + 1));
