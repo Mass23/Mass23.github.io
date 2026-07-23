@@ -80,12 +80,20 @@
       isolation: isolate;
     }
 
-    .gallery-grid figure:hover {
-      transform: scale(2);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
-      background: #e0e0e0;
-      z-index: 1;
-    }
+
+
+    .gallery-grid figure:hover img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    height: auto;
+    max-width: 500px;
+    max-height: 500px;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
 
     .gallery-grid .gallery-media-frame {
       position: relative;
