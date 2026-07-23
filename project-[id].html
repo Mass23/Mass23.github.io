@@ -290,10 +290,15 @@
       return typeof value === "string" ? value.trim() : "";
     }
 
+    function extractFilenameFromPath(path) {
+      return normalizeGalleryMediaPath(path).split(/[?#]/)[0].split("/").pop() || "";
+    }
+
     function isSupportedGalleryImage(path) {
       const normalized = normalizeGalleryMediaPath(path);
       if (!normalized) return false;
-      return /(?:\.)(avif|gif|jpe?g|png|svg|webp)(?:[?#].*)?$/i.test(normalized)
+      // Keep accepting extensionless paths because the previous gallery logic rendered any non-empty image path.
+      return /\.(avif|gif|jpe?g|png|svg|webp)(?:[?#].*)?$/i.test(normalized)
         || !/\.[a-z0-9]+(?:[?#].*)?$/i.test(normalized);
     }
 
@@ -311,7 +316,7 @@
 
       if (item && item.video) return `Video ${index + 1}`;
 
-      const filename = mediaPath.split(/[?#]/)[0].split("/").pop() || "";
+      const filename = extractFilenameFromPath(mediaPath);
       const stem = filename.replace(/\.[^.]+$/, "");
       const readable = decodeURIComponent(stem).replace(/[_-]+/g, " ").trim();
       return readable || `Image ${index + 1}`;
