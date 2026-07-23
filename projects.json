@@ -168,16 +168,12 @@
         "sidebar": {
           "exhibitions": [
             {
-              "title": "Figure1a 2023-2024 competition",
-              "description": "Where Do We Go From Here selected"
+              "title": "Figure1a competition 2024 - FUTURE UNFRAMED",
+              "description": "'Where do we go from here' selected by the jury, Exhibition: Hôtel de Ville Lausanne"
             },
             {
-              "title": "Figure1a 2025 competition",
-              "description": "Drunk Landscape selected"
-            },
-            {
-              "title": "Hôtel de Ville Lausanne",
-              "description": "Exhibition"
+              "title": "Figure1a competition 2025 - Extreme Environments",
+              "description": "'Drunk landscape' selected by the jury, Exhibition: Hôtel de Ville Lausanne, Sept-Oct 2025"
             }
           ],
           "outreach": [],
