@@ -61,97 +61,121 @@
       white-space: pre-line;
     }
 
-    .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
-}
-.gallery-grid figure {
-  margin: 0;
-  background: #d0d6db;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid rgba(37, 38, 38, 0.2);
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
-  transform-origin: center;
-  isolation: isolate;
-}
-
-/* let the enlarged image escape the figure's clipping box */
-.gallery-grid figure:hover {
-  overflow: visible;
-  z-index: 1000;
-}
-
-.gallery-grid .gallery-media-frame {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: #111;
-}
-
-/* let it escape the media frame's clipping box too */
-.gallery-grid figure:hover .gallery-media-frame {
-  overflow: visible;
-}
-
-.gallery-grid img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
+        .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+    .gallery-grid figure {
+      margin: 0;
+      background: #d0d6db;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(37, 38, 38, 0.2);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+      transform-origin: center;
+      isolation: isolate;
+    }
+        
+    .gallery-grid .gallery-media-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #111;
+    }
+    
+    .gallery-grid .gallery-media-frame img {
   transition: transform 0.25s ease;
 }
 
-.gallery-grid figure:hover img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: auto;
-  height: auto;
-  max-width: 85vw;
-  max-height: 80vh;
-  object-fit: contain;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-  border: 3px solid #fff;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+.gallery-grid figure:not(.is-active) .gallery-media-frame:hover img {
+  transform: scale(1.05);
 }
 
-.gallery-grid .gallery-media-frame iframe {
+/* optional: subtle darkening overlay with a zoom icon on hover */
+.gallery-grid .gallery-media-frame::after {
+  content: "";
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.25s ease;
+  pointer-events: none;
 }
 
-/* hide the normal caption in the grid, show it attached to the popup on hover */
-.gallery-grid figcaption {
-  padding: 12px;
-  font-size: 13px;
-  line-height: 1.5;
-  color: #252626;
+.gallery-grid figure:not(.is-active) .gallery-media-frame:hover::after {
+  background: rgba(0, 0, 0, 0.15);
 }
-
-.gallery-grid figure:hover figcaption {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  /* push it below the enlarged image - tweak the 250px to roughly half your image's max height */
-  transform: translate(-50%, calc(-50% + 260px));
-  width: max-content;
-  max-width: 500px;
-  background: rgba(0, 0, 0, 0.85);
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 4px;
-  z-index: 1001;
-  text-align: center;
-}
+    
+    .gallery-grid img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      transition: transform 0.25s ease;
+    }
+    
+    .gallery-grid .gallery-media-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    
+    /* hide the normal caption in the grid, show it attached to the popup on hover */
+    .gallery-grid figcaption {
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #252626;
+    }
+    
+    .gallery-grid figure.is-active {
+      overflow: visible;
+      z-index: 1000;
+    }
+    
+    .gallery-grid figure.is-active .gallery-media-frame {
+      overflow: visible;
+    }
+    
+    .gallery-grid figure.is-active img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: auto;
+      height: auto;
+      max-width: 85vw;
+      max-height: 80vh;
+      object-fit: contain;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      border: 3px solid #fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      cursor: zoom-out;
+    }
+    
+    .gallery-grid figure:not(.is-active) .gallery-media-frame img {
+      cursor: zoom-in;
+    }
+    
+    .gallery-grid figure.is-active figcaption {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, calc(40vh + 20px));
+      width: max-content;
+      max-width: 500px;
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 4px;
+      z-index: 1001;
+      text-align: center;
+    }
 
     .project-sidebar {
       background: linear-gradient(to bottom, #D0D6DB, #f3f5f7 28%);
@@ -517,6 +541,32 @@
     }
 
     loadProject();
+    
+    // event delegation: gallery-grid exists immediately,
+    // even though its <figure> children are added later
+    const galleryGridEl = document.getElementById("gallery-grid");
+    
+    galleryGridEl.addEventListener('click', (e) => {
+      const figure = e.target.closest('figure');
+      if (!figure || !galleryGridEl.contains(figure)) return;
+    
+      const wasActive = figure.classList.contains('is-active');
+    
+      // close any other open figure
+      galleryGridEl.querySelectorAll('figure.is-active').forEach(f => {
+        if (f !== figure) f.classList.remove('is-active');
+      });
+    
+      figure.classList.toggle('is-active', !wasActive);
+      e.stopPropagation();
+    });
+    
+    // click anywhere outside the gallery closes whichever is open
+    document.addEventListener('click', () => {
+      galleryGridEl.querySelectorAll('figure.is-active').forEach(f => {
+        f.classList.remove('is-active');
+      });
+    });
   </script>
 </body>
 </html>
