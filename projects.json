@@ -74,12 +74,12 @@
         "sidebar": {
           "exhibitions": [
             {
-              "title": "Figure1a 2022 and 2023-2024 competitions",
-              "description": "Selected by the jury"
+              "title": "Figure1a competition 2022",
+              "description": "'The annunciation' and 'A living past' selected by the jury, Exhibition: Hôtel de Ville Lausanne"
             },
             {
-              "title": "Hôtel de Ville Lausanne",
-              "description": "Exhibition"
+              "title": "Figure1a competition 2023-2024",
+              "description": "'ALWAYS' selected by the jury, Exhibition: Hôtel de Ville Lausanne"
             },
             {
               "title": "EPFL Pavilions",
@@ -98,22 +98,7 @@
             }
           ],
           "links": []
-        },
-        "artworks": [
-          {
-            "title": "The Annunciation",
-            "year": 2021,
-            "description": "A reinterpretation of the biblical scene, The annunciation is a programmatic artwork coded in the python programming language with tools usually used for scientific figures creation. At the core of the Bible's myth, the annunciation is the moment where the Angel Gabriel announces to Mary that she carries God's son. It represents the encounter between two worlds: the divine and the human. The artist chose this singular moment out of many others depicted all throughout Christian art history, as a metaphor of the bridge it creates between Science and Art History. Scientific tools were used to represent a classical biblical scene: two charts included in a figure. Mathematic equations applied on statistical distributions were used to create the motion in the image that represents the Angel wings. Moreover, pale colours and gold evoke the washed-out appearance of medieval artworks. Therefore, The annunciation presents itself as part of an artistic tradition, while re-enacting it with the help of contemporary techniques."
-          },
-          {
-            "title": "A Living Past",
-            "year": 2022
-          },
-          {
-            "title": "ALWAYS",
-            "year": 2023
-          }
-        ]
+        }
       }
     },
     {
