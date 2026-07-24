@@ -70,12 +70,11 @@
 
     .project-preview-image {
       display: none;
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
+      max-width: 300px;
+      max-height: 300px;
+      object-fit: contain;
       border-radius: 6px;
       margin-bottom: 8px;
-      aspect-ratio: 1;
     }
 
     .project-preview-title {
@@ -118,9 +117,12 @@
         max-width: min(86vw, 320px);
       }
 
+      @media (max-width: 768px) {
       .project-preview-image {
-        height: 200px;
+        max-width: 200px;
+        max-height: 200px;
       }
+    }
     }
   </style>
 </head>
