@@ -148,35 +148,107 @@
   pointer-events: auto;
 }
 
-.gallery-grid figure.is-active img {
+.gallery-grid figure.is-active {
   position: fixed;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto;
+  column-gap: 28px;
+  row-gap: 8px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  max-width: 92vw;
+  max-height: 85vh;
+  z-index: 1001;
+}
+
+.gallery-grid figure.is-active.has-detail-text {
+  grid-template-columns: minmax(0, auto) minmax(220px, 340px);
+}
+
+.gallery-grid figure.is-active .gallery-media-frame {
+  grid-column: 1;
+  grid-row: 1;
+  position: static;
   width: auto;
   height: auto;
-  max-width: 85vw;
+  aspect-ratio: unset;
+  max-width: 65vw;
+  max-height: 75vh;
+  background: transparent;
+}
+
+.gallery-grid figure.is-active .gallery-media-frame img {
+  position: static;
+  width: auto;
+  height: auto;
+  max-width: 65vw;
   max-height: 75vh;
   object-fit: contain;
-  transform: translate(-50%, -50%);
-  z-index: 1001;
+  transform: none;
+  display: block;
   border: 3px solid #fff;
   box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   cursor: zoom-out;
 }
 
 .gallery-grid figure.is-active figcaption {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, calc(37.5vh + 20px));
-  width: max-content;
-  max-width: 500px;
+  grid-column: 1;
+  grid-row: 2;
+  position: static;
+  transform: none;
+  width: auto;
+  max-width: 65vw;
   background: transparent;
   color: #fff;
-  padding: 6px 12px;
-  z-index: 1002;
+  padding: 6px 0 0;
+  z-index: auto;
   text-align: center;
   font-size: 15px;
+}
+
+.gallery-grid figure .gallery-detail-text {
+  display: none;
+}
+
+.gallery-grid figure.is-active.has-detail-text .gallery-detail-text {
+  display: block;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  color: #e0e0e0;
+  font-family: "Andale Mono", Menlo, monospace;
+  max-height: 75vh;
+  overflow-y: auto;
+  padding-right: 4px;
+  text-align: left;
+}
+
+.gallery-grid .gallery-detail-text .detail-text-section + .detail-text-section {
+  margin-top: 18px;
+}
+
+.gallery-grid .gallery-detail-text .detail-text-heading {
+  font-family: Arial, sans-serif;
+  font-style: italic;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  margin: 0 0 6px;
+}
+
+.gallery-grid .gallery-detail-text .detail-text-body {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-line;
 }
 
     .project-sidebar {
@@ -261,6 +333,27 @@
       .project-full-description {
         margin-top: 18px;
         font-size: 14px;
+      }
+
+      .gallery-grid figure.is-active.has-detail-text {
+        grid-template-columns: auto;
+        grid-template-rows: auto auto auto;
+        max-height: 90vh;
+        max-width: 90vw;
+      }
+
+      .gallery-grid figure.is-active .gallery-media-frame,
+      .gallery-grid figure.is-active .gallery-media-frame img {
+        max-width: 85vw;
+        max-height: 55vh;
+      }
+
+      .gallery-grid figure.is-active.has-detail-text .gallery-detail-text {
+        grid-column: 1;
+        grid-row: 3;
+        max-width: 85vw;
+        max-height: 25vh;
+        text-align: center;
       }
     }
 
@@ -396,6 +489,26 @@
       return label || `${projectTitle || "Project"} image ${index + 1}`;
     }
 
+    function buildDetailTextSection(heading, content) {
+      const trimmed = typeof content === "string" ? content.trim() : "";
+      if (!trimmed) return null;
+
+      const section = document.createElement("div");
+      section.className = "detail-text-section";
+
+      const headingEl = document.createElement("p");
+      headingEl.className = "detail-text-heading";
+      setTextContent(headingEl, heading);
+
+      const bodyEl = document.createElement("p");
+      bodyEl.className = "detail-text-body";
+      setTextContent(bodyEl, trimmed);
+
+      section.appendChild(headingEl);
+      section.appendChild(bodyEl);
+      return section;
+    }
+
     function renderSidebarList(sectionEl, listEl, entries, fallbackAsLink = false) {
       listEl.innerHTML = "";
       const valid = Array.isArray(entries) ? entries.filter(Boolean) : [];
@@ -525,6 +638,19 @@
 
             figure.appendChild(mediaFrame);
             figure.appendChild(caption);
+
+            const generalSection = buildDetailTextSection("General description", item.general_text);
+            const technicalSection = buildDetailTextSection("Technical description", item.technical_text);
+
+            if (generalSection || technicalSection) {
+              const detailText = document.createElement("div");
+              detailText.className = "gallery-detail-text";
+              if (generalSection) detailText.appendChild(generalSection);
+              if (technicalSection) detailText.appendChild(technicalSection);
+              figure.appendChild(detailText);
+              figure.classList.add("has-detail-text");
+            }
+
             galleryGrid.appendChild(figure);
           }
         }
