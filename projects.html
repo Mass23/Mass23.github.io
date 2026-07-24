@@ -66,16 +66,19 @@
       color: #111;
       pointer-events: none;
       z-index: 20;
+      text-align: center; /* centers inline content like img */
     }
-
+    
     .project-preview-image {
       display: none;
       max-width: 300px;
       max-height: 300px;
+      width: auto;
+      height: auto;
       object-fit: contain;
       border-radius: 6px;
-      margin-bottom: 8px;
-    }
+      margin: 0 auto 8px auto; /* center horizontally */
+    }  
 
     .project-preview-title {
       font-size: 14px;
@@ -109,21 +112,19 @@
     }
 
     @media (max-width: 768px) {
-      .node text {
-        font-size: 18px;
-      }
-
-      .project-preview {
-        max-width: min(86vw, 320px);
-      }
-
-      @media (max-width: 768px) {
-      .project-preview-image {
-        max-width: 200px;
-        max-height: 200px;
-      }
+    .node text {
+      font-size: 18px;
     }
+
+  .project-preview {
+      max-width: min(86vw, 320px);
     }
+  
+    .project-preview-image {
+      max-width: 200px;
+      max-height: 200px;
+    }
+  }
   </style>
 </head>
 <body>
@@ -275,9 +276,13 @@ function renderGraph(projectNodes) {
   const nodes = [...projectNodes, homeNode];
   const links = createLinks(projectNodes);
 
+  const isMobile = window.innerWidth <= 768;
+  const linkDistance = isMobile ? 180 : 400;
+  const chargeStrength = isMobile ? -260 : -600;
+
   simulation = d3.forceSimulation(nodes)
-    .force("link", d3.forceLink(links).id(d => d.id).distance(400))
-    .force("charge", d3.forceManyBody().strength(-600))
+    .force("link", d3.forceLink(links).id(d => d.id).distance(linkDistance))
+    .force("charge", d3.forceManyBody().strength(chargeStrength))
     .force("center", d3.forceCenter(width / 2, height / 2));
 
   const link = svg.append("g")
