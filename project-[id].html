@@ -545,32 +545,35 @@
     }
 
     loadProject();
-    
-    // event delegation: gallery-grid exists immediately,
-    // even though its <figure> children are added later
+
     const galleryGridEl = document.getElementById("gallery-grid");
+    const lightboxBackdrop = document.getElementById("lightbox-backdrop");
+    
+    function closeActiveFigure() {
+      galleryGridEl.querySelectorAll('figure.is-active').forEach(f => {
+        f.classList.remove('is-active');
+      });
+      lightboxBackdrop.classList.remove('is-active');
+    }
     
     galleryGridEl.addEventListener('click', (e) => {
       const figure = e.target.closest('figure');
       if (!figure || !galleryGridEl.contains(figure)) return;
     
       const wasActive = figure.classList.contains('is-active');
+      closeActiveFigure();
     
-      // close any other open figure
-      galleryGridEl.querySelectorAll('figure.is-active').forEach(f => {
-        if (f !== figure) f.classList.remove('is-active');
-      });
+      if (!wasActive) {
+        figure.classList.add('is-active');
+        lightboxBackdrop.classList.add('is-active');
+      }
     
-      figure.classList.toggle('is-active', !wasActive);
       e.stopPropagation();
     });
     
-    // click anywhere outside the gallery closes whichever is open
-    document.addEventListener('click', () => {
-      galleryGridEl.querySelectorAll('figure.is-active').forEach(f => {
-        f.classList.remove('is-active');
-      });
-    });
+    // click the backdrop (or anywhere outside) closes it
+    lightboxBackdrop.addEventListener('click', closeActiveFigure);
+    document.addEventListener('click', closeActiveFigure);
   </script>
 </body>
 </html>
