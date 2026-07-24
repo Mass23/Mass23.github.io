@@ -53,6 +53,16 @@
       min-width: 0;
     }
 
+    .project-title {
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 1.3;
+      margin: 0;
+      color: #252626;
+    }
+
     .project-full-description {
       font-size: 15px;
       line-height: 1.7;
@@ -394,6 +404,7 @@
 
       <div class="project-layout">
         <section class="project-main" aria-label="Project main content">
+          <h2 id="project-title" class="project-title"></h2>
           <p id="project-description" class="project-full-description"></p>
           <section class="image-gallery" aria-label="Project gallery">
             <div id="gallery-grid" class="gallery-grid"></div>
@@ -563,6 +574,7 @@
       const status = document.getElementById("status");
       const container = document.getElementById("project-detail");
       const description = document.getElementById("project-description");
+      const titleEl = document.getElementById("project-title");
       const galleryGrid = document.getElementById("gallery-grid");
 
       const exhibitionsSection = document.getElementById("sidebar-exhibitions");
@@ -592,6 +604,7 @@
           return;
         }
 
+        setTextContent(titleEl, project.card.title || "");
         description.textContent = project.page.fullDescription || "";
 
         const galleryItems = Array.isArray(project.page.gallery) ? project.page.gallery : [];
