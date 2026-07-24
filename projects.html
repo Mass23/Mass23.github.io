@@ -256,6 +256,17 @@ function drag(simulationRef) {
     });
 }
 
+function constrainNodePosition(node, nodeWidth, nodeHeight) {
+  const margin = 4;
+  const minX = margin + nodeWidth / 2;
+  const maxX = width - margin - nodeWidth / 2;
+  const minY = margin + nodeHeight / 2;
+  const maxY = height - margin - nodeHeight / 2;
+
+  node.x = Math.max(minX, Math.min(maxX, node.x));
+  node.y = Math.max(minY, Math.min(maxY, node.y));
+}
+
 function renderGraph(projectNodes) {
   svg.selectAll("*").remove();
 
@@ -316,6 +327,12 @@ function renderGraph(projectNodes) {
       .attr("y1", d => d.source.y)
       .attr("x2", d => d.target.x)
       .attr("y2", d => d.target.y);
+
+    node.each(d => {
+      const nodeWidth = d.textWidth + 40;
+      const nodeHeight = d.textHeight + 16;
+      constrainNodePosition(d, nodeWidth, nodeHeight);
+    });
 
     node.attr("transform", d => `translate(${d.x},${d.y})`);
   });
