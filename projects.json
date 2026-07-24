@@ -17,20 +17,20 @@
           },
           {
             "image": "images/brodinsky-sur-boue/maxbeth.webp",
-            "caption": "Original theater play MAXINE//BETHANIE, Grange de Dorigny - 2023, Photograph: Kamil Wodzislawski"
+            "caption": "Theater play MAXINE//BETHANIE, Grange de Dorigny - 2023, Photograph: Kamil Wodzislawski"
           },
           {
             "image": "images/brodinsky-sur-boue/sonnets.gif",
-            "caption": "Image taken at the SON/NET/S exhibition, Bruit rose - 2024"
+            "caption": "Images taken at the SON/NET/S exhibition, Bruit rose - 2024"
           },
           {
             "image": "images/brodinsky-sur-boue/andro_reloaded.webp",
-            "caption": "Original theater play ANDROMAQUE_RELOAD\\ED, Fri'scènes - 2022, Photograph: Andreas Eggler"
+            "caption": "Theater play ANDROMAQUE_RELOAD\\ED, Fri'scènes - 2022, Photograph: Andreas Eggler"
           }
         ],
-        "fullDescription": "United by a desire to broaden their respective artistic horizons, the members of BSB seek to combine their skills to enable interdisciplinary and organic contemporary creations. Together, we've carried out several live theater performances (for which I composed and performed the music), art performances, and exhibitions/installations across Suisse romande including at La Grange de Dorigny, Le Bruit Rose, and Friscènes. Over the years, this has added up to dozens of performances in theaters, largely centered on singing and playing music live, but also recording videos and staging.",
+        "fullDescription": "United by a desire to broaden their respective artistic horizons, the members of BSB seek to combine their skills to enable interdisciplinary and organic contemporary creations. Together, we've carried out several live theater performances (for which I composed and performed music in a live setting), art performances, and exhibitions/installations across Suisse romande including at La Grange de Dorigny, Le Bruit Rose, and Friscènes. Over the years, this has added up to dozens of performances in theaters, largely centered on singing and playing music live, but also recording videos and staging.",
         "sidebar": {
-          "exhibitions": ["SON/NET/S: https://brodinskysurboue.ch/docs/catalogue.pdf"],
+          "exhibitions": ["For more information, visit our website here below."],
           "outreach": [],
           "links": [
             {
@@ -44,7 +44,7 @@
     {
       "id": "programmatic-artworks",
       "card": {
-        "title": "Programmatic Artworks",
+        "title": "Programmatic-artworks",
         "shortDescription": "Computational processes generating artistic outcomes integrating visuals, sound, and interactivity.",
         "keywords": ["Images", "Ethical", "Art history", "Coding"],
         "previewImage": "images/previews/programmatic-artworks.webp"
@@ -104,7 +104,7 @@
     {
       "id": "how-i-create-my-identity",
       "card": {
-        "title": "How I Create My Identity",
+        "title": "How-I-create-my-identity",
         "shortDescription": "An installation exploring identity through the lens of time and space.",
         "keywords": ["Images", "Videos", "Installation", "Identity", "Music", "Coding"],
         "previewImage": "images/previews/how-i-create-my-identity.webp"
@@ -196,7 +196,7 @@
     {
       "id": "crumbling-the-shoulders-of-giants",
       "card": {
-        "title": "Crumbling the Shoulders of Giants",
+        "title": "Crumbling-the-shoulders-of-giants",
         "shortDescription": "A generative artwork exploring climate change and eroding trust in science.",
         "keywords": ["Videos", "Ethical", "Glitch", "Identity", "Coding"],
         "previewImage": "images/previews/crumbling-the-shoulders-of-giants.webp"
@@ -225,7 +225,7 @@
     {
       "id": "ai-manifesto-2026",
       "card": {
-        "title": "AI MANIFESTO 2026",
+        "title": "AI-MANIFESTO-2026",
         "shortDescription": "A 15-minute narrative video confronting AI saturation in contemporary creative practice.",
         "keywords": ["Videos", "Ethical", "Glitch", "Art history", "Identity", "Music", "Coding"],
         "previewImage": "images/previews/ai-manifesto-2026.webp"
