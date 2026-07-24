@@ -71,6 +71,10 @@
       white-space: pre-line;
     }
 
+    .image-gallery {
+      margin-top: 24px;
+    }
+
         .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -576,6 +580,8 @@
       const description = document.getElementById("project-description");
       const titleEl = document.getElementById("project-title");
       const galleryGrid = document.getElementById("gallery-grid");
+      const gallerySection = galleryGrid.closest(".image-gallery");
+      const projectMain = document.querySelector(".project-main");
 
       const exhibitionsSection = document.getElementById("sidebar-exhibitions");
       const outreachSection = document.getElementById("sidebar-outreach");
@@ -608,6 +614,13 @@
         description.textContent = project.page.fullDescription || "";
 
         const galleryItems = Array.isArray(project.page.gallery) ? project.page.gallery : [];
+        const hasVideo = galleryItems.some(item => item && item.video);
+        if (hasVideo) {
+          projectMain.insertBefore(gallerySection, description);
+        } else {
+          projectMain.insertBefore(description, gallerySection);
+        }
+
         galleryGrid.replaceChildren();
         if (!galleryItems.length) {
           const emptyCaption = document.createElement("p");

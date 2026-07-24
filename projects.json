@@ -12,13 +12,25 @@
       "page": {
         "gallery": [
           {
-            "image": "images/projects/brodinsky-sur-boue/image-01.webp",
-            "caption": "Performance and installation"
+            "video": "https://vimeo.com/1186698268",
+            "caption": "Our neck of the woods"
+          },
+          {
+            "image": "images/brodinsky-sur-boue/maxbeth.webp",
+            "caption": "Original theater play MAXINE//BETHANIE, Grange de Dorigny - 2023, Photograph: Kamil Wodzislawski"
+          },
+          {
+            "image": "images/brodinsky-sur-boue/sonnets.gif",
+            "caption": "Image taken at the SON/NET/S exhibition, Bruit rose - 2024"
+          },
+          {
+            "image": "images/brodinsky-sur-boue/andro_reloaded.webp",
+            "caption": "Original theater play ANDROMAQUE_RELOAD\\ED, Fri'scènes - 2022, Photograph: Andreas Eggler"
           }
         ],
-        "fullDescription": "Uni-e-s par un désir d'élargir leurs horizons artistiques respectifs, les membres de BSB cherchent à conjuguer leurs compétences pour permettre des créations contemporaines interdisciplinaires et organiques.\n\nFondé en 2019, le collectif Brodinsky sur Boue réunit 3 artistes uni-e-s par un désir commun: celui d'élargir les horizons de l'art et ne pas le réduire à ses formats classiques trop clivants. Au contraire, les membres du collectif souhaitent conjuguer leurs compétences diverses pour créer des œuvres totales. Les membres de BSB font tout elles-mêmes: écriture des pièces, composition de la musique, design graphique, montage vidéo, costumes, etc. Leurs projets sont des créations 100% originales et interdisciplinaires, où tous les éléments sont d'égale importance.\n\nEn plus de sa forme interdisciplinaire, BSB est animé par une vision: celle de faire de l'art un moyen de connaissance et d'exploration. Tous les membres de BSB ont effectué une formation universitaire avancée (Doctorat en philosophie, Master en dramaturgie, Doctorat en bioinformatique) et considèrent que celle-ci ne peut aboutir pleinement que dans une réalisation artistique, hors du carcan contraignant des institutions. Pour BSB, l'art est un moyen fondamental de partage de connaissances, car il est à la fois intuitif, sensitif et émotionnel.\n\nLes créations des BSB puisent tant dans des inspirations littéraires, que philosophiques ou scientifiques. Une fois encore, l'objectif est de ne pas laisser le savoir se faire enfermer dans des cases. Elles font appel à des concepts abstraits et universels dans le but de réfléchir (sur) notre monde particulier.\n\nLe thème de la diversité des points de vue est omniprésent dans les projets du collectif. Pour BSB, celui-ci a une portée sociale et politique; il met en avant l'idée de mise en perspective, l'élargissement de notre champ de vision individuel pour (re)fonder un collectif.",
+        "fullDescription": "United by a desire to broaden their respective artistic horizons, the members of BSB seek to combine their skills to enable interdisciplinary and organic contemporary creations. Together, we've carried out several live theater performances (for which I composed and performed the music), art performances, and exhibitions/installations across Suisse romande including at La Grange de Dorigny, Le Bruit Rose, and Friscènes. Over the years, this has added up to dozens of performances in theaters, largely centered on singing and playing music live, but also recording videos and staging.",
         "sidebar": {
-          "exhibitions": [],
+          "exhibitions": ["SON/NET/S: https://brodinskysurboue.ch/docs/catalogue.pdf"],
           "outreach": [],
           "links": [
             {
@@ -40,15 +52,15 @@
       "page": {
         "gallery": [
           {
-            "image": "images/projects/programmatic-artworks/image-01.webp",
+            "image": "images/programmatic-artworks/image-01.webp",
             "caption": "The Annunciation (2021)"
           },
           {
-            "image": "images/projects/programmatic-artworks/image-02.webp",
+            "image": "images/programmatic-artworks/image-02.webp",
             "caption": "A Living Past (2022)"
           },
           {
-            "image": "images/projects/programmatic-artworks/image-03.webp",
+            "image": "images/programmatic-artworks/image-03.webp",
             "caption": "ALWAYS (2023)"
           }
         ],
@@ -113,7 +125,7 @@
             "caption": "Installation view"
           }
         ],
-        "fullDescription": "Through the exploration of the artist's identity, the installation \"How-I-create-my-identity\" investigates the structure of one's identity, particularly through the lens of time and space. Time is symbolically represented by the three visual elements of the installation. The two videos \"PAST\" and \"FUTURE\" respectively depict the past (in a diapositive style video) and the future (as projected videos and images). In contrast, the triptych \"IDENTITY\" composed of motionless programmatic pictures represents the illusion of present. These three visual elements explore the deterministic influence of the past on one's identity, but also how individuals alter their identity in the future. The music \"ULTRASYNCHRONICITY\" further expands on the link between the past, the illusion of present, and the future.\n\nThis deterministic perspective is paradoxically challenged by the theme of the \"existential coincidence\". The artist takes the example of his parents' meeting, conditional on his mother's family immigrating from Italy to Switzerland in the 1960s. This narrative challenges our interpretation of fortuity: by bridging the past and the future through shared themes and aesthetics, it illustrates the only conceivable present capable of connecting the two, emphasising the deterministic vision behind this artwork. Moreover, the choice of images expands on how space has affected and affects the artist's identity through cultural and social influences.\n\nThrough the deconstruction of past influences, and the reconstruction of a synthetic future identity, the installation \"How-I-create-my-identity\" invites the viewer to reflect on the formation of their own identity.",
+        "fullDescription": "Through the exploration of the artist’s identity, the installation “How-I-create-my-identity” investigates the structure of one’s identity, particularly through the lens of time and space.  Time is symbolically represented by the three visual elements of the installation. The two videos “PAST” and “FUTURE” respectively depict the past (in a diapositive style video) and the future (as projected videos and images). In contrast, the triptych “IDENTITY” composed of motionless programmatic pictures represents the illusion of present. These three visual elements explore the deterministic influence of the past on one’s identity, but also how individuals alter their identity in the future. The music “ULTRASYNCHRONICITY” further expands on the link between the past, the illusion of present, and the future. Through the deconstruction of past influences, and the reconstruction of a synthetic future identity, the installation “How-I-create-my-identity” invites the viewer to reflect on the formation of their own identity. ",
         "sidebar": {
           "exhibitions": [
             {
@@ -153,11 +165,14 @@
         "gallery": [
           {
             "image": "images/a-glitch-in-the-ethics/WDWGFH_final.gif",
-            "caption": "Where Do We Go From Here (2023)"
+            "caption": "Where Do We Go From Here (2023)",
+            "general_text": "",
+            "technical_text": ""
           },
           {
             "image": "images/a-glitch-in-the-ethics/will_you_call_it_a_genocide.webp",
-            "caption": "Will you call it a genocide if the word is hardcoded in the jpeg file? (2024)"
+            "caption": "Will you call it a genocide if the word is hardcoded in the jpeg file? (2024)",
+            "technical_text": "Screenshot of the Gaza Strip area from Copernicus’s Sentinel aerial imagery. Difference in pixel colour between 2022 and 2023 was computed and normalised using python3 and the opencv2 library. Subsequently, the word ”GENOCIDE” was hardcoded 666 times randomly into the jpeg format image. Several images were created using different random seeds."
           },
           {
             "image": "images/a-glitch-in-the-ethics/drunk_landscape.webp",
