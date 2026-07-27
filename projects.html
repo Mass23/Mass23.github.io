@@ -277,13 +277,23 @@ function renderGraph(projectNodes) {
   const links = createLinks(projectNodes);
 
   const isMobile = window.innerWidth <= 768;
-  const linkDistance = isMobile ? 180 : 400;
-  const chargeStrength = isMobile ? -260 : -600;
-
+  const linkDistance = isMobile ? 190 : 400;
+  const chargeStrength = isMobile ? -320 : -600;
+  
+  // Pull harder to center on X, softer on Y (more vertical spread)
+  const forceXStrength = isMobile ? 0.18 : 0.08;
+  const forceYStrength = isMobile ? 0.04 : 0.08;
+  
   simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links).id(d => d.id).distance(linkDistance))
     .force("charge", d3.forceManyBody().strength(chargeStrength))
-    .force("center", d3.forceCenter(width / 2, height / 2));
+    .force("x", d3.forceX(width / 2).strength(forceXStrength))
+    .force("y", d3.forceY(height / 2).strength(forceYStrength))
+    .force("collision", d3.forceCollide().radius(d => {
+      const w = (d.textWidth || 80) + 40;
+      const h = (d.textHeight || 24) + 16;
+      return Math.max(w, h) / 2 + (isMobile ? 10 : 6);
+    }).iterations(2));
 
   const link = svg.append("g")
     .selectAll("line")
