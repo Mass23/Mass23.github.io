@@ -304,22 +304,10 @@ function renderGraph(projectNodes) {
 
   const seed = timeSeedHHmmss(); // or mmss if you really want
   const rand = seededRandom(seed);
-
-  const seed = timeSeedHHmmss(); // or mmss
-  const rand = seededRandom(seed);
   
   // spread starts differently each load (deterministic for that seed)
   const startSpreadX = isMobile ? width * 0.35 : width * 0.45;
   const startSpreadY = isMobile ? height * 0.45 : height * 0.45;
-  
-  nodes.forEach((n) => {
-    if (n.isHome) return; // keep home fixed if you want
-    n.fx = null;
-    n.fy = null;
-    n.x = width / 2 + (rand() - 0.5) * 2 * startSpreadX;
-    n.y = height / 2 + (rand() - 0.5) * 2 * startSpreadY;
-    n.vx = 0;*
-
   
   simulation = d3.forceSimulation(nodes)
     .randomSource(rand)
@@ -332,8 +320,6 @@ function renderGraph(projectNodes) {
       const h = (d.textHeight || 24) + 16;
       return Math.max(w, h) / 2 + (isMobile ? 10 : 6);
     }).iterations(2));
-
-  simulation.alpha(1).restart();
 
   const link = svg.append("g")
     .selectAll("line")
