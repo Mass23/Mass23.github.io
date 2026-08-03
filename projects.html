@@ -260,11 +260,17 @@ function drag(simulationRef) {
 }
 
 function constrainNodePosition(node, nodeWidth, nodeHeight) {
+  const isMobile = window.innerWidth <= 768;
+  const overflowRatio = isMobile ? 0.10 : 0; // allow 10% off-screen on mobile
+
+  const overflowX = width * overflowRatio;
+  const overflowY = height * overflowRatio;
   const margin = 4;
-  const minX = margin + nodeWidth / 2;
-  const maxX = width - margin - nodeWidth / 2;
-  const minY = margin + nodeHeight / 2;
-  const maxY = height - margin - nodeHeight / 2;
+
+  const minX = -overflowX + margin + nodeWidth / 2;
+  const maxX = width + overflowX - margin - nodeWidth / 2;
+  const minY = -overflowY + margin + nodeHeight / 2;
+  const maxY = height + overflowY - margin - nodeHeight / 2;
 
   node.x = Math.max(minX, Math.min(maxX, node.x));
   node.y = Math.max(minY, Math.min(maxY, node.y));
