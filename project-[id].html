@@ -3,7 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Project Detail</title>
+  <meta name="description" content="Detailed project page for the portfolio of Massimo Bourquin." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" id="canonical-url" href="https://mass23.github.io/project-%5Bid%5D.html" />
+  <meta property="og:title" content="Project Detail | Massimo Bourquin" />
+  <meta property="og:description" content="Detailed project page from Massimo Bourquin's portfolio." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" id="og-url" content="https://mass23.github.io/project-%5Bid%5D.html" />
+  <meta property="og:image" content="https://mass23.github.io/images/me.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Project Detail | Massimo Bourquin" />
+  <meta name="twitter:description" content="Detailed project page from Massimo Bourquin's portfolio." />
+  <meta name="twitter:image" content="https://mass23.github.io/images/me.webp" />
+  <title>Project Detail | Massimo Bourquin</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="shortcut icon" href="images/me.webp" sizes="48x48" />
   <style>
@@ -460,6 +472,30 @@
   </div>
 
   <script>
+    function updateMetaTag(selector, value) {
+      const meta = document.querySelector(selector);
+      if (meta && value) meta.setAttribute("content", value);
+    }
+
+    function updateSeoForProject(projectId, projectTitle, projectDescription) {
+      const baseUrl = "https://mass23.github.io/project-%5Bid%5D.html";
+      const projectUrl = `${baseUrl}?id=${encodeURIComponent(projectId)}`;
+      const trimmedDescription = (projectDescription || "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 160);
+
+      const canonical = document.getElementById("canonical-url");
+      if (canonical) canonical.setAttribute("href", projectUrl);
+
+      updateMetaTag('meta[name="description"]', trimmedDescription || "Detailed project page from Massimo Bourquin's portfolio.");
+      updateMetaTag('meta[property="og:title"]', `${projectTitle} | Massimo Bourquin`);
+      updateMetaTag('meta[property="og:description"]', trimmedDescription || "Detailed project page from Massimo Bourquin's portfolio.");
+      updateMetaTag('meta[property="og:url"]', projectUrl);
+      updateMetaTag('meta[name="twitter:title"]', `${projectTitle} | Massimo Bourquin`);
+      updateMetaTag('meta[name="twitter:description"]', trimmedDescription || "Detailed project page from Massimo Bourquin's portfolio.");
+    }
+
     function slugifyForLookup(value) {
       return String(value || "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
     }
@@ -634,8 +670,10 @@
           return;
         }
 
-        setTextContent(titleEl, project.card.title || "");
-        description.textContent = project.page.fullDescription || "";
+        const projectTitle = project.card.title || "";
+        const projectDescription = project.page.fullDescription || project.card.description || "";
+        setTextContent(titleEl, projectTitle);
+        description.textContent = projectDescription;
 
         const galleryItems = Array.isArray(project.page.gallery) ? project.page.gallery : [];
         const hasVideo = galleryItems.some(item => item && item.video);
@@ -713,7 +751,8 @@
         renderSidebarList(outreachSection, outreachList, sidebar.outreach || []);
         renderSidebarList(linksSection, linksList, sidebar.links || [], true);
 
-        document.title = `${project.card.title || "Project"} | Projects`;
+        document.title = `${projectTitle || "Project"} | Projects | Massimo Bourquin`;
+        updateSeoForProject(projectId, projectTitle || "Project", projectDescription);
         status.style.display = "none";
         container.style.display = "block";
       } catch (error) {
